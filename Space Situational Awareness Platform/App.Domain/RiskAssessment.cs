@@ -9,5 +9,5 @@ public class RiskAssessment : BaseEntity
     public DateTime CalculatedAt { get; set; }
     
     public Guid ConjunctionEventId { get; set; }
-    public ConjunctionEvent ConjunctionEvent { get; set; }
+    public ConjunctionEvent ConjunctionEvent { get; set; } = default!;
 }
