@@ -4,8 +4,8 @@ namespace App.Domain;
 
 public class TleRecord : BaseEntity
 {
-    public Guid ObjectId { get; set; }
-    public virtual Object? Object { get; set; }
+    public Guid SpaceObjectId { get; set; }
+    public virtual SpaceObject? SpaceObject { get; set; }
 
     public DateTime Epoch { get; set; }
     public double Inclination { get; set; }

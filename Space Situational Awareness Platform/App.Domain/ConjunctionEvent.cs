@@ -4,10 +4,10 @@ using Base.Domain;
 public class ConjunctionEvent : BaseEntity
 {
     public Guid PrimaryObjectId { get; set; }
-    public virtual Object? PrimaryObject { get; set; }
+    public virtual SpaceObject? PrimaryObject { get; set; }
     
     public Guid SecondaryObjectId { get; set; }
-    public virtual Object? SecondaryObject { get; set; }
+    public virtual SpaceObject? SecondaryObject { get; set; }
     
     public DateTime TimeOfClosestApproach { get; set; }
     public double MissDistance { get; set; }
