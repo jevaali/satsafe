@@ -1,0 +1,126 @@
+erDiagram
+
+    %% Core domain
+    Operator ||--o{ Satellite : owns
+    Satellite ||--|| Orbit : has
+    DebrisObject ||--|| Orbit : has
+
+    %% Orbital data
+    Satellite ||--o{ TleRecord : updates
+    DebrisObject ||--o{ TleRecord : updates
+
+    %% Risk assessment
+    Satellite ||--o{ ConjunctionEvent : involved_in
+    DebrisObject ||--o{ ConjunctionEvent : involved_in
+    ConjunctionEvent ||--|| RiskAssessment : evaluates
+
+    %% Alerts & notifications
+    User ||--o{ Alert : receives
+    User ||--o{ NotificationSetting : configures
+    ConjunctionEvent ||--o{ Alert : triggers
+
+    %% User to operator association
+    User ||--o{ UserOperator : linked_to
+    Operator ||--o{ UserOperator : linked_to
+
+    %% Entity definitions
+    Operator {
+        int Id PK
+        string Name
+        string Country
+        string Type
+    }
+
+    Satellite {
+        int Id PK
+        string Name
+        int NoradId
+        datetime LaunchDate
+        string Status
+        int OperatorId FK
+        int OrbitId FK
+    }
+
+    DebrisObject {
+        int Id PK
+        int NoradId
+        float SizeEstimate
+        string RiskCategory
+        int OrbitId FK
+    }
+
+    Orbit {
+        int Id PK
+        double SemiMajorAxis
+        double Eccentricity
+        double Inclination
+        double RAAN
+        double ArgumentOfPerigee
+        double MeanAnomaly
+        datetime Epoch
+    }
+    
+    TleRecord {
+        int Id PK
+        int ObjectId FK
+        datetime Epoch
+        double Inclination
+        double RAAN
+        double Eccentricity
+        double ArgumentOfPerigee
+        double MeanAnomaly
+        double MeanMotion
+        int RevolutionNumber
+        double BSTar
+        double FirstDerivative
+        double SecondDerivative
+        string RawLine1
+        string RawLine2
+    }
+
+    ConjunctionEvent {
+        int Id PK
+        int PrimaryObjectId FK
+        int SecondaryObjectId FK
+        datetime TimeOfClosestApproach
+        double MissDistance
+        double CollisionProbability
+        string Status
+    }
+
+    RiskAssessment {
+        int Id PK
+        int ConjunctionEventId FK
+        double RiskScore
+        string ModelVersion
+        datetime CalculatedAt
+    }
+
+    Alert {
+        int Id PK
+        int UserId FK
+        int ConjunctionEventId FK
+        string Severity
+        bool IsAcknowledged
+    }
+
+    NotificationSetting {
+        int Id PK
+        int UserId FK
+        double ThresholdDistance
+        bool EmailEnabled
+        bool SmsEnabled
+    }
+
+    User {
+        int Id PK
+        string Name
+        string Email
+    }
+
+    UserOperator {
+        int Id PK
+        int UserId FK
+        int OperatorId FK
+        string Role
+    }
