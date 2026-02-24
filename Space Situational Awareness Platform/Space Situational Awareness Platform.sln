@@ -2,6 +2,10 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebbApp", "WebbApp\WebbApp.csproj", "{BE4F39E7-3C57-4E8C-AD39-000365AB2392}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Domain", "App.Domain\App.Domain.csproj", "{70F884A3-41BE-4493-8B0A-3447BAC4AB8A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Base.Domain", "Base.Domain\Base.Domain.csproj", "{698721CE-C0BF-4295-A719-ACF87A804F6E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +16,13 @@ Global
 		{BE4F39E7-3C57-4E8C-AD39-000365AB2392}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE4F39E7-3C57-4E8C-AD39-000365AB2392}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE4F39E7-3C57-4E8C-AD39-000365AB2392}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70F884A3-41BE-4493-8B0A-3447BAC4AB8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70F884A3-41BE-4493-8B0A-3447BAC4AB8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70F884A3-41BE-4493-8B0A-3447BAC4AB8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70F884A3-41BE-4493-8B0A-3447BAC4AB8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{698721CE-C0BF-4295-A719-ACF87A804F6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{698721CE-C0BF-4295-A719-ACF87A804F6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{698721CE-C0BF-4295-A719-ACF87A804F6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{698721CE-C0BF-4295-A719-ACF87A804F6E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
