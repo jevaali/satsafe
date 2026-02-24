@@ -5,11 +5,9 @@ namespace App.Domain;
 
 public class UserOperator : BaseEntity
 {
-    // Foreign keys
-    public Guid UserId { get; set; }
+    public Guid AppUserId { get; set; }
+    public AppUser? AppUser { get; set; }
+    
     public Guid OperatorId { get; set; }
-
-    // Navigation properties
-    public AppUser? User { get; set; }
     public Operator? Operator { get; set; }
 }

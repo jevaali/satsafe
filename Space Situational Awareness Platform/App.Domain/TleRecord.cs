@@ -4,8 +4,8 @@ namespace App.Domain;
 
 public class TleRecord : BaseEntity
 {
-    // Foreign key - note: this could reference either Satellite or DebrisObject
     public Guid ObjectId { get; set; }
+    public virtual Object? Object { get; set; }
 
     public DateTime Epoch { get; set; }
     public double Inclination { get; set; }

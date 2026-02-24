@@ -12,7 +12,7 @@ public class AppUser: IdentityUser<Guid>
     
     public virtual ICollection<AppUserRole>? AppUserRoles { get; set; }
     
-    public List<Alert>? Alerts { get; set; } = new();
-    public List<NotificationSetting>? NotificationSettings { get; set; } = new();
-    public List<UserOperator>? UserOperators { get; set; } = new();
+    public ICollection<Alert>? Alerts { get; set; } = [];
+    public ICollection<NotificationSetting>? NotificationSettings { get; set; } = [];
+    public ICollection<UserOperator>? UserOperators { get; set; } = [];
 }

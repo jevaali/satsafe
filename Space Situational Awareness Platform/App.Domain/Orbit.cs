@@ -12,7 +12,9 @@ public class Orbit : BaseEntity
     public double MeanAnomaly { get; set; }
     public DateTime Epoch { get; set; }
 
-    // Navigation properties
+    public Guid? SatelliteId { get; set; }
     public Satellite? Satellite { get; set; }
+    
+    public Guid? DebrisObjectId { get; set; }
     public DebrisObject? DebrisObject { get; set; }
 }

@@ -8,12 +8,10 @@ public class DebrisObject : BaseEntity
     public float SizeEstimate { get; set; }
     public string RiskCategory { get; set; } = string.Empty;
     
-    // Foreign key
     public Guid OrbitId { get; set; }
-
-    // Navigation properties
     public Orbit? Orbit { get; set; }
-    public List<TleRecord> TleRecords { get; set; } = new();
-    public List<ConjunctionEvent> PrimaryConjunctionEvents { get; set; } = new();
-    public List<ConjunctionEvent> SecondaryConjunctionEvents { get; set; } = new();
+    
+    public ICollection<TleRecord> TleRecords { get; set; } = [];
+    public ICollection<ConjunctionEvent> PrimaryConjunctionEvents { get; set; } = [];
+    public ICollection<ConjunctionEvent> SecondaryConjunctionEvents { get; set; } = [];
 }

@@ -9,14 +9,12 @@ public class Satellite : BaseEntity
     public DateTime LaunchDate { get; set; }
     public string Status { get; set; } = string.Empty;
     
-    // Foreign keys
     public Guid OperatorId { get; set; }
+    public virtual Operator? Operator { get; set; }
+    
     public Guid OrbitId { get; set; }
-
-    // Navigation properties
-    public Operator? Operator { get; set; }
-    public Orbit? Orbit { get; set; }
-    public List<TleRecord> TleRecords { get; set; } = new();
-    public List<ConjunctionEvent> PrimaryConjunctionEvents { get; set; } = new();
-    public List<ConjunctionEvent> SecondaryConjunctionEvents { get; set; } = new();
+    public virtual Orbit? Orbit { get; set; }
+    
+    public ICollection<TleRecord> TleRecords { get; set; } = [];
+    public ICollection<ConjunctionEvent> ConjunctionEvents { get; set; } = [];
 }

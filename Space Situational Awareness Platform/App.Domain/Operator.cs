@@ -8,7 +8,6 @@ public class Operator : BaseEntity
     public string Country { get; set; } = string.Empty;
     public string Type { get; set; } = string.Empty;
 
-    // Navigation properties
-    public List<Satellite> Satellites { get; set; } = new();
-    public List<UserOperator> UserOperators { get; set; } = new();
+    public ICollection<Satellite> Satellites { get; set; } = [];
+    public ICollection<UserOperator> UserOperators { get; set; } = [];
 }

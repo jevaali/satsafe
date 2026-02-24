@@ -5,13 +5,11 @@ namespace App.Domain;
 
 public class NotificationSetting : BaseEntity
 {
-    // Foreign key
-    public Guid UserId { get; set; }
 
     public double ThresholdDistance { get; set; }
     public bool EmailEnabled { get; set; }
     public bool SmsEnabled { get; set; }
-
-    // Navigation properties
-    public AppUser? User { get; set; }
+    
+    public Guid AppUserId { get; set; }
+    public AppUser? AppUser { get; set; }
 }
