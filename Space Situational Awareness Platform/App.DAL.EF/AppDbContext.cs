@@ -32,13 +32,13 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
         // Configure relationships
         modelBuilder.Entity<ConjunctionEvent>()
             .HasOne(ce => ce.PrimaryObject)
-            .WithMany(d => d.ConjunctionEvents)
+            .WithMany(d => d.PrimaryConjunctionEvents)
             .HasForeignKey(ce => ce.PrimaryObjectId)
             .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<ConjunctionEvent>()
             .HasOne(ce => ce.SecondaryObject)
-            .WithMany(d => d.ConjunctionEvents)
+            .WithMany(d => d.SecondaryConjunctionEvents)
             .HasForeignKey(ce => ce.SecondaryObjectId)
             .OnDelete(DeleteBehavior.Restrict);
 

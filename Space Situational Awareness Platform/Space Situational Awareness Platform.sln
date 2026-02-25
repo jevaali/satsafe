@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebbApp", "WebbApp\WebbApp.csproj", "{BE4F39E7-3C57-4E8C-AD39-000365AB2392}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp", "WebApp\WebApp.csproj", "{BE4F39E7-3C57-4E8C-AD39-000365AB2392}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Domain", "App.Domain\App.Domain.csproj", "{70F884A3-41BE-4493-8B0A-3447BAC4AB8A}"
 EndProject
