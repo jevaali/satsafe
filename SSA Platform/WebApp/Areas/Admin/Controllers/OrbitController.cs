@@ -55,7 +55,7 @@ namespace WebApp.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("SemiMajorAxis,Eccentricity,Inclination,RAAN,ArgumentOfPerigee,MeanAnomaly,Epoch,SatelliteId,DebrisObjectId,Id")] Orbit orbit)
+        public async Task<IActionResult> Create([Bind("SemiMajorAxis,Eccentricity,Inclination,RAAN,ArgumentOfPerigee,MeanAnomaly,Epoch,SpaceObjectId,Id")] Orbit orbit)
         {
             if (ModelState.IsValid)
             {
@@ -88,7 +88,7 @@ namespace WebApp.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("SemiMajorAxis,Eccentricity,Inclination,RAAN,ArgumentOfPerigee,MeanAnomaly,Epoch,SatelliteId,DebrisObjectId,Id")] Orbit orbit)
+        public async Task<IActionResult> Edit(Guid id, [Bind("SemiMajorAxis,Eccentricity,Inclination,RAAN,ArgumentOfPerigee,MeanAnomaly,Epoch,SpaceObjectId,Id")] Orbit orbit)
         {
             if (id != orbit.Id)
             {

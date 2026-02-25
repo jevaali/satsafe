@@ -50,8 +50,8 @@ namespace WebApp.Areas.Admin.Controllers
         // GET: Admin/ConjunctionEvent/Create
         public IActionResult Create()
         {
-            ViewData["PrimaryObjectId"] = new SelectList(_context.SpaceObjects, "Id", "ObjectType");
-            ViewData["SecondaryObjectId"] = new SelectList(_context.SpaceObjects, "Id", "ObjectType");
+            ViewData["PrimaryObjectId"] = new SelectList(_context.Set<SpaceObject>(), "Id", "ObjectType");
+            ViewData["SecondaryObjectId"] = new SelectList(_context.Set<SpaceObject>(), "Id", "ObjectType");
             return View();
         }
 
@@ -69,8 +69,8 @@ namespace WebApp.Areas.Admin.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PrimaryObjectId"] = new SelectList(_context.SpaceObjects, "Id", "ObjectType", conjunctionEvent.PrimaryObjectId);
-            ViewData["SecondaryObjectId"] = new SelectList(_context.SpaceObjects, "Id", "ObjectType", conjunctionEvent.SecondaryObjectId);
+            ViewData["PrimaryObjectId"] = new SelectList(_context.Set<SpaceObject>(), "Id", "ObjectType", conjunctionEvent.PrimaryObjectId);
+            ViewData["SecondaryObjectId"] = new SelectList(_context.Set<SpaceObject>(), "Id", "ObjectType", conjunctionEvent.SecondaryObjectId);
             return View(conjunctionEvent);
         }
 
@@ -87,8 +87,8 @@ namespace WebApp.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewData["PrimaryObjectId"] = new SelectList(_context.SpaceObjects, "Id", "ObjectType", conjunctionEvent.PrimaryObjectId);
-            ViewData["SecondaryObjectId"] = new SelectList(_context.SpaceObjects, "Id", "ObjectType", conjunctionEvent.SecondaryObjectId);
+            ViewData["PrimaryObjectId"] = new SelectList(_context.Set<SpaceObject>(), "Id", "ObjectType", conjunctionEvent.PrimaryObjectId);
+            ViewData["SecondaryObjectId"] = new SelectList(_context.Set<SpaceObject>(), "Id", "ObjectType", conjunctionEvent.SecondaryObjectId);
             return View(conjunctionEvent);
         }
 
@@ -124,8 +124,8 @@ namespace WebApp.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PrimaryObjectId"] = new SelectList(_context.SpaceObjects, "Id", "ObjectType", conjunctionEvent.PrimaryObjectId);
-            ViewData["SecondaryObjectId"] = new SelectList(_context.SpaceObjects, "Id", "ObjectType", conjunctionEvent.SecondaryObjectId);
+            ViewData["PrimaryObjectId"] = new SelectList(_context.Set<SpaceObject>(), "Id", "ObjectType", conjunctionEvent.PrimaryObjectId);
+            ViewData["SecondaryObjectId"] = new SelectList(_context.Set<SpaceObject>(), "Id", "ObjectType", conjunctionEvent.SecondaryObjectId);
             return View(conjunctionEvent);
         }
 

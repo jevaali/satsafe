@@ -34,10 +34,7 @@
                 @Html.DisplayNameFor(model => model.Epoch)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.SatelliteId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DebrisObjectId)
+                @Html.DisplayNameFor(model => model.SpaceObjectId)
             </th>
             <th></th>
         </tr>
@@ -67,10 +64,7 @@
                 @Html.DisplayFor(modelItem => item.Epoch)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.SatelliteId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DebrisObjectId)
+                @Html.DisplayFor(modelItem => item.SpaceObjectId)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

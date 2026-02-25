@@ -11,22 +11,22 @@ using App.Domain;
 namespace WebApp.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class SpaceObjectController : Controller
+    public class OperatorController : Controller
     {
         private readonly AppDbContext _context;
 
-        public SpaceObjectController(AppDbContext context)
+        public OperatorController(AppDbContext context)
         {
             _context = context;
         }
 
-        // GET: Admin/SpaceObject
+        // GET: Admin/Operator
         public async Task<IActionResult> Index()
         {
-            return View(await _context.SpaceObjects.ToListAsync());
+            return View(await _context.Operators.ToListAsync());
         }
 
-        // GET: Admin/SpaceObject/Details/5
+        // GET: Admin/Operator/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -34,40 +34,40 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var spaceObject = await _context.SpaceObjects
+            var @operator = await _context.Operators
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (spaceObject == null)
+            if (@operator == null)
             {
                 return NotFound();
             }
 
-            return View(spaceObject);
+            return View(@operator);
         }
 
-        // GET: Admin/SpaceObject/Create
+        // GET: Admin/Operator/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Admin/SpaceObject/Create
+        // POST: Admin/Operator/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("NoradId,OrbitId,Id")] SpaceObject spaceObject)
+        public async Task<IActionResult> Create([Bind("Name,Country,Type,Id")] Operator @operator)
         {
             if (ModelState.IsValid)
             {
-                spaceObject.Id = Guid.NewGuid();
-                _context.Add(spaceObject);
+                @operator.Id = Guid.NewGuid();
+                _context.Add(@operator);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(spaceObject);
+            return View(@operator);
         }
 
-        // GET: Admin/SpaceObject/Edit/5
+        // GET: Admin/Operator/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -75,22 +75,22 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var spaceObject = await _context.SpaceObjects.FindAsync(id);
-            if (spaceObject == null)
+            var @operator = await _context.Operators.FindAsync(id);
+            if (@operator == null)
             {
                 return NotFound();
             }
-            return View(spaceObject);
+            return View(@operator);
         }
 
-        // POST: Admin/SpaceObject/Edit/5
+        // POST: Admin/Operator/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("NoradId,OrbitId,Id")] SpaceObject spaceObject)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Name,Country,Type,Id")] Operator @operator)
         {
-            if (id != spaceObject.Id)
+            if (id != @operator.Id)
             {
                 return NotFound();
             }
@@ -99,12 +99,12 @@ namespace WebApp.Areas.Admin.Controllers
             {
                 try
                 {
-                    _context.Update(spaceObject);
+                    _context.Update(@operator);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SpaceObjectExists(spaceObject.Id))
+                    if (!OperatorExists(@operator.Id))
                     {
                         return NotFound();
                     }
@@ -115,10 +115,10 @@ namespace WebApp.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(spaceObject);
+            return View(@operator);
         }
 
-        // GET: Admin/SpaceObject/Delete/5
+        // GET: Admin/Operator/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -126,34 +126,34 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var spaceObject = await _context.SpaceObjects
+            var @operator = await _context.Operators
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (spaceObject == null)
+            if (@operator == null)
             {
                 return NotFound();
             }
 
-            return View(spaceObject);
+            return View(@operator);
         }
 
-        // POST: Admin/SpaceObject/Delete/5
+        // POST: Admin/Operator/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var spaceObject = await _context.SpaceObjects.FindAsync(id);
-            if (spaceObject != null)
+            var @operator = await _context.Operators.FindAsync(id);
+            if (@operator != null)
             {
-                _context.SpaceObjects.Remove(spaceObject);
+                _context.Operators.Remove(@operator);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool SpaceObjectExists(Guid id)
+        private bool OperatorExists(Guid id)
         {
-            return _context.SpaceObjects.Any(e => e.Id == id);
+            return _context.Operators.Any(e => e.Id == id);
         }
     }
 }

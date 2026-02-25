@@ -49,7 +49,7 @@ namespace WebApp.Areas.Admin.Controllers
         // GET: Admin/TleRecord/Create
         public IActionResult Create()
         {
-            ViewData["SpaceObjectId"] = new SelectList(_context.SpaceObjects, "Id", "ObjectType");
+            ViewData["SpaceObjectId"] = new SelectList(_context.Set<SpaceObject>(), "Id", "ObjectType");
             return View();
         }
 
@@ -67,7 +67,7 @@ namespace WebApp.Areas.Admin.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SpaceObjectId"] = new SelectList(_context.SpaceObjects, "Id", "ObjectType", tleRecord.SpaceObjectId);
+            ViewData["SpaceObjectId"] = new SelectList(_context.Set<SpaceObject>(), "Id", "ObjectType", tleRecord.SpaceObjectId);
             return View(tleRecord);
         }
 
@@ -84,7 +84,7 @@ namespace WebApp.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewData["SpaceObjectId"] = new SelectList(_context.SpaceObjects, "Id", "ObjectType", tleRecord.SpaceObjectId);
+            ViewData["SpaceObjectId"] = new SelectList(_context.Set<SpaceObject>(), "Id", "ObjectType", tleRecord.SpaceObjectId);
             return View(tleRecord);
         }
 
@@ -120,7 +120,7 @@ namespace WebApp.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SpaceObjectId"] = new SelectList(_context.SpaceObjects, "Id", "ObjectType", tleRecord.SpaceObjectId);
+            ViewData["SpaceObjectId"] = new SelectList(_context.Set<SpaceObject>(), "Id", "ObjectType", tleRecord.SpaceObjectId);
             return View(tleRecord);
         }
 

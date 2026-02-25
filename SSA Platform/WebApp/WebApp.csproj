@@ -28,4 +28,22 @@
       <ProjectReference Include="..\App.DAL.EF\App.DAL.EF.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\TleRecord\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\TleRecord\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\TleRecord\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\TleRecord\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\TleRecord\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\Orbit\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\Orbit\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\Orbit\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\Orbit\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\Orbit\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\SpaceObject\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\SpaceObject\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\SpaceObject\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\SpaceObject\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\SpaceObject\Index.cshtml" />
+    </ItemGroup>
+
 </Project>
