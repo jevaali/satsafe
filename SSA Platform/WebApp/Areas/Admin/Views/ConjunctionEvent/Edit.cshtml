@@ -1,0 +1,64 @@
+@model App.Domain.ConjunctionEvent
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>ConjunctionEvent</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="PrimaryObjectId" class="control-label"></label>
+                <select asp-for="PrimaryObjectId" class="form-control" asp-items="ViewBag.PrimaryObjectId"></select>
+                <span asp-validation-for="PrimaryObjectId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SecondaryObjectId" class="control-label"></label>
+                <select asp-for="SecondaryObjectId" class="form-control" asp-items="ViewBag.SecondaryObjectId"></select>
+                <span asp-validation-for="SecondaryObjectId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TimeOfClosestApproach" class="control-label"></label>
+                <input asp-for="TimeOfClosestApproach" class="form-control" />
+                <span asp-validation-for="TimeOfClosestApproach" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MissDistance" class="control-label"></label>
+                <input asp-for="MissDistance" class="form-control" />
+                <span asp-validation-for="MissDistance" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CollisionProbability" class="control-label"></label>
+                <input asp-for="CollisionProbability" class="form-control" />
+                <span asp-validation-for="CollisionProbability" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                <input asp-for="Status" class="form-control" />
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RiskAssessmentId" class="control-label"></label>
+                <input asp-for="RiskAssessmentId" class="form-control" />
+                <span asp-validation-for="RiskAssessmentId" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
