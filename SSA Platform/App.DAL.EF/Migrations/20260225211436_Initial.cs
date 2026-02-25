@@ -80,8 +80,7 @@ namespace App.DAL.EF.Migrations
                     ArgumentOfPerigee = table.Column<double>(type: "REAL", nullable: false),
                     MeanAnomaly = table.Column<double>(type: "REAL", nullable: false),
                     Epoch = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    SatelliteId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    DebrisObjectId = table.Column<Guid>(type: "TEXT", nullable: true)
+                    SpaceObjectId = table.Column<Guid>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -256,12 +255,12 @@ namespace App.DAL.EF.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SpaceObjects",
+                name: "SpaceObject",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     NoradId = table.Column<int>(type: "INTEGER", nullable: false),
-                    OrbitId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    OrbitId = table.Column<Guid>(type: "TEXT", nullable: true),
                     ObjectType = table.Column<string>(type: "TEXT", maxLength: 13, nullable: false),
                     SizeEstimate = table.Column<float>(type: "REAL", nullable: true),
                     RiskCategory = table.Column<string>(type: "TEXT", nullable: true),
@@ -272,19 +271,18 @@ namespace App.DAL.EF.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SpaceObjects", x => x.Id);
+                    table.PrimaryKey("PK_SpaceObject", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SpaceObjects_Operators_OperatorId",
+                        name: "FK_SpaceObject_Operators_OperatorId",
                         column: x => x.OperatorId,
                         principalTable: "Operators",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_SpaceObjects_Orbits_OrbitId",
+                        name: "FK_SpaceObject_Orbits_OrbitId",
                         column: x => x.OrbitId,
                         principalTable: "Orbits",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -304,15 +302,15 @@ namespace App.DAL.EF.Migrations
                 {
                     table.PrimaryKey("PK_ConjunctionEvents", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ConjunctionEvents_SpaceObjects_PrimaryObjectId",
+                        name: "FK_ConjunctionEvents_SpaceObject_PrimaryObjectId",
                         column: x => x.PrimaryObjectId,
-                        principalTable: "SpaceObjects",
+                        principalTable: "SpaceObject",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_ConjunctionEvents_SpaceObjects_SecondaryObjectId",
+                        name: "FK_ConjunctionEvents_SpaceObject_SecondaryObjectId",
                         column: x => x.SecondaryObjectId,
-                        principalTable: "SpaceObjects",
+                        principalTable: "SpaceObject",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -341,9 +339,9 @@ namespace App.DAL.EF.Migrations
                 {
                     table.PrimaryKey("PK_TleRecords", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TleRecords_SpaceObjects_SpaceObjectId",
+                        name: "FK_TleRecords_SpaceObject_SpaceObjectId",
                         column: x => x.SpaceObjectId,
-                        principalTable: "SpaceObjects",
+                        principalTable: "SpaceObject",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -475,13 +473,13 @@ namespace App.DAL.EF.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_SpaceObjects_OperatorId",
-                table: "SpaceObjects",
+                name: "IX_SpaceObject_OperatorId",
+                table: "SpaceObject",
                 column: "OperatorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SpaceObjects_OrbitId",
-                table: "SpaceObjects",
+                name: "IX_SpaceObject_OrbitId",
+                table: "SpaceObject",
                 column: "OrbitId",
                 unique: true);
 
@@ -544,7 +542,7 @@ namespace App.DAL.EF.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "SpaceObjects");
+                name: "SpaceObject");
 
             migrationBuilder.DropTable(
                 name: "Operators");

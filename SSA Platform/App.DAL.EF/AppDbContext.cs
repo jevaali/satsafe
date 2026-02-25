@@ -15,7 +15,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
     public DbSet<Orbit> Orbits { get; set; } = null!;
     public DbSet<RiskAssessment> RiskAssessments { get; set; } = null!;
     public DbSet<Satellite> Satellites { get; set; } = null!;
-    public DbSet<SpaceObject> SpaceObjects { get; set; } = null!;
     public DbSet<TleRecord> TleRecords { get; set; } = null!;
     public DbSet<UserOperator> UserOperators { get; set; } = null!;
 
@@ -46,16 +45,11 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
             .HasOne(ce => ce.RiskAssessment)
             .WithOne(ra => ra.ConjunctionEvent)
             .HasForeignKey<RiskAssessment>(ra => ra.ConjunctionEventId);
-
-        modelBuilder.Entity<Orbit>()
-            .HasOne(o => o.Satellite)
-            .WithOne(s => s.Orbit)
-            .HasForeignKey<Satellite>(s => s.OrbitId);
-
-        modelBuilder.Entity<Orbit>()
-            .HasOne(o => o.DebrisObject)
-            .WithOne(d => d.Orbit)
-            .HasForeignKey<DebrisObject>(d => d.OrbitId);
+        
+        modelBuilder.Entity<SpaceObject>()
+            .HasOne(s => s.Orbit)
+            .WithOne(o => o.SpaceObject)
+            .HasForeignKey<SpaceObject>(s => s.OrbitId);
 
         modelBuilder.Entity<TleRecord>()
             .HasOne(t => t.SpaceObject)

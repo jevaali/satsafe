@@ -245,9 +245,6 @@ namespace App.DAL.EF.Migrations
                     b.Property<double>("ArgumentOfPerigee")
                         .HasColumnType("REAL");
 
-                    b.Property<Guid?>("DebrisObjectId")
-                        .HasColumnType("TEXT");
-
                     b.Property<double>("Eccentricity")
                         .HasColumnType("REAL");
 
@@ -263,11 +260,11 @@ namespace App.DAL.EF.Migrations
                     b.Property<double>("RAAN")
                         .HasColumnType("REAL");
 
-                    b.Property<Guid?>("SatelliteId")
-                        .HasColumnType("TEXT");
-
                     b.Property<double>("SemiMajorAxis")
                         .HasColumnType("REAL");
+
+                    b.Property<Guid?>("SpaceObjectId")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -315,12 +312,15 @@ namespace App.DAL.EF.Migrations
                         .HasMaxLength(13)
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("OrbitId")
+                    b.Property<Guid?>("OrbitId")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.ToTable("SpaceObjects");
+                    b.HasIndex("OrbitId")
+                        .IsUnique();
+
+                    b.ToTable("SpaceObject");
 
                     b.HasDiscriminator<string>("ObjectType").HasValue("SpaceObject");
 
@@ -524,9 +524,6 @@ namespace App.DAL.EF.Migrations
                     b.Property<float>("SizeEstimate")
                         .HasColumnType("REAL");
 
-                    b.HasIndex("OrbitId")
-                        .IsUnique();
-
                     b.HasDiscriminator().HasValue("Debris");
                 });
 
@@ -549,9 +546,6 @@ namespace App.DAL.EF.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasIndex("OperatorId");
-
-                    b.HasIndex("OrbitId")
-                        .IsUnique();
 
                     b.HasDiscriminator().HasValue("Satellite");
                 });
@@ -631,6 +625,15 @@ namespace App.DAL.EF.Migrations
                         .IsRequired();
 
                     b.Navigation("ConjunctionEvent");
+                });
+
+            modelBuilder.Entity("App.Domain.SpaceObject", b =>
+                {
+                    b.HasOne("App.Domain.Orbit", "Orbit")
+                        .WithOne("SpaceObject")
+                        .HasForeignKey("App.Domain.SpaceObject", "OrbitId");
+
+                    b.Navigation("Orbit");
                 });
 
             modelBuilder.Entity("App.Domain.TleRecord", b =>
@@ -714,17 +717,6 @@ namespace App.DAL.EF.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("App.Domain.DebrisObject", b =>
-                {
-                    b.HasOne("App.Domain.Orbit", "Orbit")
-                        .WithOne("DebrisObject")
-                        .HasForeignKey("App.Domain.DebrisObject", "OrbitId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Orbit");
-                });
-
             modelBuilder.Entity("App.Domain.Satellite", b =>
                 {
                     b.HasOne("App.Domain.Operator", "Operator")
@@ -733,15 +725,7 @@ namespace App.DAL.EF.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("App.Domain.Orbit", "Orbit")
-                        .WithOne("Satellite")
-                        .HasForeignKey("App.Domain.Satellite", "OrbitId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Operator");
-
-                    b.Navigation("Orbit");
                 });
 
             modelBuilder.Entity("App.Domain.Identity.AppUserRole", b =>
@@ -790,9 +774,7 @@ namespace App.DAL.EF.Migrations
 
             modelBuilder.Entity("App.Domain.Orbit", b =>
                 {
-                    b.Navigation("DebrisObject");
-
-                    b.Navigation("Satellite");
+                    b.Navigation("SpaceObject");
                 });
 
             modelBuilder.Entity("App.Domain.SpaceObject", b =>

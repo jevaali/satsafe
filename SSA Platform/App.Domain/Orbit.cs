@@ -11,10 +11,7 @@ public class Orbit : BaseEntity
     public double ArgumentOfPerigee { get; set; }
     public double MeanAnomaly { get; set; }
     public DateTime Epoch { get; set; }
-
-    public Guid? SatelliteId { get; set; }
-    public Satellite? Satellite { get; set; }
     
-    public Guid? DebrisObjectId { get; set; }
-    public DebrisObject? DebrisObject { get; set; }
+    public Guid? SpaceObjectId { get; set; }
+    public SpaceObject? SpaceObject { get; set; }
 }
