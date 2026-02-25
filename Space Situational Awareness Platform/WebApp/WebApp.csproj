@@ -4,8 +4,8 @@
         <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <UserSecretsId>aspnet-WebbApp-372d8e9d-42de-44d6-92a3-6e86e05069c2</UserSecretsId>
-        <RootNamespace>WebbApp</RootNamespace>
+        <UserSecretsId>aspnet-WebApp-372d8e9d-42de-44d6-92a3-6e86e05069c2</UserSecretsId>
+        <RootNamespace>WebApp</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -22,11 +22,37 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="10.0.2" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\App.DAL.EF\App.DAL.EF.csproj" />
       <ProjectReference Include="..\App.Domain\App.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\Alert\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\Alert\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\Alert\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\Alert\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\Alert\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\ConjunctionEvent\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\ConjunctionEvent\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\ConjunctionEvent\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\ConjunctionEvent\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\ConjunctionEvent\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\_ViewImports.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\_ViewStart.cshtml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <UpToDateCheckInput Remove="Areas\Admin\Views\Alert\Create.cshtml" />
+      <UpToDateCheckInput Remove="Areas\Admin\Views\Alert\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Areas\Admin\Views\Alert\Details.cshtml" />
+      <UpToDateCheckInput Remove="Areas\Admin\Views\Alert\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Areas\Admin\Views\Alert\Index.cshtml" />
+      <UpToDateCheckInput Remove="Areas\Admin\Views\_ViewImports.cshtml" />
+      <UpToDateCheckInput Remove="Areas\Admin\Views\_ViewStart.cshtml" />
     </ItemGroup>
 
 </Project>
