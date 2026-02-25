@@ -1,0 +1,110 @@
+@model IEnumerable<App.Domain.TleRecord>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SpaceObject)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Epoch)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Inclination)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RAAN)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Eccentricity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ArgumentOfPerigee)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MeanAnomaly)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MeanMotion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RevolutionNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BSTar)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstDerivative)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SecondDerivative)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RawLine1)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RawLine2)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Epoch)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Inclination)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RAAN)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Eccentricity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ArgumentOfPerigee)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MeanAnomaly)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MeanMotion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RevolutionNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BSTar)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstDerivative)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SecondDerivative)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RawLine1)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RawLine2)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
