@@ -11,4 +11,12 @@ public class RiskAssessment : BaseEntityWithMeta
     public string ModelVersion { get; set; } = string.Empty;
     public Guid ConjunctionEventId { get; set; }
     public required ConjunctionEvent ConjunctionEvent { get; set; }
+    
+    public void UpdateRiskScore(double score)
+    {
+        if (score < 0)
+            throw new ArgumentException("Risk score cannot be negative");
+
+        RiskScore = score;
+    }
 }

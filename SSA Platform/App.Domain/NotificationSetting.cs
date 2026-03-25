@@ -12,4 +12,12 @@ public class NotificationSetting : BaseEntityWithMeta
     
     public Guid AppUserId { get; set; }
     public AppUser? AppUser { get; set; }
+    
+    public void UpdateThreshold(double distance)
+    {
+        if (distance <= 0)
+            throw new ArgumentException("Threshold must be positive");
+
+        ThresholdDistance = distance;
+    }
 }

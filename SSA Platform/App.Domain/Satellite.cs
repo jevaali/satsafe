@@ -12,4 +12,12 @@ public class Satellite : SpaceObject
     
     public Guid OperatorId { get; set; }
     public required Operator Operator { get; set; }
+    
+    public void Decommission()
+    {
+        if (Status == ESatelliteStatus.Decommissioned)
+            return;
+
+        Status = ESatelliteStatus.Decommissioned;
+    }
 }

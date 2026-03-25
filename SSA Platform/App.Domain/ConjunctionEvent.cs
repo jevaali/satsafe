@@ -20,4 +20,37 @@ public class ConjunctionEvent : BaseEntityWithMeta
     public RiskAssessment? RiskAssessment { get; set; }
     
     public ICollection<Alert> Alerts { get; set; } = [];
+    
+    public void UpdateMissDistance(double distance)
+    {
+        if (distance < 0)
+            throw new ArgumentException("Miss distance cannot be negative");
+
+        MissDistance = distance;
+    }
+
+    
+    public void UpdateCollisionProbability(double probability)
+    {
+        if (probability is < 0 or > 1)
+            throw new ArgumentException("Probability must be between 0 and 1");
+
+        CollisionProbability = probability;
+    }
+    
+    
+    public bool IsHighRisk()
+    {
+        return CollisionProbability > 0.01 || MissDistance < 1000; // example thresholds
+    }
+    
+    
+    public void MarkAsResolved()
+    {
+        if (Status == EConjunctionEventStatus.AlreadyOccurred)
+            throw new InvalidOperationException("Cannot resolve past events");
+
+        Status = EConjunctionEventStatus.Resolved;
+    }
+    
 }

@@ -17,4 +17,12 @@ public class Alert : BaseEntityWithMeta
     
     public Guid ConjunctionEventId { get; set; }
     public virtual ConjunctionEvent? ConjunctionEvent { get; set; }
+    
+    public void Acknowledge()
+    {
+        if (IsAcknowledged)
+            return;
+
+        IsAcknowledged = true;
+    }
 }
