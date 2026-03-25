@@ -12,6 +12,6 @@ public class Orbit : BaseEntityWithMeta
     public double MeanAnomaly { get; set; }
     public DateTime Epoch { get; set; }
     
-    public Guid? SpaceObjectId { get; set; }
-    public SpaceObject? SpaceObject { get; set; }
+    public Guid SpaceObjectId { get; set; }
+    public required SpaceObject SpaceObject { get; set; }
 }

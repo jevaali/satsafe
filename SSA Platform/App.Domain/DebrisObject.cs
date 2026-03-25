@@ -1,9 +1,9 @@
-using Base.Domain;
+using App.Domain.Enums;
 
 namespace App.Domain;
 
 public class DebrisObject : SpaceObject
 {
     public float SizeEstimate { get; set; }
-    public string RiskCategory { get; set; } = string.Empty;
+    public EDebrisObjectRiskCategory RiskCategory { get; set; }
 }

@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Base.Domain;
 
 namespace App.Domain;
@@ -5,7 +6,7 @@ namespace App.Domain;
 public class TleRecord : BaseEntityWithMeta
 {
     public Guid SpaceObjectId { get; set; }
-    public virtual SpaceObject? SpaceObject { get; set; }
+    public required SpaceObject SpaceObject { get; set; }
 
     public DateTime Epoch { get; set; }
     public double Inclination { get; set; }
@@ -18,6 +19,10 @@ public class TleRecord : BaseEntityWithMeta
     public double BSTar { get; set; }
     public double FirstDerivative { get; set; }
     public double SecondDerivative { get; set; }
+    
+    [MaxLength(124)]
     public string RawLine1 { get; set; } = string.Empty;
+    
+    [MaxLength(124)]
     public string RawLine2 { get; set; } = string.Empty;
 }
