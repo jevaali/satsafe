@@ -2,7 +2,7 @@ using Base.Domain;
 
 namespace App.Domain;
 
-public class Orbit : BaseEntity
+public class Orbit : BaseEntityWithMeta
 {
     public double SemiMajorAxis { get; set; }
     public double Eccentricity { get; set; }

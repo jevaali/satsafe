@@ -2,7 +2,7 @@ using Base.Domain;
 
 namespace App.Domain;
 
-public class RiskAssessment : BaseEntity
+public class RiskAssessment : BaseEntityWithMeta
 {
     public double RiskScore { get; set; }
     public string ModelVersion { get; set; } = string.Empty;

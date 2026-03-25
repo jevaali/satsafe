@@ -1,6 +1,15 @@
 ﻿namespace Base.Domain;
 
-public abstract class BaseEntity: IBaseEntity
+public class BaseEntity : BaseEntity<Guid>, IBaseEntity
 {
-    public Guid Id { get; set; } =  Guid.NewGuid();
+    public BaseEntity()
+    {
+        Id = Guid.NewGuid();
+    }
+}
+
+public abstract class BaseEntity<TKey> : IBaseEntity<TKey> 
+    where TKey : IEquatable<TKey>
+{
+    public virtual TKey Id { get; set; }
 }

@@ -1,7 +1,7 @@
 namespace App.Domain;
 using Base.Domain;
 
-public class ConjunctionEvent : BaseEntity
+public class ConjunctionEvent : BaseEntityWithMeta
 {
     public Guid PrimaryObjectId { get; set; }
     public virtual SpaceObject? PrimaryObject { get; set; }

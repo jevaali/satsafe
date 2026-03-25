@@ -3,7 +3,7 @@ using Base.Domain;
 
 namespace App.Domain;
 
-public class Alert : BaseEntity
+public class Alert : BaseEntityWithMeta
 {
     public string Severity { get; set; } = string.Empty;
     public bool IsAcknowledged { get; set; }

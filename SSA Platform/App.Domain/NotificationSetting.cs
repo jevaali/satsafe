@@ -3,7 +3,7 @@ using Base.Domain;
 
 namespace App.Domain;
 
-public class NotificationSetting : BaseEntity
+public class NotificationSetting : BaseEntityWithMeta
 {
 
     public double ThresholdDistance { get; set; }

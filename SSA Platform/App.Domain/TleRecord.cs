@@ -2,7 +2,7 @@ using Base.Domain;
 
 namespace App.Domain;
 
-public class TleRecord : BaseEntity
+public class TleRecord : BaseEntityWithMeta
 {
     public Guid SpaceObjectId { get; set; }
     public virtual SpaceObject? SpaceObject { get; set; }
