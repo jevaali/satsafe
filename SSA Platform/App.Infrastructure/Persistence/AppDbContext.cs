@@ -18,6 +18,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
     public DbSet<Orbit> Orbits { get; set; } = null!;
     public DbSet<RiskAssessment> RiskAssessments { get; set; } = null!;
     public DbSet<Satellite> Satellites { get; set; } = null!;
+    public DbSet<SpaceObject> SpaceObjects { get; set; } = null!;
     public DbSet<TleRecord> TleRecords { get; set; } = null!;
     public DbSet<UserOperator> UserOperators { get; set; } = null!;
 
@@ -25,9 +26,10 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
     {
         base.OnModelCreating(modelBuilder);
         
-        modelBuilder.Entity<SpaceObject>().ToTable("SpaceObjects");
-        modelBuilder.Entity<Satellite>().ToTable("Satellites");
-        modelBuilder.Entity<DebrisObject>().ToTable("DebrisObjects");
+        modelBuilder.Entity<SpaceObject>()
+            .HasDiscriminator<string>("SpaceObjectType")
+            .HasValue<Satellite>("Satellite")
+            .HasValue<DebrisObject>("DebrisObject");
         
         modelBuilder.Entity<ConjunctionEvent>()
             .HasOne(ce => ce.PrimaryObject)

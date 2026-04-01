@@ -25,8 +25,15 @@ public class SatelliteController : Controller
         if (!ModelState.IsValid)
             return View(request);
 
-        var id = await _useCase.Execute(request);
-
-        return RedirectToAction("Details", new { id });
+        try
+        {
+            var id = await _useCase.Execute(request);
+            return RedirectToAction("Details", new { id });
+        }
+        catch (Exception ex)
+        {
+            ModelState.AddModelError(string.Empty, ex.Message);
+            return View(request);
+        }
     }
 }

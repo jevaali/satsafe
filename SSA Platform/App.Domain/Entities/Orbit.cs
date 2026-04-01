@@ -13,6 +13,8 @@ public class Orbit : BaseEntityWithMeta
     public Orbit(OrbitParameters parameters)
     {
         Parameters = parameters;
+        CreatedBy = "system"; // Required by DB constraint
+        CreatedAt = DateTime.UtcNow;
     }
     
     private Orbit() { } 

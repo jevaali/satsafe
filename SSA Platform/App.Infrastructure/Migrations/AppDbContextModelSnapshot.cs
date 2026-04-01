@@ -385,6 +385,11 @@ namespace App.Infrastructure.Migrations
                     b.Property<Guid?>("OrbitId")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("SpaceObjectType")
+                        .IsRequired()
+                        .HasMaxLength(13)
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("TEXT");
 
@@ -396,9 +401,11 @@ namespace App.Infrastructure.Migrations
                     b.HasIndex("OrbitId")
                         .IsUnique();
 
-                    b.ToTable("SpaceObjects", (string)null);
+                    b.ToTable("SpaceObjects");
 
-                    b.UseTptMappingStrategy();
+                    b.HasDiscriminator<string>("SpaceObjectType").HasValue("SpaceObject");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("App.Domain.Entities.TleRecord", b =>
@@ -618,7 +625,7 @@ namespace App.Infrastructure.Migrations
                     b.Property<float>("SizeEstimate")
                         .HasColumnType("REAL");
 
-                    b.ToTable("DebrisObjects", (string)null);
+                    b.HasDiscriminator().HasValue("DebrisObject");
                 });
 
             modelBuilder.Entity("App.Domain.Entities.Satellite", b =>
@@ -640,7 +647,7 @@ namespace App.Infrastructure.Migrations
 
                     b.HasIndex("OperatorId");
 
-                    b.ToTable("Satellites", (string)null);
+                    b.HasDiscriminator().HasValue("Satellite");
                 });
 
             modelBuilder.Entity("App.Domain.Entities.Identity.AppUserRole", b =>
@@ -853,23 +860,8 @@ namespace App.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("App.Domain.Entities.DebrisObject", b =>
-                {
-                    b.HasOne("App.Domain.Entities.SpaceObject", null)
-                        .WithOne()
-                        .HasForeignKey("App.Domain.Entities.DebrisObject", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("App.Domain.Entities.Satellite", b =>
                 {
-                    b.HasOne("App.Domain.Entities.SpaceObject", null)
-                        .WithOne()
-                        .HasForeignKey("App.Domain.Entities.Satellite", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("App.Domain.Entities.Operator", "Operator")
                         .WithMany("Satellites")
                         .HasForeignKey("OperatorId")

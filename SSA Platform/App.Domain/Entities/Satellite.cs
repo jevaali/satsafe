@@ -31,7 +31,9 @@ public class Satellite : SpaceObject
             Status = ESatelliteStatus.Active,
             Operator = op,
             OperatorId = op.Id,
-            Orbit = null
+            Orbit = null,
+            CreatedBy = "system", 
+            CreatedAt = DateTime.UtcNow
         };
     }
     public void UpdateDetails(string name, DateTime launchDate, Operator op, OrbitParameters orbitParams)

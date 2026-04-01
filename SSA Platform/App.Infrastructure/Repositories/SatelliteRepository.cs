@@ -21,8 +21,8 @@ public class SatelliteRepository : ISatelliteRepository
     }
 
     public async Task AddAsync(Satellite satellite)
-    {
-        await _context.Satellites.AddAsync(satellite);
+    { 
+        _context.SpaceObjects.Add(satellite);
     }
 
     public Task UpdateAsync(Satellite entity)
