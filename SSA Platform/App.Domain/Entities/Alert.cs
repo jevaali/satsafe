@@ -8,7 +8,7 @@ namespace App.Domain.Entities;
 public class Alert : BaseEntityWithMeta
 {
     [MaxLength(128)]
-    public string? Message { get; set; }
+    public LangStr? Message { get; set; }
     public EAlertSeverity Severity { get; set; }
     public bool IsAcknowledged { get; set; }
     

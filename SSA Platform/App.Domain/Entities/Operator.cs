@@ -8,13 +8,13 @@ public class Operator : BaseEntityWithMeta
 {
     
     [MaxLength(124)]
-    public string Name { get; set; } = string.Empty;
+    public LangStr Name { get; set; } = string.Empty;
     
     [MaxLength(124)]
-    public string Country { get; set; } = string.Empty;
+    public LangStr Country { get; set; } = string.Empty;
     
     [MaxLength(124)]
-    public string? OperatorTypeString { get; set; } = string.Empty;
+    public LangStr? OperatorTypeString { get; set; } = string.Empty;
     
     public EOperatorType? OperatorType { get; set; }
 

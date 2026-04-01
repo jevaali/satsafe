@@ -1,3 +1,4 @@
+using App.Domain.ValueObjects;
 using Base.Domain;
 
 namespace App.Domain.Entities;
@@ -11,13 +12,23 @@ public abstract class SpaceObject : BaseEntityWithMetaSoftDelete
     public ICollection<ConjunctionEvent> PrimaryConjunctionEvents { get; set; } = [];
     public ICollection<ConjunctionEvent> SecondaryConjunctionEvents { get; set; } = [];
     
-    
-    public void UpdateOrbit(Orbit orbit)
+    public void SetOrbit(OrbitParameters parameters)
     {
-        Orbit = orbit ?? throw new ArgumentNullException(nameof(orbit));
+        if (parameters == null) throw new ArgumentNullException(nameof(parameters));
+
+        if (Orbit == null)
+        {
+            Orbit = new Orbit(parameters)
+            {
+                SpaceObject = this,
+                SpaceObjectId = this.Id
+            };
+        }
+        else
+        {
+            Orbit.UpdateParameters(parameters);
+        }
     }
-    
-    
     public void AddTleRecord(TleRecord record)
     {
         if (record.Epoch < DateTime.UtcNow.AddDays(-30))
@@ -25,6 +36,7 @@ public abstract class SpaceObject : BaseEntityWithMetaSoftDelete
 
         TleRecords.Add(record);
     }
+    
 }
 
 

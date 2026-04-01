@@ -1,11 +1,12 @@
 using App.Domain.Entities.Enums;
 using App.Domain.ValueObjects;
+using Base.Domain;
 
 namespace App.Domain.Entities;
 
 public class Satellite : SpaceObject
 {
-    public string Name { get; private set; } = string.Empty;
+    public LangStr Name { get; private set; } = string.Empty;
     public DateTime LaunchDate { get; private set; }
     public ESatelliteStatus Status { get; private set; }
 
@@ -33,14 +34,6 @@ public class Satellite : SpaceObject
             Orbit = null
         };
     }
-
-    public void SoftDelete(string deletedBy)
-    {
-        DeletedAt = DateTime.UtcNow;
-        DeletedBy = deletedBy;
-        Status = ESatelliteStatus.Deleted;
-    }
-
     public void UpdateDetails(string name, DateTime launchDate, Operator op, OrbitParameters orbitParams)
     {
         if (string.IsNullOrWhiteSpace(name))
@@ -51,21 +44,11 @@ public class Satellite : SpaceObject
         Operator = op;
         OperatorId = op.Id;
     }
-    public void SetOrbit(OrbitParameters parameters)
+    
+    public void SoftDelete(string deletedBy)
     {
-        if (parameters == null) throw new ArgumentNullException(nameof(parameters));
-
-        if (Orbit == null)
-        {
-            Orbit = new Orbit(parameters)
-            {
-                SpaceObject = this,
-                SpaceObjectId = this.Id
-            };
-        }
-        else
-        {
-            Orbit.UpdateParameters(parameters);
-        }
+        DeletedAt = DateTime.UtcNow;
+        DeletedBy = deletedBy;
+        Status = ESatelliteStatus.Deleted;
     }
 }
