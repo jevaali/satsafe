@@ -13,7 +13,7 @@ public class OrbitParameters
         double semiMajorAxis,
         double eccentricity,
         double inclination,
-        double raan,
+        double RAAN,
         double argumentOfPerigee,
         double meanAnomaly)
     {
@@ -25,7 +25,7 @@ public class OrbitParameters
         SemiMajorAxis = semiMajorAxis;
         Eccentricity = eccentricity;
         Inclination = inclination;
-        RAAN = raan;
+        RAAN = RAAN;
         ArgumentOfPerigee = argumentOfPerigee;
         MeanAnomaly = meanAnomaly;
     }

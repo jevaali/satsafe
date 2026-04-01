@@ -14,6 +14,8 @@ public class Orbit : BaseEntityWithMeta
     {
         Parameters = parameters;
     }
+    
+    private Orbit() { } 
 
     public void UpdateParameters(OrbitParameters parameters)
     {

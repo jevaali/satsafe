@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace App.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260401105259_Initial")]
+    [Migration("20260401175058_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace App.Infrastructure.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.5");
 
-            modelBuilder.Entity("App.Domain.Alert", b =>
+            modelBuilder.Entity("App.Domain.Entities.Alert", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -41,7 +41,7 @@ namespace App.Infrastructure.Migrations
 
                     b.Property<string>("Message")
                         .HasMaxLength(128)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("jsonb");
 
                     b.Property<int>("Severity")
                         .HasColumnType("INTEGER");
@@ -64,7 +64,7 @@ namespace App.Infrastructure.Migrations
                     b.ToTable("Alerts");
                 });
 
-            modelBuilder.Entity("App.Domain.ConjunctionEvent", b =>
+            modelBuilder.Entity("App.Domain.Entities.ConjunctionEvent", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -113,7 +113,7 @@ namespace App.Infrastructure.Migrations
                     b.ToTable("ConjunctionEvents");
                 });
 
-            modelBuilder.Entity("App.Domain.Identity.AppRole", b =>
+            modelBuilder.Entity("App.Domain.Entities.Identity.AppRole", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -140,7 +140,7 @@ namespace App.Infrastructure.Migrations
                     b.ToTable("AspNetRoles", (string)null);
                 });
 
-            modelBuilder.Entity("App.Domain.Identity.AppUser", b =>
+            modelBuilder.Entity("App.Domain.Entities.Identity.AppUser", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -219,7 +219,7 @@ namespace App.Infrastructure.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("App.Domain.NotificationSetting", b =>
+            modelBuilder.Entity("App.Domain.Entities.NotificationSetting", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -257,7 +257,7 @@ namespace App.Infrastructure.Migrations
                     b.ToTable("NotificationSettings");
                 });
 
-            modelBuilder.Entity("App.Domain.Operator", b =>
+            modelBuilder.Entity("App.Domain.Entities.Operator", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -266,7 +266,7 @@ namespace App.Infrastructure.Migrations
                     b.Property<string>("Country")
                         .IsRequired()
                         .HasMaxLength(124)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("jsonb");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
@@ -278,14 +278,14 @@ namespace App.Infrastructure.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(124)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("jsonb");
 
                     b.Property<int?>("OperatorType")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("OperatorTypeString")
                         .HasMaxLength(124)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("jsonb");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("TEXT");
@@ -298,14 +298,11 @@ namespace App.Infrastructure.Migrations
                     b.ToTable("Operators");
                 });
 
-            modelBuilder.Entity("App.Domain.Orbit", b =>
+            modelBuilder.Entity("App.Domain.Entities.Orbit", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
-
-                    b.Property<double>("ArgumentOfPerigee")
-                        .HasColumnType("REAL");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
@@ -313,24 +310,6 @@ namespace App.Infrastructure.Migrations
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasColumnType("TEXT");
-
-                    b.Property<double>("Eccentricity")
-                        .HasColumnType("REAL");
-
-                    b.Property<DateTime>("Epoch")
-                        .HasColumnType("TEXT");
-
-                    b.Property<double>("Inclination")
-                        .HasColumnType("REAL");
-
-                    b.Property<double>("MeanAnomaly")
-                        .HasColumnType("REAL");
-
-                    b.Property<double>("RAAN")
-                        .HasColumnType("REAL");
-
-                    b.Property<double>("SemiMajorAxis")
-                        .HasColumnType("REAL");
 
                     b.Property<Guid>("SpaceObjectId")
                         .HasColumnType("TEXT");
@@ -346,7 +325,7 @@ namespace App.Infrastructure.Migrations
                     b.ToTable("Orbits");
                 });
 
-            modelBuilder.Entity("App.Domain.RiskAssessment", b =>
+            modelBuilder.Entity("App.Domain.Entities.RiskAssessment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -384,7 +363,7 @@ namespace App.Infrastructure.Migrations
                     b.ToTable("RiskAssessments");
                 });
 
-            modelBuilder.Entity("App.Domain.SpaceObject", b =>
+            modelBuilder.Entity("App.Domain.Entities.SpaceObject", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -406,11 +385,6 @@ namespace App.Infrastructure.Migrations
                     b.Property<int>("NoradId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("ObjectType")
-                        .IsRequired()
-                        .HasMaxLength(13)
-                        .HasColumnType("TEXT");
-
                     b.Property<Guid?>("OrbitId")
                         .HasColumnType("TEXT");
 
@@ -425,14 +399,12 @@ namespace App.Infrastructure.Migrations
                     b.HasIndex("OrbitId")
                         .IsUnique();
 
-                    b.ToTable("SpaceObject");
+                    b.ToTable("SpaceObjects", (string)null);
 
-                    b.HasDiscriminator<string>("ObjectType").HasValue("SpaceObject");
-
-                    b.UseTphMappingStrategy();
+                    b.UseTptMappingStrategy();
                 });
 
-            modelBuilder.Entity("App.Domain.TleRecord", b =>
+            modelBuilder.Entity("App.Domain.Entities.TleRecord", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -510,7 +482,7 @@ namespace App.Infrastructure.Migrations
                     b.ToTable("TleRecords");
                 });
 
-            modelBuilder.Entity("App.Domain.UserOperator", b =>
+            modelBuilder.Entity("App.Domain.Entities.UserOperator", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -639,9 +611,9 @@ namespace App.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("App.Domain.DebrisObject", b =>
+            modelBuilder.Entity("App.Domain.Entities.DebrisObject", b =>
                 {
-                    b.HasBaseType("App.Domain.SpaceObject");
+                    b.HasBaseType("App.Domain.Entities.SpaceObject");
 
                     b.Property<int>("RiskCategory")
                         .HasColumnType("INTEGER");
@@ -649,19 +621,19 @@ namespace App.Infrastructure.Migrations
                     b.Property<float>("SizeEstimate")
                         .HasColumnType("REAL");
 
-                    b.HasDiscriminator().HasValue("Debris");
+                    b.ToTable("DebrisObjects", (string)null);
                 });
 
-            modelBuilder.Entity("App.Domain.Satellite", b =>
+            modelBuilder.Entity("App.Domain.Entities.Satellite", b =>
                 {
-                    b.HasBaseType("App.Domain.SpaceObject");
+                    b.HasBaseType("App.Domain.Entities.SpaceObject");
 
                     b.Property<DateTime>("LaunchDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("jsonb");
 
                     b.Property<Guid>("OperatorId")
                         .HasColumnType("TEXT");
@@ -671,10 +643,10 @@ namespace App.Infrastructure.Migrations
 
                     b.HasIndex("OperatorId");
 
-                    b.HasDiscriminator().HasValue("Satellite");
+                    b.ToTable("Satellites", (string)null);
                 });
 
-            modelBuilder.Entity("App.Domain.Identity.AppUserRole", b =>
+            modelBuilder.Entity("App.Domain.Entities.Identity.AppUserRole", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>");
 
@@ -691,15 +663,15 @@ namespace App.Infrastructure.Migrations
                     b.HasDiscriminator().HasValue("AppUserRole");
                 });
 
-            modelBuilder.Entity("App.Domain.Alert", b =>
+            modelBuilder.Entity("App.Domain.Entities.Alert", b =>
                 {
-                    b.HasOne("App.Domain.ConjunctionEvent", "ConjunctionEvent")
+                    b.HasOne("App.Domain.Entities.ConjunctionEvent", "ConjunctionEvent")
                         .WithMany("Alerts")
                         .HasForeignKey("ConjunctionEventId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("App.Domain.Identity.AppUser", "User")
+                    b.HasOne("App.Domain.Entities.Identity.AppUser", "User")
                         .WithMany("Alerts")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -710,15 +682,15 @@ namespace App.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("App.Domain.ConjunctionEvent", b =>
+            modelBuilder.Entity("App.Domain.Entities.ConjunctionEvent", b =>
                 {
-                    b.HasOne("App.Domain.SpaceObject", "PrimaryObject")
+                    b.HasOne("App.Domain.Entities.SpaceObject", "PrimaryObject")
                         .WithMany("PrimaryConjunctionEvents")
                         .HasForeignKey("PrimaryObjectId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("App.Domain.SpaceObject", "SecondaryObject")
+                    b.HasOne("App.Domain.Entities.SpaceObject", "SecondaryObject")
                         .WithMany("SecondaryConjunctionEvents")
                         .HasForeignKey("SecondaryObjectId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -729,9 +701,9 @@ namespace App.Infrastructure.Migrations
                     b.Navigation("SecondaryObject");
                 });
 
-            modelBuilder.Entity("App.Domain.NotificationSetting", b =>
+            modelBuilder.Entity("App.Domain.Entities.NotificationSetting", b =>
                 {
-                    b.HasOne("App.Domain.Identity.AppUser", "AppUser")
+                    b.HasOne("App.Domain.Entities.Identity.AppUser", "AppUser")
                         .WithMany("NotificationSettings")
                         .HasForeignKey("AppUserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -740,29 +712,72 @@ namespace App.Infrastructure.Migrations
                     b.Navigation("AppUser");
                 });
 
-            modelBuilder.Entity("App.Domain.RiskAssessment", b =>
+            modelBuilder.Entity("App.Domain.Entities.Orbit", b =>
                 {
-                    b.HasOne("App.Domain.ConjunctionEvent", "ConjunctionEvent")
+                    b.OwnsOne("App.Domain.ValueObjects.OrbitParameters", "Parameters", b1 =>
+                        {
+                            b1.Property<Guid>("OrbitId")
+                                .HasColumnType("TEXT");
+
+                            b1.Property<double>("ArgumentOfPerigee")
+                                .HasColumnType("REAL")
+                                .HasColumnName("ArgumentOfPerigee");
+
+                            b1.Property<double>("Eccentricity")
+                                .HasColumnType("REAL")
+                                .HasColumnName("Eccentricity");
+
+                            b1.Property<double>("Inclination")
+                                .HasColumnType("REAL")
+                                .HasColumnName("Inclination");
+
+                            b1.Property<double>("MeanAnomaly")
+                                .HasColumnType("REAL")
+                                .HasColumnName("MeanAnomaly");
+
+                            b1.Property<double>("RAAN")
+                                .HasColumnType("REAL")
+                                .HasColumnName("RAAN");
+
+                            b1.Property<double>("SemiMajorAxis")
+                                .HasColumnType("REAL")
+                                .HasColumnName("SemiMajorAxis");
+
+                            b1.HasKey("OrbitId");
+
+                            b1.ToTable("Orbits");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OrbitId");
+                        });
+
+                    b.Navigation("Parameters")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("App.Domain.Entities.RiskAssessment", b =>
+                {
+                    b.HasOne("App.Domain.Entities.ConjunctionEvent", "ConjunctionEvent")
                         .WithOne("RiskAssessment")
-                        .HasForeignKey("App.Domain.RiskAssessment", "ConjunctionEventId")
+                        .HasForeignKey("App.Domain.Entities.RiskAssessment", "ConjunctionEventId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("ConjunctionEvent");
                 });
 
-            modelBuilder.Entity("App.Domain.SpaceObject", b =>
+            modelBuilder.Entity("App.Domain.Entities.SpaceObject", b =>
                 {
-                    b.HasOne("App.Domain.Orbit", "Orbit")
+                    b.HasOne("App.Domain.Entities.Orbit", "Orbit")
                         .WithOne("SpaceObject")
-                        .HasForeignKey("App.Domain.SpaceObject", "OrbitId");
+                        .HasForeignKey("App.Domain.Entities.SpaceObject", "OrbitId");
 
                     b.Navigation("Orbit");
                 });
 
-            modelBuilder.Entity("App.Domain.TleRecord", b =>
+            modelBuilder.Entity("App.Domain.Entities.TleRecord", b =>
                 {
-                    b.HasOne("App.Domain.SpaceObject", "SpaceObject")
+                    b.HasOne("App.Domain.Entities.SpaceObject", "SpaceObject")
                         .WithMany("TleRecords")
                         .HasForeignKey("SpaceObjectId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -771,15 +786,15 @@ namespace App.Infrastructure.Migrations
                     b.Navigation("SpaceObject");
                 });
 
-            modelBuilder.Entity("App.Domain.UserOperator", b =>
+            modelBuilder.Entity("App.Domain.Entities.UserOperator", b =>
                 {
-                    b.HasOne("App.Domain.Identity.AppUser", "AppUser")
+                    b.HasOne("App.Domain.Entities.Identity.AppUser", "AppUser")
                         .WithMany("UserOperators")
                         .HasForeignKey("AppUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("App.Domain.Operator", "Operator")
+                    b.HasOne("App.Domain.Entities.Operator", "Operator")
                         .WithMany("UserOperators")
                         .HasForeignKey("OperatorId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -792,7 +807,7 @@ namespace App.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
-                    b.HasOne("App.Domain.Identity.AppRole", null)
+                    b.HasOne("App.Domain.Entities.Identity.AppRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -801,7 +816,7 @@ namespace App.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
-                    b.HasOne("App.Domain.Identity.AppUser", null)
+                    b.HasOne("App.Domain.Entities.Identity.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -810,7 +825,7 @@ namespace App.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
-                    b.HasOne("App.Domain.Identity.AppUser", null)
+                    b.HasOne("App.Domain.Entities.Identity.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -819,13 +834,13 @@ namespace App.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.HasOne("App.Domain.Identity.AppRole", null)
+                    b.HasOne("App.Domain.Entities.Identity.AppRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("App.Domain.Identity.AppUser", null)
+                    b.HasOne("App.Domain.Entities.Identity.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -834,16 +849,31 @@ namespace App.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.HasOne("App.Domain.Identity.AppUser", null)
+                    b.HasOne("App.Domain.Entities.Identity.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("App.Domain.Satellite", b =>
+            modelBuilder.Entity("App.Domain.Entities.DebrisObject", b =>
                 {
-                    b.HasOne("App.Domain.Operator", "Operator")
+                    b.HasOne("App.Domain.Entities.SpaceObject", null)
+                        .WithOne()
+                        .HasForeignKey("App.Domain.Entities.DebrisObject", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("App.Domain.Entities.Satellite", b =>
+                {
+                    b.HasOne("App.Domain.Entities.SpaceObject", null)
+                        .WithOne()
+                        .HasForeignKey("App.Domain.Entities.Satellite", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("App.Domain.Entities.Operator", "Operator")
                         .WithMany("Satellites")
                         .HasForeignKey("OperatorId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -852,15 +882,15 @@ namespace App.Infrastructure.Migrations
                     b.Navigation("Operator");
                 });
 
-            modelBuilder.Entity("App.Domain.Identity.AppUserRole", b =>
+            modelBuilder.Entity("App.Domain.Entities.Identity.AppUserRole", b =>
                 {
-                    b.HasOne("App.Domain.Identity.AppRole", "AppRole")
+                    b.HasOne("App.Domain.Entities.Identity.AppRole", "AppRole")
                         .WithMany()
                         .HasForeignKey("AppRoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("App.Domain.Identity.AppUser", "AppUser")
+                    b.HasOne("App.Domain.Entities.Identity.AppUser", "AppUser")
                         .WithMany("AppUserRoles")
                         .HasForeignKey("AppUserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -871,14 +901,14 @@ namespace App.Infrastructure.Migrations
                     b.Navigation("AppUser");
                 });
 
-            modelBuilder.Entity("App.Domain.ConjunctionEvent", b =>
+            modelBuilder.Entity("App.Domain.Entities.ConjunctionEvent", b =>
                 {
                     b.Navigation("Alerts");
 
                     b.Navigation("RiskAssessment");
                 });
 
-            modelBuilder.Entity("App.Domain.Identity.AppUser", b =>
+            modelBuilder.Entity("App.Domain.Entities.Identity.AppUser", b =>
                 {
                     b.Navigation("Alerts");
 
@@ -889,20 +919,20 @@ namespace App.Infrastructure.Migrations
                     b.Navigation("UserOperators");
                 });
 
-            modelBuilder.Entity("App.Domain.Operator", b =>
+            modelBuilder.Entity("App.Domain.Entities.Operator", b =>
                 {
                     b.Navigation("Satellites");
 
                     b.Navigation("UserOperators");
                 });
 
-            modelBuilder.Entity("App.Domain.Orbit", b =>
+            modelBuilder.Entity("App.Domain.Entities.Orbit", b =>
                 {
                     b.Navigation("SpaceObject")
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("App.Domain.SpaceObject", b =>
+            modelBuilder.Entity("App.Domain.Entities.SpaceObject", b =>
                 {
                     b.Navigation("PrimaryConjunctionEvents");
 

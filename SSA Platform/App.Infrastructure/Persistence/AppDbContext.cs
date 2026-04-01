@@ -1,6 +1,8 @@
-﻿using App.Domain;
+﻿using System.Text.Json;
+using App.Domain;
 using App.Domain.Entities;
 using App.Domain.Entities.Identity;
+using Base.Domain;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,14 +24,11 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
-        // Configure table-per-hierarchy (TPH) inheritance for SpaceObject
-        modelBuilder.Entity<SpaceObject>()
-            .HasDiscriminator<string>("ObjectType")
-            .HasValue<Satellite>("Satellite")
-            .HasValue<DebrisObject>("Debris");
-
-        // Configure relationships
+        
+        modelBuilder.Entity<SpaceObject>().ToTable("SpaceObjects");
+        modelBuilder.Entity<Satellite>().ToTable("Satellites");
+        modelBuilder.Entity<DebrisObject>().ToTable("DebrisObjects");
+        
         modelBuilder.Entity<ConjunctionEvent>()
             .HasOne(ce => ce.PrimaryObject)
             .WithMany(d => d.PrimaryConjunctionEvents)
@@ -69,5 +68,44 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
                 p.Property(pp => pp.MeanAnomaly).HasColumnName("MeanAnomaly");
             });
         });
+        
+        modelBuilder.Entity<Alert>().Property(e => e.Message)
+            .HasConversion(
+                v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
+                v => JsonSerializer.Deserialize<LangStr>(v, (JsonSerializerOptions?)null)!
+            )
+            .HasColumnType("jsonb");
+        
+        
+        modelBuilder.Entity<Operator>().Property(e => e.Name)
+            .HasConversion(
+                v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
+                v => JsonSerializer.Deserialize<LangStr>(v, (JsonSerializerOptions?)null)!
+            )
+            .HasColumnType("jsonb");
+        
+        
+        modelBuilder.Entity<Operator>().Property(e => e.Country)
+            .HasConversion(
+                v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
+                v => JsonSerializer.Deserialize<LangStr>(v, (JsonSerializerOptions?)null)!
+            )
+            .HasColumnType("jsonb");
+        
+        
+        modelBuilder.Entity<Operator>().Property(e => e.OperatorTypeString)
+            .HasConversion(
+                v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
+                v => JsonSerializer.Deserialize<LangStr>(v, (JsonSerializerOptions?)null)!
+            )
+            .HasColumnType("jsonb");
+        
+        modelBuilder.Entity<Satellite>().Property(e => e.Name)
+            .HasConversion(
+                v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
+                v => JsonSerializer.Deserialize<LangStr>(v, (JsonSerializerOptions?)null)!
+            )
+            .HasColumnType("jsonb");
+        
     }
 }
