@@ -1,4 +1,6 @@
-﻿namespace Base.Domain;
+﻿using Base.Contracts;
+
+namespace Base.Domain;
 
 public class BaseEntity : BaseEntity<Guid>, IBaseEntity
 {

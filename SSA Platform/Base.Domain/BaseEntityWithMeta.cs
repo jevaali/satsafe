@@ -1,3 +1,5 @@
+using Base.Contracts;
+
 namespace Base.Domain;
 
 public abstract class BaseEntityWithMeta :BaseEntityWithMeta<Guid>,  IBaseEntityWithMeta

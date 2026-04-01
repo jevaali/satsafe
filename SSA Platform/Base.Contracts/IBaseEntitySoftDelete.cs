@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Base.Domain;
+namespace Base.Contracts;
 
 public interface IBaseEntitySoftDelete
 {

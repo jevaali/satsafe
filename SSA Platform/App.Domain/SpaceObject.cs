@@ -2,7 +2,7 @@ using Base.Domain;
 
 namespace App.Domain;
 
-public abstract class SpaceObject : BaseEntityWithMeta
+public abstract class SpaceObject : BaseEntityWithMetaSoftDelete
 {
     public int NoradId { get; set; }
     public Guid? OrbitId { get; set; }

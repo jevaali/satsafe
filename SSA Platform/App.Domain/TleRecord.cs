@@ -3,7 +3,7 @@ using Base.Domain;
 
 namespace App.Domain;
 
-public class TleRecord : BaseEntityWithMeta
+public class TleRecord : BaseEntityWithMetaSoftDelete
 {
     public Guid SpaceObjectId { get; set; }
     public required SpaceObject SpaceObject { get; set; }

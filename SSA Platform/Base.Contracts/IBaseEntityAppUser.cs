@@ -1,4 +1,4 @@
-namespace Base.Domain;
+namespace Base.Contracts;
 
 public interface IBaseEntityAppUser : IBaseEntityAppUser<Guid>
 {

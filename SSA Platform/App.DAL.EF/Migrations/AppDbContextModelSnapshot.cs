@@ -26,11 +26,27 @@ namespace App.DAL.EF.Migrations
                     b.Property<Guid>("ConjunctionEventId")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("IsAcknowledged")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Severity")
-                        .IsRequired()
+                    b.Property<string>("Message")
+                        .HasMaxLength(128)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Severity")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UpdatedBy")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("UserId")
@@ -54,6 +70,13 @@ namespace App.DAL.EF.Migrations
                     b.Property<double>("CollisionProbability")
                         .HasColumnType("REAL");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<double>("MissDistance")
                         .HasColumnType("REAL");
 
@@ -66,11 +89,16 @@ namespace App.DAL.EF.Migrations
                     b.Property<Guid>("SecondaryObjectId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("TimeOfClosestApproach")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UpdatedBy")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -197,6 +225,13 @@ namespace App.DAL.EF.Migrations
                     b.Property<Guid>("AppUserId")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("EmailEnabled")
                         .HasColumnType("INTEGER");
 
@@ -205,6 +240,12 @@ namespace App.DAL.EF.Migrations
 
                     b.Property<double>("ThresholdDistance")
                         .HasColumnType("REAL");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -221,14 +262,32 @@ namespace App.DAL.EF.Migrations
 
                     b.Property<string>("Country")
                         .IsRequired()
+                        .HasMaxLength(124)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(124)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
+                    b.Property<int?>("OperatorType")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("OperatorTypeString")
+                        .HasMaxLength(124)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UpdatedBy")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -244,6 +303,13 @@ namespace App.DAL.EF.Migrations
 
                     b.Property<double>("ArgumentOfPerigee")
                         .HasColumnType("REAL");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<double>("Eccentricity")
                         .HasColumnType("REAL");
@@ -263,7 +329,13 @@ namespace App.DAL.EF.Migrations
                     b.Property<double>("SemiMajorAxis")
                         .HasColumnType("REAL");
 
-                    b.Property<Guid?>("SpaceObjectId")
+                    b.Property<Guid>("SpaceObjectId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UpdatedBy")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -277,18 +349,29 @@ namespace App.DAL.EF.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("CalculatedAt")
+                    b.Property<Guid>("ConjunctionEventId")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("ConjunctionEventId")
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ModelVersion")
                         .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<double>("RiskScore")
                         .HasColumnType("REAL");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -304,6 +387,13 @@ namespace App.DAL.EF.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("NoradId")
                         .HasColumnType("INTEGER");
 
@@ -313,6 +403,12 @@ namespace App.DAL.EF.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<Guid?>("OrbitId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UpdatedBy")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -339,6 +435,13 @@ namespace App.DAL.EF.Migrations
                     b.Property<double>("BSTar")
                         .HasColumnType("REAL");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<double>("Eccentricity")
                         .HasColumnType("REAL");
 
@@ -362,10 +465,12 @@ namespace App.DAL.EF.Migrations
 
                     b.Property<string>("RawLine1")
                         .IsRequired()
+                        .HasMaxLength(124)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("RawLine2")
                         .IsRequired()
+                        .HasMaxLength(124)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("RevolutionNumber")
@@ -375,6 +480,12 @@ namespace App.DAL.EF.Migrations
                         .HasColumnType("REAL");
 
                     b.Property<Guid>("SpaceObjectId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UpdatedBy")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -517,9 +628,8 @@ namespace App.DAL.EF.Migrations
                 {
                     b.HasBaseType("App.Domain.SpaceObject");
 
-                    b.Property<string>("RiskCategory")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("RiskCategory")
+                        .HasColumnType("INTEGER");
 
                     b.Property<float>("SizeEstimate")
                         .HasColumnType("REAL");
@@ -536,14 +646,14 @@ namespace App.DAL.EF.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("OperatorId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
 
                     b.HasIndex("OperatorId");
 
@@ -774,7 +884,8 @@ namespace App.DAL.EF.Migrations
 
             modelBuilder.Entity("App.Domain.Orbit", b =>
                 {
-                    b.Navigation("SpaceObject");
+                    b.Navigation("SpaceObject")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("App.Domain.SpaceObject", b =>
