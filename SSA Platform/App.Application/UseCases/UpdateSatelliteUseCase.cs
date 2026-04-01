@@ -36,7 +36,7 @@ public class UpdateSatelliteUseCase
         // Call domain method
         satellite.UpdateDetails(request.Name, request.LaunchDate, op, orbitParams);
 
-        await _uow.Satellites.Update(satellite);
+        await _uow.Satellites.UpdateAsync(satellite);
         await _uow.CommitAsync();
     }
 }

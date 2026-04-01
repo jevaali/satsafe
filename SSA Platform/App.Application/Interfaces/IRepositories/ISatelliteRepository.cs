@@ -3,9 +3,6 @@ using App.Domain.Entities;
 
 namespace App.Application.Interfaces.IRepositories;
 
-public interface ISatelliteRepository
+public interface ISatelliteRepository : IRepository<Satellite>
 {
-    Task AddAsync(Satellite satellite);
-    Task<Satellite> GetByIdAsync(Guid satelliteId);
-    Task Update(Satellite satellite);
 }

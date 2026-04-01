@@ -19,4 +19,24 @@ public class OperatorRepository : IOperatorRepository
     {
         return await _context.Operators.FindAsync(id);
     }
+
+    public async Task AddAsync(Operator entity)
+    {
+        await _context.Operators.AddAsync(entity);
+    }
+
+    public Task UpdateAsync(Operator entity)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task DeleteAsync(Operator entity)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IEnumerable<Operator>> GetAllAsync()
+    {
+        throw new NotImplementedException();
+    }
 }

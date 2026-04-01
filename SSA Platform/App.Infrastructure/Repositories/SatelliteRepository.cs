@@ -15,16 +15,31 @@ public class SatelliteRepository : ISatelliteRepository
         _context = context;
     }
 
+    public Task<Satellite?> GetByIdAsync(Guid id)
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task AddAsync(Satellite satellite)
     {
         await _context.Satellites.AddAsync(satellite);
     }
 
-    Task<Satellite> ISatelliteRepository.GetByIdAsync(Guid satelliteId)
+    public Task UpdateAsync(Satellite entity)
     {
         throw new NotImplementedException();
     }
 
+    public Task DeleteAsync(Satellite entity)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IEnumerable<Satellite>> GetAllAsync()
+    {
+        throw new NotImplementedException();
+    }
+    
     public Task Update(Satellite satellite)
     {
         throw new NotImplementedException();

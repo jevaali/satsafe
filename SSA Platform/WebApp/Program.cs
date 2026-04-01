@@ -18,6 +18,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddScoped<AddSatelliteUseCase>();
+builder.Services.AddScoped<AddOperatorUseCase>();
 
 builder.Services.AddScoped<ISatelliteRepository, SatelliteRepository>();
 builder.Services.AddScoped<IOperatorRepository, OperatorRepository>();
