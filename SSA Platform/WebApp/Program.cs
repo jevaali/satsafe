@@ -1,5 +1,10 @@
-using App.DAL.EF;
-using App.Domain.Identity;
+using App.Application.Interfaces;
+using App.Application.Interfaces.IRepositories;
+using App.Application.UseCases;
+using App.Domain.Entities.Identity;
+using App.Infrastructure.Persistence;
+using App.Infrastructure.Repositories;
+using App.Infrastructure.UnitOfWork;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,6 +16,12 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+builder.Services.AddScoped<AddSatelliteUseCase>();
+
+builder.Services.AddScoped<ISatelliteRepository, SatelliteRepository>();
+builder.Services.AddScoped<IOperatorRepository, OperatorRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services
     .AddIdentity<AppUser,  AppRole>(options => options.SignIn.RequireConfirmedAccount = false)
@@ -43,7 +54,7 @@ app.MapStaticAssets();
 
 app.MapControllerRoute(
         name: "area",
-        pattern: "{area=exists}/{controller=Home}/{action=Index}/{id?}")
+        pattern: "{area}/{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
 

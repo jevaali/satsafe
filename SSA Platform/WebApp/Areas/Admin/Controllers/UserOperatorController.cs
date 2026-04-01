@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using App.DAL.EF;
 using App.Domain;
+using App.Domain.Entities;
+using App.Infrastructure.Persistence;
 
 namespace WebApp.Areas.Admin.Controllers
 {
