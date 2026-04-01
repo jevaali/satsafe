@@ -19,8 +19,10 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddScoped<AddSatelliteUseCase>();
 builder.Services.AddScoped<AddOperatorUseCase>();
+builder.Services.AddScoped<AddDebrisObjectUseCase>();
 
 builder.Services.AddScoped<ISatelliteRepository, SatelliteRepository>();
+builder.Services.AddScoped<IDebrisObjectRepository, DebrisObjectRepository>();
 builder.Services.AddScoped<IOperatorRepository, OperatorRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 

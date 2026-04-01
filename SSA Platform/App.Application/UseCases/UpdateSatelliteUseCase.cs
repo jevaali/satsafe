@@ -22,8 +22,7 @@ public class UpdateSatelliteUseCase
         var op = await _uow.Operators.GetByIdAsync(request.OperatorId);
         if (op == null)
             throw new Exception("Operator not found");
-
-        // Convert DTO → Domain ValueObject
+        
         var orbitParams = new OrbitParameters(
             request.SemiMajorAxis,
             request.Eccentricity,
@@ -33,7 +32,6 @@ public class UpdateSatelliteUseCase
             request.MeanAnomaly
         );
 
-        // Call domain method
         satellite.UpdateDetails(request.Name, request.LaunchDate, op, orbitParams);
 
         await _uow.Satellites.UpdateAsync(satellite);

@@ -19,8 +19,8 @@ public class OrbitParameters
     {
         if (semiMajorAxis <= 0)
             throw new ArgumentOutOfRangeException(nameof(semiMajorAxis));
-        if (eccentricity is < 0 or >= 1)
-            throw new ArgumentOutOfRangeException(nameof(eccentricity));
+        //if (eccentricity is < 0 or >= 1)
+            //throw new ArgumentOutOfRangeException(nameof(eccentricity));
 
         SemiMajorAxis = semiMajorAxis;
         Eccentricity = eccentricity;

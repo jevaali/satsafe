@@ -1,0 +1,68 @@
+@model App.Application.DTO.AddDebrisObjectRequest
+
+@{
+    ViewData["Title"] = "Create Debris Object";
+}
+
+<h1>Create</h1>
+
+<h4>Debris Object</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="SizeEstimate" class="control-label"></label>
+                <input asp-for="SizeEstimate" class="form-control" />
+                <span asp-validation-for="SizeEstimate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RiskCategory" class="control-label"></label>
+                <select asp-for="RiskCategory" class="form-control" asp-items="Html.GetEnumSelectList<App.Domain.Entities.Enums.EDebrisObjectRiskCategory>()"></select>
+                <span asp-validation-for="RiskCategory" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SemiMajorAxis" class="control-label"></label>
+                <input asp-for="SemiMajorAxis" class="form-control" step="any" />
+                <span asp-validation-for="SemiMajorAxis" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Eccentricity" class="control-label"></label>
+                <input asp-for="Eccentricity" class="form-control" step="any" />
+                <span asp-validation-for="Eccentricity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Inclination" class="control-label"></label>
+                <input asp-for="Inclination" class="form-control" step="any" />
+                <span asp-validation-for="Inclination" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RAAN" class="control-label"></label>
+                <input asp-for="RAAN" class="form-control" step="any" />
+                <span asp-validation-for="RAAN" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ArgumentOfPerigee" class="control-label"></label>
+                <input asp-for="ArgumentOfPerigee" class="form-control" step="any" />
+                <span asp-validation-for="ArgumentOfPerigee" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MeanAnomaly" class="control-label"></label>
+                <input asp-for="MeanAnomaly" class="form-control" step="any" />
+                <span asp-validation-for="MeanAnomaly" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
