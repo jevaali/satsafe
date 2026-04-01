@@ -15,12 +15,6 @@ public class AddOperatorUseCase
 
     public async Task<Guid> Execute(AddOperatorRequest request)
     {
-        if (string.IsNullOrWhiteSpace(request.Name))
-            throw new ArgumentException("Name is required");
-
-        if (string.IsNullOrWhiteSpace(request.Country))
-            throw new ArgumentException("Country is required");
-
         var operatorEntity = new Operator
         {
             Id = Guid.NewGuid(),

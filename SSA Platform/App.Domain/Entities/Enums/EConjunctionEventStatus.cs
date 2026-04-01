@@ -6,4 +6,5 @@ public enum EConjunctionEventStatus
     Imminent,
     Potential,
     Resolved,
+    Pending
 }

@@ -5,4 +5,5 @@ namespace App.Application.Interfaces.IRepositories;
 
 public interface ISatelliteRepository : IRepository<Satellite>
 {
+    Task<IEnumerable<Satellite>> GetByOperatorIdAsync(Guid operatorId);
 }

@@ -1,0 +1,129 @@
+@model IEnumerable<App.Domain.Entities.Alert>
+
+@{
+    ViewData["Title"] = "Alerts";
+}
+
+<div class="container">
+    <div class="row py-4">
+        <div class="col-12">
+            <h1 class="display-4 fw-bold text-danger">Alerts</h1>
+            <p class="lead text-muted mb-4">
+                View and acknowledge alerts for your satellites.
+            </p>
+        </div>
+    </div>
+
+    <div class="row py-2">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-area="Operator" asp-controller="Dashboard" asp-action="Index">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Alerts</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row py-3">
+        <div class="col-12">
+            @if (Model.Any())
+            {
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Message
+                                    </th>
+                                    <th>
+                                        Severity
+                                    </th>
+                                    <th>
+                                        Status
+                                    </th>
+                                    <th>
+                                        Conjunction Event
+                                    </th>
+                                    <th>
+                                        Created
+                                    </th>
+                                    <th>
+                                        Actions
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.OrderByDescending(a => a.CreatedAt))
+                                {
+                                    <tr class="@(!item.IsAcknowledged ? "table-warning" : "")">
+                                        <td>
+                                            @item.Message?.ToString()
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-@item.Severity.ToString().ToLower()">
+                                                @item.Severity
+                                            </span>
+                                        </td>
+                                        <td>
+                                            @if (item.IsAcknowledged)
+                                            {
+                                                <span class="badge bg-success">Acknowledged</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-warning">Pending</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (item.ConjunctionEvent != null)
+                                            {
+                                                <a asp-area="Operator" asp-controller="Dashboard" asp-action="ConjunctionDetails" asp-route-id="@item.ConjunctionEventId">
+                                                    View Event
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">-</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @item.CreatedAt.ToString("g")
+                                        </td>
+                                        <td>
+                                            @if (!item.IsAcknowledged)
+                                            {
+                                                <form asp-area="Operator" asp-controller="Dashboard" asp-action="AcknowledgeAlert" asp-route-id="@item.Id" method="post">
+                                                    @Html.AntiForgeryToken()
+                                                    <button type="submit" class="btn btn-sm btn-outline-success">Acknowledge</button>
+                                                </form>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body text-center py-5">
+                        <h3 class="text-muted">No Alerts</h3>
+                        <p class="text-muted">No alerts have been generated for your satellites.</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="row py-3">
+        <div class="col-12">
+            <a asp-area="Operator" asp-controller="Dashboard" asp-action="Index" class="btn btn-outline-secondary">
+                ← Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>

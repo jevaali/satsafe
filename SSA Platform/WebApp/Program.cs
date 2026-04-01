@@ -20,10 +20,17 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddScoped<AddSatelliteUseCase>();
 builder.Services.AddScoped<AddOperatorUseCase>();
 builder.Services.AddScoped<AddDebrisObjectUseCase>();
+builder.Services.AddScoped<RegisterOperatorUseCase>();
+builder.Services.AddScoped<GetOperatorDashboardUseCase>();
+builder.Services.AddScoped<AcknowledgeAlertUseCase>();
+builder.Services.AddScoped<ResolveConjunctionUseCase>();
 
 builder.Services.AddScoped<ISatelliteRepository, SatelliteRepository>();
 builder.Services.AddScoped<IDebrisObjectRepository, DebrisObjectRepository>();
 builder.Services.AddScoped<IOperatorRepository, OperatorRepository>();
+builder.Services.AddScoped<IUserOperatorRepository, UserOperatorRepository>();
+builder.Services.AddScoped<IConjunctionEventRepository, ConjunctionEventRepository>();
+builder.Services.AddScoped<IAlertRepository, AlertRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services
@@ -35,6 +42,20 @@ builder.Services
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+
+// Seed the Operator role
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<AppRole>>();
+    if (!await roleManager.RoleExistsAsync("Operator"))
+    {
+        await roleManager.CreateAsync(new AppRole { Name = "Operator" });
+    }
+    if (!await roleManager.RoleExistsAsync("Admin"))
+    {
+        await roleManager.CreateAsync(new AppRole { Name = "Admin" });
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

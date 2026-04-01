@@ -1,8 +1,8 @@
 using App.Application.Interfaces;
 using App.Application.Interfaces.IRepositories;
-using App.Domain;
 using App.Domain.Entities;
 using App.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace App.Infrastructure.Repositories;
 
@@ -25,18 +25,18 @@ public class OperatorRepository : IOperatorRepository
         await _context.Operators.AddAsync(entity);
     }
 
-    public Task UpdateAsync(Operator entity)
+    public async Task UpdateAsync(Operator entity)
     {
-        throw new NotImplementedException();
+        _context.Operators.Update(entity);
     }
 
-    public Task DeleteAsync(Operator entity)
+    public async Task DeleteAsync(Operator entity)
     {
-        throw new NotImplementedException();
+        _context.Operators.Remove(entity);
     }
 
-    public Task<IEnumerable<Operator>> GetAllAsync()
+    public async Task<IEnumerable<Operator>> GetAllAsync()
     {
-        throw new NotImplementedException();
+        return await _context.Operators.ToListAsync();
     }
 }

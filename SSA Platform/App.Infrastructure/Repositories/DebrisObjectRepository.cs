@@ -1,8 +1,8 @@
 using App.Application.Interfaces;
 using App.Application.Interfaces.IRepositories;
-using App.Domain;
 using App.Domain.Entities;
 using App.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace App.Infrastructure.Repositories;
 
@@ -15,9 +15,13 @@ public class DebrisObjectRepository : IDebrisObjectRepository
         _context = context;
     }
 
-    public Task<DebrisObject?> GetByIdAsync(Guid id)
+    public async Task<DebrisObject?> GetByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
+        return await _context.SpaceObjects
+            .OfType<DebrisObject>()
+            .Include(d => d.Orbit)
+            .Include(d => d.TleRecords)
+            .FirstOrDefaultAsync(d => d.Id == id);
     }
 
     public async Task AddAsync(DebrisObject debrisObject)
@@ -25,24 +29,28 @@ public class DebrisObjectRepository : IDebrisObjectRepository
         _context.SpaceObjects.Add(debrisObject);
     }
 
-    public Task UpdateAsync(DebrisObject entity)
+    public async Task UpdateAsync(DebrisObject entity)
     {
-        throw new NotImplementedException();
+        _context.SpaceObjects.Update(entity);
     }
 
-    public Task DeleteAsync(DebrisObject entity)
+    public async Task DeleteAsync(DebrisObject entity)
     {
-        throw new NotImplementedException();
+        _context.SpaceObjects.Remove(entity);
     }
 
-    public Task<IEnumerable<DebrisObject>> GetAllAsync()
+    public async Task<IEnumerable<DebrisObject>> GetAllAsync()
     {
-        throw new NotImplementedException();
+        return await _context.SpaceObjects
+            .OfType<DebrisObject>()
+            .Include(d => d.Orbit)
+            .Include(d => d.TleRecords)
+            .ToListAsync();
     }
     
-    public Task Update(DebrisObject debrisObject)
+    public async Task Update(DebrisObject debrisObject)
     {
-        throw new NotImplementedException();
+        _context.SpaceObjects.Update(debrisObject);
     }
     
 }

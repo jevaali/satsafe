@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Models;
 
@@ -6,8 +7,14 @@ namespace WebApp.Controllers;
 
 public class HomeController : Controller
 {
+    [AllowAnonymous]
     public IActionResult Index()
     {
+        if (User.IsInRole("Operator"))
+        {
+            return RedirectToAction("Index", "Dashboard", new { area = "Operator" });
+        }
+        
         return View();
     }
 

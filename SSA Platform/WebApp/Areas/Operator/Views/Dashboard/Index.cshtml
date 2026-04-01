@@ -1,0 +1,289 @@
+@model App.Application.DTO.OperatorDashboardDto
+
+@{
+    ViewData["Title"] = "Operator Dashboard";
+}
+<link rel="stylesheet" href="~/css/orbit.css" asp-append-version="true" />
+
+<div class="container">
+    <!-- Welcome Section -->
+    <div class="row align-items-center py-5">
+        <div class="col-lg-6">
+            <h1 class="display-4 fw-bold text-primary">Welcome, @Model.OperatorName</h1>
+            <p class="lead text-muted mb-4">
+                Manage your satellite fleet, monitor conjunction events, and handle alerts from your operations dashboard.
+            </p>
+            <div class="d-flex gap-3">
+                <a asp-area="Operator" asp-controller="Dashboard" asp-action="Satellites" class="btn btn-primary btn-lg">
+                    Manage Satellites
+                </a>
+                <a asp-area="Operator" asp-controller="Dashboard" asp-action="Conjunctions" class="btn btn-outline-secondary btn-lg">
+                    Conjunctions
+                </a>
+                <a asp-area="Operator" asp-controller="Dashboard" asp-action="Alerts" class="btn btn-outline-secondary btn-lg">
+                    Alerts
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-6 text-center">
+            <div class="position-relative">
+                <div class="orbit-visualization">
+                    <div class="earth"></div>
+                    <div class="orbit-track"></div>
+                    <div class="satellite sat-1"></div>
+                    <div class="satellite sat-2"></div>
+                    <div class="satellite sat-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="row py-4">
+        <div class="col-12 text-center mb-4">
+            <h2 class="h4 text-muted">Fleet Overview</h2>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card text-center h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <h3 class="display-6 fw-bold text-primary">@Model.TotalSatellites</h3>
+                    <p class="text-muted mb-0">Total Satellites</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card text-center h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <h3 class="display-6 fw-bold text-success">@Model.ActiveSatellites</h3>
+                    <p class="text-muted mb-0">Active Satellites</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card text-center h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <h3 class="display-6 fw-bold text-warning">@Model.PendingConjunctions</h3>
+                    <p class="text-muted mb-0">Pending Conjunctions</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Risk and Alert Stats -->
+    <div class="row py-4">
+        <div class="col-md-6 mb-3">
+            <div class="card text-center h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    @if (Model.HighRiskConjunctions > 0)
+                    {
+                        <h3 class="display-6 fw-bold text-danger">@Model.HighRiskConjunctions</h3>
+                        <p class="text-muted mb-0">High Risk Conjunctions</p>
+                    }
+                    else
+                    {
+                        <h3 class="display-6 fw-bold text-success">@Model.HighRiskConjunctions</h3>
+                        <p class="text-muted mb-0">High Risk Conjunctions</p>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <div class="card text-center h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    @if (Model.UnacknowledgedAlerts > 0)
+                    {
+                        <h3 class="display-6 fw-bold text-danger">@Model.UnacknowledgedAlerts</h3>
+                        <p class="text-muted mb-0">Unacknowledged Alerts</p>
+                    }
+                    else
+                    {
+                        <h3 class="display-6 fw-bold text-success">@Model.UnacknowledgedAlerts</h3>
+                        <p class="text-muted mb-0">Unacknowledged Alerts</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row py-5">
+        <div class="col-12 text-center mb-4">
+            <h2 class="h4 text-muted">Quick Actions</h2>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Satellites</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text text-muted">View and manage your assigned satellite fleet.</p>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">✓ View all satellites</li>
+                        <li class="mb-2">✓ View satellite details</li>
+                        <li class="mb-2">✓ Monitor satellite status</li>
+                    </ul>
+                    <a asp-area="Operator" asp-controller="Dashboard" asp-action="Satellites" class="btn btn-outline-primary w-100">
+                        Manage Satellites
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-warning">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">Conjunctions</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text text-muted">Monitor and respond to potential close approaches.</p>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">✓ View conjunction events</li>
+                        <li class="mb-2">✓ View event details</li>
+                        <li class="mb-2">✓ Mark as resolved</li>
+                    </ul>
+                    <a asp-area="Operator" asp-controller="Dashboard" asp-action="Conjunctions" class="btn btn-outline-warning w-100">
+                        View Conjunctions
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">Alerts</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text text-muted">View and acknowledge alerts for your satellites.</p>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">✓ View all alerts</li>
+                        <li class="mb-2">✓ View alert details</li>
+                        <li class="mb-2">✓ Acknowledge alerts</li>
+                    </ul>
+                    <a asp-area="Operator" asp-controller="Dashboard" asp-action="Alerts" class="btn btn-outline-danger w-100">
+                        View Alerts
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity Section -->
+    <div class="row py-5">
+        <div class="col-12 text-center mb-4">
+            <h2 class="h4 text-muted">Recent Conjunction Events</h2>
+        </div>
+        @if (Model.Conjunctions.Any())
+        {
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Time of Closest Approach</th>
+                                    <th>Primary Object</th>
+                                    <th>Secondary Object</th>
+                                    <th>Miss Distance (m)</th>
+                                    <th>Collision Probability</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var conj in Model.Conjunctions.OrderByDescending(c => c.TimeOfClosestApproach).Take(5))
+                                {
+                                    <tr class="@(conj.IsHighRisk() ? "table-danger" : "")">
+                                        <td>@conj.TimeOfClosestApproach.ToString("g")</td>
+                                        <td>@(conj.PrimaryObject?.NoradId.ToString() ?? conj.PrimaryObjectId.ToString())</td>
+                                        <td>@(conj.SecondaryObject?.NoradId.ToString() ?? conj.SecondaryObjectId.ToString())</td>
+                                        <td>@conj.MissDistance.ToString("N0")</td>
+                                        <td>@(conj.CollisionProbability * 100).ToString("F4")%</td>
+                                        <td>
+                                            <span class="badge bg-@conj.Status.GetType().GetProperty("Status")?.GetValue(conj)?.ToString()?.ToLower()">
+                                                @conj.Status
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <a asp-area="Operator" asp-controller="Dashboard" asp-action="ConjunctionDetails" asp-route-id="@conj.Id" class="btn btn-sm btn-outline-primary">Details</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="col-12 text-center">
+                <p class="text-muted">No conjunction events found for your satellites.</p>
+            </div>
+        }
+    </div>
+
+    <!-- Alerts Section -->
+    <div class="row py-5">
+        <div class="col-12 text-center mb-4">
+            <h2 class="h4 text-muted">Recent Alerts</h2>
+        </div>
+        @if (Model.Alerts.Any())
+        {
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Message</th>
+                                    <th>Severity</th>
+                                    <th>Status</th>
+                                    <th>Created</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var alert in Model.Alerts.OrderByDescending(a => a.CreatedAt).Take(5))
+                                {
+                                    <tr class="@(!alert.IsAcknowledged ? "table-warning" : "")">
+                                        <td>@alert.Message?.ToString()</td>
+                                        <td>
+                                            <span class="badge bg-@alert.Severity.ToString().ToLower()">
+                                                @alert.Severity
+                                            </span>
+                                        </td>
+                                        <td>
+                                            @if (alert.IsAcknowledged)
+                                            {
+                                                <span class="badge bg-success">Acknowledged</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-warning">Pending</span>
+                                            }
+                                        </td>
+                                        <td>@alert.CreatedAt.ToString("g")</td>
+                                        <td>
+                                            @if (!alert.IsAcknowledged)
+                                            {
+                                                <form asp-area="Operator" asp-controller="Dashboard" asp-action="AcknowledgeAlert" asp-route-id="@alert.Id" method="post">
+                                                    @Html.AntiForgeryToken()
+                                                    <button type="submit" class="btn btn-sm btn-outline-success">Acknowledge</button>
+                                                </form>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="col-12 text-center">
+                <p class="text-muted">No alerts found for your satellites.</p>
+            </div>
+        }
+    </div>
+</div>

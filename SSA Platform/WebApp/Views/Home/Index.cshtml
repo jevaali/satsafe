@@ -1,8 +1,141 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Space Situational Awareness Platform";
 }
+<link rel="stylesheet" href="~/css/orbit.css" asp-append-version="true" />
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container">
+    <!-- Hero Section -->
+    <div class="row align-items-center py-5">
+        <div class="col-lg-6">
+            <h1 class="display-4 fw-bold text-primary">Space Situational Awareness Platform</h1>
+            <p class="lead text-muted mb-4">
+                Monitor, track, and analyze objects in Earth orbit to ensure safe and sustainable space operations.
+                Join our community of space professionals and enthusiasts.
+            </p>
+            <div class="d-flex gap-3">
+                <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-primary btn-lg">
+                    Get Started
+                </a>
+                <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-secondary btn-lg">
+                    Sign In
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-6 text-center">
+            <div class="position-relative">
+                <div class="orbit-visualization">
+                    <div class="earth"></div>
+                    <div class="orbit-track"></div>
+                    <div class="satellite sat-1"></div>
+                    <div class="satellite sat-2"></div>
+                    <div class="satellite sat-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="row py-4">
+        <div class="col-12 text-center mb-4">
+            <h2 class="h4 text-muted">Platform Statistics</h2>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card text-center h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <h3 class="display-6 fw-bold text-primary">10,000+</h3>
+                    <p class="text-muted mb-0">Tracked Space Objects</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card text-center h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <h3 class="display-6 fw-bold text-success">5,000+</h3>
+                    <p class="text-muted mb-0">Active Satellites</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card text-center h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <h3 class="display-6 fw-bold text-warning">36,000+</h3>
+                    <p class="text-muted mb-0">Debris Objects</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="row py-5">
+        <div class="col-12 text-center mb-4">
+            <h2 class="h4 text-muted">Why Join Our Platform</h2>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">Real-Time Tracking</h5>
+                    <p class="card-text text-muted">Access up-to-date orbital data for satellites and debris objects.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">Conjunction Alerts</h5>
+                    <p class="card-text text-muted">Get notified about potential close approaches that may pose risks.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">Operator Management</h5>
+                    <p class="card-text text-muted">Register your organization to manage and monitor your satellite fleet.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Registration Options -->
+    <div class="row py-5">
+        <div class="col-12 text-center mb-4">
+            <h2 class="h4 text-muted">Join Our Community</h2>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Regular User</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-2">✓ View orbital data and statistics</li>
+                        <li class="mb-2">✓ Receive conjunction alerts</li>
+                        <li class="mb-2">✓ Customize notification settings</li>
+                        <li class="mb-2">✓ Access community features</li>
+                    </ul>
+                    <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-outline-primary w-100">
+                        Register as User
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 border-success">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Space Operator</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-2">✓ All user features</li>
+                        <li class="mb-2">✓ Register and manage your satellites</li>
+                        <li class="mb-2">✓ Upload TLE data for your objects</li>
+                        <li class="mb-2">✓ Operator-specific analytics</li>
+                    </ul>
+                    <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-success w-100">
+                        Register as Operator
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

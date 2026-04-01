@@ -56,7 +56,7 @@ namespace WebApp.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Country,Type,Id")] Operator @operator)
+        public async Task<IActionResult> Create([Bind("Name,Country,Type,Id")] App.Domain.Entities.Operator @operator)
         {
             if (ModelState.IsValid)
             {
@@ -89,7 +89,7 @@ namespace WebApp.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Name,Country,Type,Id")] Operator @operator)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Name,Country,Type,Id")] App.Domain.Entities.Operator @operator)
         {
             if (id != @operator.Id)
             {

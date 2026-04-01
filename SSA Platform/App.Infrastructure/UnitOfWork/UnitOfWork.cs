@@ -11,17 +11,26 @@ public class UnitOfWork : IUnitOfWork
     public ISatelliteRepository Satellites { get; }
     public IDebrisObjectRepository DebrisObjects { get; }
     public IOperatorRepository Operators { get; }
+    public IUserOperatorRepository UserOperators { get; }
+    public IConjunctionEventRepository ConjunctionEvents { get; }
+    public IAlertRepository Alerts { get; }
 
     public UnitOfWork(
         AppDbContext context,
         ISatelliteRepository satellites,
         IDebrisObjectRepository debrisObjects,
-        IOperatorRepository operators)
+        IOperatorRepository operators,
+        IUserOperatorRepository userOperators,
+        IConjunctionEventRepository conjunctionEvents,
+        IAlertRepository alerts)
     {
         _context = context;
         Satellites = satellites;
         DebrisObjects = debrisObjects;
         Operators = operators;
+        UserOperators = userOperators;
+        ConjunctionEvents = conjunctionEvents;
+        Alerts = alerts;
     }
 
     public async Task CommitAsync()

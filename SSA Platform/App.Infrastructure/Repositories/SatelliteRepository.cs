@@ -1,8 +1,8 @@
 using App.Application.Interfaces;
 using App.Application.Interfaces.IRepositories;
-using App.Domain;
 using App.Domain.Entities;
 using App.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace App.Infrastructure.Repositories;
 
@@ -15,9 +15,14 @@ public class SatelliteRepository : ISatelliteRepository
         _context = context;
     }
 
-    public Task<Satellite?> GetByIdAsync(Guid id)
+    public async Task<Satellite?> GetByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
+        return await _context.SpaceObjects
+            .OfType<Satellite>()
+            .Include(s => s.Operator)
+            .Include(s => s.Orbit)
+            .Include(s => s.TleRecords)
+            .FirstOrDefaultAsync(s => s.Id == id);
     }
 
     public async Task AddAsync(Satellite satellite)
@@ -25,24 +30,40 @@ public class SatelliteRepository : ISatelliteRepository
         _context.SpaceObjects.Add(satellite);
     }
 
-    public Task UpdateAsync(Satellite entity)
+    public async Task UpdateAsync(Satellite entity)
     {
-        throw new NotImplementedException();
+        _context.SpaceObjects.Update(entity);
     }
 
-    public Task DeleteAsync(Satellite entity)
+    public async Task DeleteAsync(Satellite entity)
     {
-        throw new NotImplementedException();
+        _context.SpaceObjects.Remove(entity);
     }
 
-    public Task<IEnumerable<Satellite>> GetAllAsync()
+    public async Task<IEnumerable<Satellite>> GetAllAsync()
     {
-        throw new NotImplementedException();
+        return await _context.SpaceObjects
+            .OfType<Satellite>()
+            .Include(s => s.Operator)
+            .Include(s => s.Orbit)
+            .Include(s => s.TleRecords)
+            .ToListAsync();
     }
-    
-    public Task Update(Satellite satellite)
+
+    public async Task<IEnumerable<Satellite>> GetByOperatorIdAsync(Guid operatorId)
     {
-        throw new NotImplementedException();
+        return await _context.SpaceObjects
+            .OfType<Satellite>()
+            .Include(s => s.Operator)
+            .Include(s => s.Orbit)
+            .Include(s => s.TleRecords)
+            .Where(s => s.OperatorId == operatorId)
+            .ToListAsync();
+    }
+
+    public async Task Update(Satellite satellite)
+    {
+        _context.SpaceObjects.Update(satellite);
     }
     
 }

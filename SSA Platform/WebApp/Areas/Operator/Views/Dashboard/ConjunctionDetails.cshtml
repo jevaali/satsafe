@@ -1,0 +1,202 @@
+@model App.Domain.Entities.ConjunctionEvent
+
+@{
+    ViewData["Title"] = "Conjunction Details";
+}
+
+<div class="container">
+    <div class="row py-4">
+        <div class="col-12">
+            <h1 class="display-4 fw-bold text-warning">Conjunction Details</h1>
+            <p class="lead text-muted mb-4">
+                Detailed information about this conjunction event.
+            </p>
+        </div>
+    </div>
+
+    <div class="row py-2">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-area="Operator" asp-controller="Dashboard" asp-action="Index">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a asp-area="Operator" asp-controller="Dashboard" asp-action="Conjunctions">Conjunctions</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Details</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    @if (Model.IsHighRisk())
+    {
+        <div class="row py-3">
+            <div class="col-12">
+                <div class="alert alert-danger" role="alert">
+                    <strong>High Risk!</strong> This conjunction event has been flagged as high risk. Immediate attention may be required.
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="row py-3">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">Event Information</h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-6">
+                            Time of Closest Approach
+                        </dt>
+                        <dd class="col-sm-6">
+                            @Model.TimeOfClosestApproach.ToString("g")
+                        </dd>
+                        <dt class="col-sm-6">
+                            Miss Distance
+                        </dt>
+                        <dd class="col-sm-6">
+                            @Model.MissDistance.ToString("N0") m
+                        </dd>
+                        <dt class="col-sm-6">
+                            Collision Probability
+                        </dt>
+                        <dd class="col-sm-6">
+                            @(Model.CollisionProbability * 100).ToString("F4")%
+                        </dd>
+                        <dt class="col-sm-6">
+                            Status
+                        </dt>
+                        <dd class="col-sm-6">
+                            <span class="badge bg-@Model.Status.ToString().ToLower()">
+                                @Model.Status
+                            </span>
+                        </dd>
+                        <dt class="col-sm-6">
+                            Risk Level
+                        </dt>
+                        <dd class="col-sm-6">
+                            @if (Model.IsHighRisk())
+                            {
+                                <span class="badge bg-danger">High</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success">Low</span>
+                            }
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">Objects Involved</h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-4">
+                            Primary Object
+                        </dt>
+                        <dd class="col-sm-8">
+                            @(Model.PrimaryObject?.NoradId.ToString() ?? Model.PrimaryObjectId.ToString())
+                        </dd>
+                        <dt class="col-sm-4">
+                            Secondary Object
+                        </dt>
+                        <dd class="col-sm-8">
+                            @(Model.SecondaryObject?.NoradId.ToString() ?? Model.SecondaryObjectId.ToString())
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.RiskAssessment != null)
+    {
+        <div class="row py-3">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0">Risk Assessment</h5>
+                    </div>
+                    <div class="card-body">
+                        <dl class="row">
+                            <dt class="col-sm-4">
+                                Risk ID
+                            </dt>
+                            <dd class="col-sm-8">
+                                @Model.RiskAssessment.Id
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (Model.Alerts != null && Model.Alerts.Any())
+    {
+        <div class="row py-3">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-danger text-white">
+                        <h5 class="mb-0">Related Alerts</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Message</th>
+                                    <th>Severity</th>
+                                    <th>Acknowledged</th>
+                                    <th>Created</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var alert in Model.Alerts)
+                                {
+                                    <tr>
+                                        <td>@alert.Message?.ToString()</td>
+                                        <td>
+                                            <span class="badge bg-@alert.Severity.ToString().ToLower()">
+                                                @alert.Severity
+                                            </span>
+                                        </td>
+                                        <td>
+                                            @if (alert.IsAcknowledged)
+                                            {
+                                                <span class="badge bg-success">Yes</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-warning">No</span>
+                                            }
+                                        </td>
+                                        <td>@alert.CreatedAt.ToString("g")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="row py-3">
+        <div class="col-12">
+            @if (Model.Status != App.Domain.Entities.Enums.EConjunctionEventStatus.Resolved && Model.Status != App.Domain.Entities.Enums.EConjunctionEventStatus.AlreadyOccurred)
+            {
+                <form asp-area="Operator" asp-controller="Dashboard" asp-action="MarkConjunctionResolved" asp-route-id="@Model.Id" method="post" class="d-inline">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-success">Mark as Resolved</button>
+                </form>
+            }
+            <a asp-area="Operator" asp-controller="Dashboard" asp-action="Conjunctions" class="btn btn-outline-secondary">
+                ← Back to Conjunctions
+            </a>
+        </div>
+    </div>
+</div>
