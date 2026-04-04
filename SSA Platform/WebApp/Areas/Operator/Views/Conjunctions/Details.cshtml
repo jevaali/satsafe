@@ -1,0 +1,137 @@
+@model App.Domain.Entities.ConjunctionEvent
+@using App.Domain.Entities
+@using App.Domain.Entities.Enums
+
+@{
+    ViewData["Title"] = "Conjunction Details";
+    var primaryName = Model.PrimaryObject switch {
+        Satellite s    => s.Name.ToString(),
+        DebrisObject d => $"DEBRIS-{d.NoradId}",
+        _              => Model.PrimaryObjectId.ToString()
+    };
+    var secondaryName = Model.SecondaryObject switch {
+        Satellite s    => s.Name.ToString(),
+        DebrisObject d => $"DEBRIS-{d.NoradId}",
+        _              => Model.SecondaryObjectId.ToString()
+    };
+    var tca = DateTime.UtcNow.AddSeconds(Model.TimeOfClosestApproach);
+}
+
+<link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
+
+<div class="ssa-container">
+
+    <div class="system-bar">
+        <span class="status-dot"></span>
+        CONJUNCTION DETAIL |
+        @tca.ToString("yyyy-MM-dd HH:mm:ss") UTC TCA
+    </div>
+
+    <div class="header">
+        <div>
+            <h3>@primaryName ↔ @secondaryName</h3>
+            <small>Conjunction Event — @Model.Id</small>
+        </div>
+        <div class="header-right">
+            @if (Model.IsHighRisk())
+            {
+                <span class="badge danger">HIGH RISK</span>
+            }
+            <span class="badge @(Model.Status == EConjunctionEventStatus.Resolved ? "bg-success" : "warning")">
+                @Model.Status
+            </span>
+        </div>
+    </div>
+
+    <div class="grid">
+
+        <!-- METRICS -->
+        <div class="card">
+            <h5>Orbital Metrics</h5>
+            <table class="table mb-0">
+                <tr>
+                    <td class="text-muted">Miss Distance</td>
+                    <td class="fw-bold @(Model.MissDistance < 1000 ? "text-danger" : Model.MissDistance < 5000 ? "text-warning" : "")">
+                        @(Model.MissDistance < 1000
+                            ? $"{Model.MissDistance:N0} m"
+                            : $"{Model.MissDistance / 1000:F3} km")
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Collision Probability</td>
+                    <td class="fw-bold">@((Model.CollisionProbability * 100).ToString("F4"))%</td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Time of Closest Approach</td>
+                    <td>@tca.ToString("yyyy-MM-dd HH:mm:ss") UTC</td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Time Until TCA</td>
+                    <td>@TimeSpan.FromSeconds(Model.TimeOfClosestApproach).ToString(@"hh\:mm\:ss")</td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Threshold</td>
+                    <td>50 km</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- OBJECTS -->
+        <div class="card">
+            <h5>Involved Objects</h5>
+            <table class="table mb-0">
+                <tr>
+                    <td class="text-muted">Primary</td>
+                    <td>
+                        <strong>@primaryName</strong>
+                        @if (Model.PrimaryObject is Satellite ps)
+                        {
+                            <div><small>NORAD @ps.NoradId | @ps.Status</small></div>
+                        }
+                        else if (Model.PrimaryObject is DebrisObject pd)
+                        {
+                            <div><small>NORAD @pd.NoradId | Debris</small></div>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Secondary</td>
+                    <td>
+                        <strong>@secondaryName</strong>
+                        @if (Model.SecondaryObject is Satellite ss)
+                        {
+                            <div><small>NORAD @ss.NoradId | @ss.Status</small></div>
+                        }
+                        else if (Model.SecondaryObject is DebrisObject sd)
+                        {
+                            <div><small>NORAD @sd.NoradId | Debris</small></div>
+                        }
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+    </div>
+
+    <!-- ACTIONS -->
+    @if (Model.Status == EConjunctionEventStatus.Pending)
+    {
+        <div class="card mt-3 p-3">
+            <h5>Actions</h5>
+            <form asp-action="Resolve" asp-route-id="@Model.Id" method="post" class="d-inline">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-success">
+                    Mark as Resolved
+                </button>
+            </form>
+            <a asp-action="Index" class="btn btn-outline-secondary ms-2">Back to List</a>
+        </div>
+    }
+    else
+    {
+        <div class="card mt-3 p-3">
+            <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
+        </div>
+    }
+
+</div>
