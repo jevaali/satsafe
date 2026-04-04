@@ -4,104 +4,209 @@
     "Name": "International Space Station",
     "OperatorName": "NASA/International Partners",
     "LaunchDate": "1998-11-20T00:00:00Z",
-    "OrbitParameters": null
+    "OrbitParameters": {
+      "SemiMajorAxis": 6778000,
+      "Eccentricity": 0.0001,
+      "Inclination": 51.6,
+      "RAAN": 95.0,
+      "ArgumentOfPerigee": 120.0,
+      "MeanAnomaly": 45.0
+    }
   },
   {
     "NoradId": 20580,
     "Name": "Hubble Space Telescope",
     "OperatorName": "NASA/ESA",
     "LaunchDate": "1990-04-24T00:00:00Z",
-    "OrbitParameters": null
+    "OrbitParameters": {
+      "SemiMajorAxis": 6917000,
+      "Eccentricity": 0.0003,
+      "Inclination": 28.5,
+      "RAAN": 180.0,
+      "ArgumentOfPerigee": 90.0,
+      "MeanAnomaly": 120.0
+    }
   },
   {
     "NoradId": 39084,
     "Name": "Landsat 8",
     "OperatorName": "NASA/USGS",
     "LaunchDate": "2013-02-11T00:00:00Z",
-    "OrbitParameters": null
+    "OrbitParameters": {
+      "SemiMajorAxis": 7083000,
+      "Eccentricity": 0.0001,
+      "Inclination": 98.2,
+      "RAAN": 60.0,
+      "ArgumentOfPerigee": 90.0,
+      "MeanAnomaly": 200.0
+    }
   },
   {
     "NoradId": 41866,
-    "Name": "GOES-16 (example GEO weather satellite)",
+    "Name": "GOES-16",
     "OperatorName": "NOAA",
     "LaunchDate": "2016-11-19T00:00:00Z",
-    "OrbitParameters": null
+    "OrbitParameters": {
+      "SemiMajorAxis": 42164000,
+      "Eccentricity": 0.0002,
+      "Inclination": 0.1,
+      "RAAN": 0.0,
+      "ArgumentOfPerigee": 0.0,
+      "MeanAnomaly": 270.0
+    }
   },
   {
     "NoradId": 39765,
-    "Name": "Jason-3 (oceanography)",
+    "Name": "Jason-3",
     "OperatorName": "NOAA/CNES/EUMETSAT/NASA",
     "LaunchDate": "2016-01-17T00:00:00Z",
-    "OrbitParameters": null
+    "OrbitParameters": {
+      "SemiMajorAxis": 7714000,
+      "Eccentricity": 0.0001,
+      "Inclination": 66.0,
+      "RAAN": 40.0,
+      "ArgumentOfPerigee": 90.0,
+      "MeanAnomaly": 310.0
+    }
   },
   {
     "NoradId": 27802,
-    "Name": "GPS IIR-11 (representative GPS satellite)",
+    "Name": "GPS IIR-11",
     "OperatorName": "U.S. Space Force",
     "LaunchDate": "2000-07-16T00:00:00Z",
-    "OrbitParameters": null
+    "OrbitParameters": {
+      "SemiMajorAxis": 26560000,
+      "Eccentricity": 0.001,
+      "Inclination": 55.0,
+      "RAAN": 120.0,
+      "ArgumentOfPerigee": 0.0,
+      "MeanAnomaly": 90.0
+    }
   },
   {
     "NoradId": 30785,
     "Name": "GPS IIF-10",
     "OperatorName": "U.S. Space Force",
     "LaunchDate": "2015-07-15T00:00:00Z",
-    "OrbitParameters": null
+    "OrbitParameters": {
+      "SemiMajorAxis": 26560000,
+      "Eccentricity": 0.001,
+      "Inclination": 55.0,
+      "RAAN": 240.0,
+      "ArgumentOfPerigee": 0.0,
+      "MeanAnomaly": 180.0
+    }
   },
   {
     "NoradId": 41766,
-    "Name": "GLONASS (example representative)",
+    "Name": "GLONASS representative",
     "OperatorName": "Roscosmos",
     "LaunchDate": "2018-10-23T00:00:00Z",
-    "OrbitParameters": null
+    "OrbitParameters": {
+      "SemiMajorAxis": 25508000,
+      "Eccentricity": 0.001,
+      "Inclination": 64.8,
+      "RAAN": 0.0,
+      "ArgumentOfPerigee": 0.0,
+      "MeanAnomaly": 45.0
+    }
   },
   {
     "NoradId": 40697,
-    "Name": "Galileo FM14 (example Galileo)",
+    "Name": "Galileo FM14",
     "OperatorName": "EUSPA/ESA",
     "LaunchDate": "2023-12-17T00:00:00Z",
-    "OrbitParameters": null
+    "OrbitParameters": {
+      "SemiMajorAxis": 29600000,
+      "Eccentricity": 0.0002,
+      "Inclination": 56.0,
+      "RAAN": 60.0,
+      "ArgumentOfPerigee": 0.0,
+      "MeanAnomaly": 90.0
+    }
   },
   {
     "NoradId": 47830,
-    "Name": "OneWeb 5 (representative large comm. constellation)",
+    "Name": "OneWeb 5",
     "OperatorName": "OneWeb",
     "LaunchDate": "2022-09-28T00:00:00Z",
-    "OrbitParameters": null
+    "OrbitParameters": {
+      "SemiMajorAxis": 6921000,
+      "Eccentricity": 0.0001,
+      "Inclination": 87.9,
+      "RAAN": 15.0,
+      "ArgumentOfPerigee": 0.0,
+      "MeanAnomaly": 60.0
+    }
   },
   {
     "NoradId": 48099,
     "Name": "Iridium NEXT 1",
     "OperatorName": "Iridium Communications",
     "LaunchDate": "2017-01-14T00:00:00Z",
-    "OrbitParameters": null
+    "OrbitParameters": {
+      "SemiMajorAxis": 7159000,
+      "Eccentricity": 0.0001,
+      "Inclination": 86.4,
+      "RAAN": 30.0,
+      "ArgumentOfPerigee": 90.0,
+      "MeanAnomaly": 150.0
+    }
   },
   {
     "NoradId": 44238,
     "Name": "Sentinel-1A",
     "OperatorName": "ESA",
     "LaunchDate": "2014-04-03T00:00:00Z",
-    "OrbitParameters": null
+    "OrbitParameters": {
+      "SemiMajorAxis": 7073000,
+      "Eccentricity": 0.0001,
+      "Inclination": 98.18,
+      "RAAN": 45.0,
+      "ArgumentOfPerigee": 90.0,
+      "MeanAnomaly": 240.0
+    }
   },
   {
     "NoradId": 42266,
-    "Name": "Swarm A (Earth magnetic field mission)",
+    "Name": "Swarm A",
     "OperatorName": "ESA",
     "LaunchDate": "2013-11-22T00:00:00Z",
-    "OrbitParameters": null
+    "OrbitParameters": {
+      "SemiMajorAxis": 6871000,
+      "Eccentricity": 0.0008,
+      "Inclination": 87.4,
+      "RAAN": 90.0,
+      "ArgumentOfPerigee": 90.0,
+      "MeanAnomaly": 330.0
+    }
   },
   {
     "NoradId": 42836,
-    "Name": "Tianhe (Chinese space station core)",
+    "Name": "Tianhe",
     "OperatorName": "CNSA",
     "LaunchDate": "2021-04-29T00:00:00Z",
-    "OrbitParameters": null
+    "OrbitParameters": {
+      "SemiMajorAxis": 6778000,
+      "Eccentricity": 0.0002,
+      "Inclination": 41.5,
+      "RAAN": 210.0,
+      "ArgumentOfPerigee": 60.0,
+      "MeanAnomaly": 80.0
+    }
   },
   {
     "NoradId": 44713,
     "Name": "James Webb Space Telescope",
     "OperatorName": "NASA/ESA/CSA",
     "LaunchDate": "2021-12-25T00:00:00Z",
-    "OrbitParameters": null
+    "OrbitParameters": {
+      "SemiMajorAxis": 1500000000,
+      "Eccentricity": 0.01,
+      "Inclination": 5.0,
+      "RAAN": 0.0,
+      "ArgumentOfPerigee": 0.0,
+      "MeanAnomaly": 0.0
+    }
   }
 ]

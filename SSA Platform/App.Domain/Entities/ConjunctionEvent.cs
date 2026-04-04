@@ -11,15 +11,37 @@ public class ConjunctionEvent : BaseEntityWithMeta
     public Guid SecondaryObjectId { get; set; }
     public SpaceObject? SecondaryObject { get; set; }
     
-    public DateTime TimeOfClosestApproach { get; set; }
+    public double TimeOfClosestApproach { get; set; }
     public double MissDistance { get; set; }
     public double CollisionProbability { get; set; }
     public EConjunctionEventStatus Status { get; set; }
 
-    public Guid RiskAssessmentId { get; set; }
+    public Guid? RiskAssessmentId { get; set; }
     public RiskAssessment? RiskAssessment { get; set; }
     
     public ICollection<Alert> Alerts { get; set; } = [];
+    
+    public double Threshold { get; private set; }
+
+    public bool IsThreat => MissDistance < Threshold;
+
+    public ConjunctionEvent(
+        Guid primaryObjectId,
+        Guid secondaryObjectId,
+        double timeOfClosestApproach,
+        double missDistance,
+        double threshold)
+    {
+        PrimaryObjectId        = primaryObjectId;
+        SecondaryObjectId      = secondaryObjectId;
+        TimeOfClosestApproach  = timeOfClosestApproach;
+        MissDistance           = missDistance;
+        Threshold              = threshold;
+        CreatedBy              = "system";
+        CreatedAt              = DateTime.UtcNow;
+    }
+
+    private ConjunctionEvent() { }
     
     public void UpdateMissDistance(double distance)
     {

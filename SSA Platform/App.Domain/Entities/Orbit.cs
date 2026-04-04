@@ -23,4 +23,9 @@ public class Orbit : BaseEntityWithMeta
     {
         Parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
     }
+
+    public object GetOrbit()
+    {
+        return Parameters;
+    }
 }

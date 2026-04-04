@@ -83,7 +83,7 @@ namespace App.Infrastructure.Migrations
                     b.Property<Guid>("PrimaryObjectId")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("RiskAssessmentId")
+                    b.Property<Guid?>("RiskAssessmentId")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("SecondaryObjectId")
@@ -92,8 +92,11 @@ namespace App.Infrastructure.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("TimeOfClosestApproach")
-                        .HasColumnType("TEXT");
+                    b.Property<double>("Threshold")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("TimeOfClosestApproach")
+                        .HasColumnType("REAL");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("TEXT");

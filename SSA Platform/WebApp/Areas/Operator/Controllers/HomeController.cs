@@ -13,18 +13,21 @@ public class HomeController : Controller
     private readonly GetOperatorDashboardUseCase _getDashboardUseCase;
     private readonly AcknowledgeAlertUseCase _acknowledgeAlertUseCase;
     private readonly ResolveConjunctionUseCase _resolveConjunctionUseCase;
+    private readonly RunConjunctionScreeningUseCase _screeningUseCase; 
     private readonly IUserOperatorRepository _userOperatorRepository;
 
     public HomeController(
         GetOperatorDashboardUseCase getDashboardUseCase,
         AcknowledgeAlertUseCase acknowledgeAlertUseCase,
         ResolveConjunctionUseCase resolveConjunctionUseCase,
+        RunConjunctionScreeningUseCase screeningUseCase,      
         IUserOperatorRepository userOperatorRepository)
     {
-        _getDashboardUseCase = getDashboardUseCase;
-        _acknowledgeAlertUseCase = acknowledgeAlertUseCase;
+        _getDashboardUseCase       = getDashboardUseCase;
+        _acknowledgeAlertUseCase   = acknowledgeAlertUseCase;
         _resolveConjunctionUseCase = resolveConjunctionUseCase;
-        _userOperatorRepository = userOperatorRepository;
+        _screeningUseCase          = screeningUseCase;  
+        _userOperatorRepository    = userOperatorRepository;
     }
 
     [HttpGet]
@@ -33,6 +36,8 @@ public class HomeController : Controller
         var (userId, operatorId) = await GetOperatorContextAsync();
         if (userId == Guid.Empty || operatorId == Guid.Empty)
             return Forbid();
+        
+        await _screeningUseCase.ExecuteAsync(operatorId, userId);
 
         var dashboard = await _getDashboardUseCase.ExecuteAsync(userId, operatorId);
         return View(dashboard);

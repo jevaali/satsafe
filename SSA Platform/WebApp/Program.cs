@@ -2,6 +2,7 @@ using App.Application.Interfaces;
 using App.Application.Interfaces.IRepositories;
 using App.Application.UseCases;
 using App.Domain.Entities.Identity;
+using App.Domain.Services;
 using App.Infrastructure.Persistence;
 using App.Infrastructure.Repositories;
 using App.Infrastructure.Seeding;
@@ -30,6 +31,9 @@ builder.Services.AddScoped<GetHomeStatsUseCase>();
 builder.Services.AddScoped<AcknowledgeAlertUseCase>();
 builder.Services.AddScoped<ResolveConjunctionUseCase>();
 builder.Services.AddScoped<GetMainListUseCase>();
+builder.Services.AddScoped<RunConjunctionScreeningUseCase>();
+
+builder.Services.AddScoped<ConjunctionAnalysisService>();
 
 builder.Services.AddScoped<ISatelliteRepository, SatelliteRepository>();
 builder.Services.AddScoped<IDebrisObjectRepository, DebrisObjectRepository>();
@@ -37,6 +41,7 @@ builder.Services.AddScoped<IOperatorRepository, OperatorRepository>();
 builder.Services.AddScoped<IUserOperatorRepository, UserOperatorRepository>();
 builder.Services.AddScoped<IConjunctionEventRepository, ConjunctionEventRepository>();
 builder.Services.AddScoped<IAlertRepository, AlertRepository>();
+builder.Services.AddScoped<ISpaceObjectsRepository, SpaceObjectsRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services
@@ -59,7 +64,7 @@ using (var scope = app.Services.CreateScope())
     
     AppDataInit.MigrateDatabase(dbContext);
     AppDataInit.SeedIdentity(userManager, roleManager);
-    AppDataInit.SeedAppData(dbContext);
+    AppDataInit.SeedAppData(dbContext, userManager);
 }
 
 // Configure the HTTP request pipeline.

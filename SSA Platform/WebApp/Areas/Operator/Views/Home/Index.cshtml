@@ -1,3 +1,4 @@
+@using App.Domain.Entities
 @using App.Domain.Entities.Enums
 @model App.Application.DTO.OperatorDashboardDto
 
@@ -125,13 +126,23 @@
                 {
                     <div class="timeline-item @(conj.IsHighRisk() ? "high" : "")">
                         <div class="time">
-                            @conj.TimeOfClosestApproach.ToString("HH:mm")
+                            @DateTime.UtcNow.AddSeconds(conj.TimeOfClosestApproach).ToString("HH:mm")
                         </div>
                         <div class="content">
-                            @conj.PrimaryObjectId ↔ @conj.SecondaryObjectId
+                            @(conj.PrimaryObject switch {
+                                Satellite s => s.Name.ToString(),
+                                DebrisObject d => $"DEBRIS-{d.NoradId}",
+                                _ => conj.PrimaryObjectId.ToString()
+                            })
+                            ↔
+                            @(conj.SecondaryObject switch {
+                                Satellite s => s.Name.ToString(),
+                                DebrisObject d => $"DEBRIS-{d.NoradId}",
+                                _ => conj.SecondaryObjectId.ToString()
+                            })
                             <div class="meta">
                                 Miss: @conj.MissDistance.ToString("N0") m |
-                                @(conj.CollisionProbability * 100).ToString("F3")%
+                                @((conj.CollisionProbability * 100).ToString("F3"))%
                             </div>
                         </div>
                     </div>

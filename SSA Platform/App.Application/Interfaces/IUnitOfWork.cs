@@ -10,6 +10,7 @@ public interface IUnitOfWork
     IUserOperatorRepository UserOperators { get; }
     IConjunctionEventRepository ConjunctionEvents { get; }
     IAlertRepository Alerts { get; }
+    ISpaceObjectsRepository SpaceObjects { get; set; }
 
     Task CommitAsync();
 }
