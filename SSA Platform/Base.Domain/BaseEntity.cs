@@ -13,5 +13,5 @@ public class BaseEntity : BaseEntity<Guid>, IBaseEntity
 public abstract class BaseEntity<TKey> : IBaseEntity<TKey> 
     where TKey : IEquatable<TKey>
 {
-    public virtual TKey Id { get; set; }
+    public virtual Guid Id { get; set; }
 }

@@ -12,60 +12,33 @@
 <body>
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-        <div class="container-fluid">
+        <div class="container">
             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SSA Platform</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button"
-                           data-bs-toggle="dropdown" aria-expanded="false">
-                            Admin
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" asp-area="Admin" asp-controller="Alert" asp-action="Index">Alert</a>
-                            </li>
-                            <li><a class="dropdown-item" asp-area="Admin" asp-controller="ConjunctionEvent" asp-action="Index">ConjunctionEvent</a>
-                            </li>
-                            <li><a class="dropdown-item" asp-area="Admin" asp-controller="NotificationSetting" asp-action="Index">NotificationSetting</a>
-                            </li>
-                            <li><a class="dropdown-item" asp-area="Admin" asp-controller="Operator" asp-action="Index">Operator</a>
-                            </li>
-                            <li><a class="dropdown-item" asp-area="Admin" asp-controller="Orbit" asp-action="Index">Orbit</a>
-                            </li>
-                            <li><a class="dropdown-item" asp-area="Admin" asp-controller="RiskAssessment" asp-action="Index">RiskAssessment</a>
-                            </li>
-                            <li><a class="dropdown-item" asp-area="Admin" asp-controller="Satellite" asp-action="Index">Satellite</a>
-                            </li>
-                            <li><a class="dropdown-item" asp-area="Admin" asp-controller="TleRecord" asp-action="Index">TleRecord</a>
-                            </li>
-                            <li><a class="dropdown-item" asp-area="Admin" asp-controller="UserOperator" asp-action="Index">UserOperator</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button"
-                           data-bs-toggle="dropdown" aria-expanded="false">
-                            Operator
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" asp-area="Operator" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
-                            </li>
-                            <li><a class="dropdown-item" asp-area="Operator" asp-controller="Dashboard" asp-action="Satellites">Satellites</a>
-                            </li>
-                            <li><a class="dropdown-item" asp-area="Operator" asp-controller="Dashboard" asp-action="Conjunctions">Conjunctions</a>
-                            </li>
-                            <li><a class="dropdown-item" asp-area="Operator" asp-controller="Dashboard" asp-action="Alerts">Alerts</a>
-                            </li>
-                        </ul>
-                    </li>
+                    @if (User.IsInRole("Operator") || User.IsInRole("OperatorHelper"))
+                    {
+                        @await Component.InvokeAsync("OperatorHeader")
+                    }
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                               aria-expanded="false">Admin</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="Operator" asp-action="Index">Manage Operators</a></li>
+                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="Satellite" asp-action="Index">All Satellites</a></li>
+                            </ul>
+                        </li>
+                    }
                 </ul>
+
                 <partial name="_LoginPartial"/>
             </div>
         </div>

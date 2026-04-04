@@ -37,6 +37,7 @@
       <_ContentIncludedByDefault Remove="Areas\Admin\Views\SpaceObject\Details.cshtml" />
       <_ContentIncludedByDefault Remove="Areas\Admin\Views\SpaceObject\Edit.cshtml" />
       <_ContentIncludedByDefault Remove="Areas\Admin\Views\SpaceObject\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\ViewComponents\OperatorHeaderViewComponent.cshtml" />
     </ItemGroup>
 
     <ItemGroup>

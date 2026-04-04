@@ -1,0 +1,16 @@
+@model OperatorHeaderViewModel
+
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+       aria-expanded="false">My Satellites</a>
+    <ul class="dropdown-menu">
+        @foreach (var sat in Model.Satellites)
+        {
+            <li>
+                <a class="dropdown-item" asp-area="Operator" asp-controller="Dashboard" asp-action="Satellites" asp-route-id="@sat.Id">
+                    @sat.Name
+                </a>
+            </li>
+        }
+    </ul>
+</li>
