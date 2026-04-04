@@ -1,6 +1,7 @@
 using App.Application.Interfaces;
 using App.Application.Interfaces.IRepositories;
 using App.Domain.Entities;
+using App.Domain.Entities.Enums;
 using App.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,7 +16,7 @@ public class SatelliteRepository : ISatelliteRepository
         _context = context;
     }
 
-    public async Task<Satellite?> GetByIdAsync(Guid id)
+    public async Task<Satellite?> GetByIdAsync(Guid? id)
     {
         return await _context.SpaceObjects
             .OfType<Satellite>()
@@ -59,6 +60,16 @@ public class SatelliteRepository : ISatelliteRepository
             .Include(s => s.TleRecords)
             .Where(s => s.OperatorId == operatorId)
             .ToListAsync();
+    }
+
+    public Task<int> GetCountAsync()
+    {
+        return _context.SpaceObjects.OfType<Satellite>().CountAsync();
+    }
+
+    public Task<int> GetActiveCountAsync()
+    {
+        return _context.SpaceObjects.OfType<Satellite>().CountAsync(s => s.Status == ESatelliteStatus.Active);
     }
 
     public async Task Update(Satellite satellite)

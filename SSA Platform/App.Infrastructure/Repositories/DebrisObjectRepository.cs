@@ -15,7 +15,7 @@ public class DebrisObjectRepository : IDebrisObjectRepository
         _context = context;
     }
 
-    public async Task<DebrisObject?> GetByIdAsync(Guid id)
+    public async Task<DebrisObject?> GetByIdAsync(Guid? id)
     {
         return await _context.SpaceObjects
             .OfType<DebrisObject>()
@@ -47,7 +47,12 @@ public class DebrisObjectRepository : IDebrisObjectRepository
             .Include(d => d.TleRecords)
             .ToListAsync();
     }
-    
+
+    public Task<int> GetCountAsync()
+    {
+        return _context.SpaceObjects.OfType<DebrisObject>().CountAsync();
+    }
+
     public async Task Update(DebrisObject debrisObject)
     {
         _context.SpaceObjects.Update(debrisObject);

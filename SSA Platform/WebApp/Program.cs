@@ -4,9 +4,11 @@ using App.Application.UseCases;
 using App.Domain.Entities.Identity;
 using App.Infrastructure.Persistence;
 using App.Infrastructure.Repositories;
+using App.Infrastructure.Seeding;
 using App.Infrastructure.UnitOfWork;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,10 +20,13 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddScoped<AddSatelliteUseCase>();
+builder.Services.AddScoped<UpdateSatelliteUseCase>();
+builder.Services.AddScoped<DeleteSatelliteUseCase>();
 builder.Services.AddScoped<AddOperatorUseCase>();
 builder.Services.AddScoped<AddDebrisObjectUseCase>();
 builder.Services.AddScoped<RegisterOperatorUseCase>();
 builder.Services.AddScoped<GetOperatorDashboardUseCase>();
+builder.Services.AddScoped<GetHomeStatsUseCase>();
 builder.Services.AddScoped<AcknowledgeAlertUseCase>();
 builder.Services.AddScoped<ResolveConjunctionUseCase>();
 
@@ -43,18 +48,21 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// Seed the Operator role
 using (var scope = app.Services.CreateScope())
 {
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<AppRole>>();
-    if (!await roleManager.RoleExistsAsync("Operator"))
+    var services = scope.ServiceProvider;
+
+    var roleManager = services.GetRequiredService<RoleManager<AppRole>>();
+    foreach (var roleName in new[] { "Operator", "User", "Admin" })
     {
-        await roleManager.CreateAsync(new AppRole { Name = "Operator" });
+        if (!await roleManager.RoleExistsAsync(roleName))
+        {
+            await roleManager.CreateAsync(new AppRole { Name = roleName });
+        }
     }
-    if (!await roleManager.RoleExistsAsync("Admin"))
-    {
-        await roleManager.CreateAsync(new AppRole { Name = "Admin" });
-    }
+    
+    var dbContext = services.GetRequiredService<AppDbContext>();
+    SatelliteSeeder.Seed(dbContext);
 }
 
 // Configure the HTTP request pipeline.

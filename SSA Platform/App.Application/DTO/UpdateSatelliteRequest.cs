@@ -20,7 +20,7 @@ public class UpdateSatelliteRequest
 
     [Required(ErrorMessage = "Operator is required")]
     [Display(Name = "Operator")]
-    public Guid OperatorId { get; set; }
+    public Guid? OperatorId { get; set; }
 
     [Required(ErrorMessage = "Semi-major axis is required")]
     [Range(6500, 50000, ErrorMessage = "Semi-major axis must be between 6,500 and 50,000 km")]

@@ -273,6 +273,13 @@ namespace App.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     NoradId = table.Column<int>(type: "INTEGER", nullable: false),
                     OrbitId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    SpaceObjectType = table.Column<string>(type: "TEXT", maxLength: 13, nullable: false),
+                    SizeEstimate = table.Column<float>(type: "REAL", nullable: true),
+                    RiskCategory = table.Column<int>(type: "INTEGER", nullable: true),
+                    Name = table.Column<string>(type: "jsonb", nullable: true),
+                    LaunchDate = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    Status = table.Column<int>(type: "INTEGER", nullable: true),
+                    OperatorId = table.Column<Guid>(type: "TEXT", nullable: true),
                     CreatedBy = table.Column<string>(type: "TEXT", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     UpdatedBy = table.Column<string>(type: "TEXT", nullable: true),
@@ -283,6 +290,12 @@ namespace App.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_SpaceObjects", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SpaceObjects_Operators_OperatorId",
+                        column: x => x.OperatorId,
+                        principalTable: "Operators",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_SpaceObjects_Orbits_OrbitId",
                         column: x => x.OrbitId,
@@ -322,52 +335,6 @@ namespace App.Infrastructure.Migrations
                         principalTable: "SpaceObjects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "DebrisObjects",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    SizeEstimate = table.Column<float>(type: "REAL", nullable: false),
-                    RiskCategory = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DebrisObjects", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_DebrisObjects_SpaceObjects_Id",
-                        column: x => x.Id,
-                        principalTable: "SpaceObjects",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Satellites",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "jsonb", nullable: false),
-                    LaunchDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Status = table.Column<int>(type: "INTEGER", nullable: false),
-                    OperatorId = table.Column<Guid>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Satellites", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Satellites_Operators_OperatorId",
-                        column: x => x.OperatorId,
-                        principalTable: "Operators",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Satellites_SpaceObjects_Id",
-                        column: x => x.Id,
-                        principalTable: "SpaceObjects",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -542,8 +509,8 @@ namespace App.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Satellites_OperatorId",
-                table: "Satellites",
+                name: "IX_SpaceObjects_OperatorId",
+                table: "SpaceObjects",
                 column: "OperatorId");
 
             migrationBuilder.CreateIndex(
@@ -590,16 +557,10 @@ namespace App.Infrastructure.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "DebrisObjects");
-
-            migrationBuilder.DropTable(
                 name: "NotificationSettings");
 
             migrationBuilder.DropTable(
                 name: "RiskAssessments");
-
-            migrationBuilder.DropTable(
-                name: "Satellites");
 
             migrationBuilder.DropTable(
                 name: "TleRecords");
@@ -617,10 +578,10 @@ namespace App.Infrastructure.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Operators");
+                name: "SpaceObjects");
 
             migrationBuilder.DropTable(
-                name: "SpaceObjects");
+                name: "Operators");
 
             migrationBuilder.DropTable(
                 name: "Orbits");

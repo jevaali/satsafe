@@ -1,0 +1,107 @@
+[
+  {
+    "NoradId": 25544,
+    "Name": "International Space Station",
+    "OperatorName": "NASA/International Partners",
+    "LaunchDate": "1998-11-20T00:00:00Z",
+    "OrbitParameters": null
+  },
+  {
+    "NoradId": 20580,
+    "Name": "Hubble Space Telescope",
+    "OperatorName": "NASA/ESA",
+    "LaunchDate": "1990-04-24T00:00:00Z",
+    "OrbitParameters": null
+  },
+  {
+    "NoradId": 39084,
+    "Name": "Landsat 8",
+    "OperatorName": "NASA/USGS",
+    "LaunchDate": "2013-02-11T00:00:00Z",
+    "OrbitParameters": null
+  },
+  {
+    "NoradId": 41866,
+    "Name": "GOES-16 (example GEO weather satellite)",
+    "OperatorName": "NOAA",
+    "LaunchDate": "2016-11-19T00:00:00Z",
+    "OrbitParameters": null
+  },
+  {
+    "NoradId": 39765,
+    "Name": "Jason-3 (oceanography)",
+    "OperatorName": "NOAA/CNES/EUMETSAT/NASA",
+    "LaunchDate": "2016-01-17T00:00:00Z",
+    "OrbitParameters": null
+  },
+  {
+    "NoradId": 27802,
+    "Name": "GPS IIR-11 (representative GPS satellite)",
+    "OperatorName": "U.S. Space Force",
+    "LaunchDate": "2000-07-16T00:00:00Z",
+    "OrbitParameters": null
+  },
+  {
+    "NoradId": 30785,
+    "Name": "GPS IIF-10",
+    "OperatorName": "U.S. Space Force",
+    "LaunchDate": "2015-07-15T00:00:00Z",
+    "OrbitParameters": null
+  },
+  {
+    "NoradId": 41766,
+    "Name": "GLONASS (example representative)",
+    "OperatorName": "Roscosmos",
+    "LaunchDate": "2018-10-23T00:00:00Z",
+    "OrbitParameters": null
+  },
+  {
+    "NoradId": 40697,
+    "Name": "Galileo FM14 (example Galileo)",
+    "OperatorName": "EUSPA/ESA",
+    "LaunchDate": "2023-12-17T00:00:00Z",
+    "OrbitParameters": null
+  },
+  {
+    "NoradId": 47830,
+    "Name": "OneWeb 5 (representative large comm. constellation)",
+    "OperatorName": "OneWeb",
+    "LaunchDate": "2022-09-28T00:00:00Z",
+    "OrbitParameters": null
+  },
+  {
+    "NoradId": 48099,
+    "Name": "Iridium NEXT 1",
+    "OperatorName": "Iridium Communications",
+    "LaunchDate": "2017-01-14T00:00:00Z",
+    "OrbitParameters": null
+  },
+  {
+    "NoradId": 44238,
+    "Name": "Sentinel-1A",
+    "OperatorName": "ESA",
+    "LaunchDate": "2014-04-03T00:00:00Z",
+    "OrbitParameters": null
+  },
+  {
+    "NoradId": 42266,
+    "Name": "Swarm A (Earth magnetic field mission)",
+    "OperatorName": "ESA",
+    "LaunchDate": "2013-11-22T00:00:00Z",
+    "OrbitParameters": null
+  },
+  {
+    "NoradId": 42836,
+    "Name": "Tianhe (Chinese space station core)",
+    "OperatorName": "CNSA",
+    "LaunchDate": "2021-04-29T00:00:00Z",
+    "OrbitParameters": null
+  },
+  {
+    "NoradId": 44713,
+    "Name": "James Webb Space Telescope",
+    "OperatorName": "NASA/ESA/CSA",
+    "LaunchDate": "2021-12-25T00:00:00Z",
+    "OrbitParameters": null
+  }
+]

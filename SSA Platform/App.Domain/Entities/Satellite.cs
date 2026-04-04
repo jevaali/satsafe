@@ -10,8 +10,10 @@ public class Satellite : SpaceObject
     public DateTime LaunchDate { get; private set; }
     public ESatelliteStatus Status { get; private set; }
 
-    public Guid OperatorId { get; private set; }
-    public required Operator Operator { get; set; }
+    public Guid? OperatorId { get; private set; }
+    public Operator? Operator { get; set; }
+    
+    public string? OperatorName { get; private set; } = string.Empty;
 
     private Satellite() { }
 
@@ -31,6 +33,7 @@ public class Satellite : SpaceObject
             Status = ESatelliteStatus.Active,
             Operator = op,
             OperatorId = op.Id,
+            OperatorName = op.Name,
             Orbit = null,
             CreatedBy = "system", 
             CreatedAt = DateTime.UtcNow
@@ -52,5 +55,35 @@ public class Satellite : SpaceObject
         DeletedAt = DateTime.UtcNow;
         DeletedBy = deletedBy;
         Status = ESatelliteStatus.Deleted;
+    }
+
+    public static Satellite CreateFromExternalData(string sName,
+        DateTime sLaunchDate,
+        string? sOperatorName,
+        OrbitParameters? sOrbitParameters)
+    {
+        if (string.IsNullOrWhiteSpace(sName))
+            throw new ArgumentException("Satellite name is required", nameof(sName));
+
+        var satellite = new Satellite
+        {
+            Id = Guid.NewGuid(),
+            Name = sName,
+            LaunchDate = sLaunchDate,
+            Status = ESatelliteStatus.Active,
+            Operator = null,
+            OperatorId = null,
+            OperatorName = sOperatorName ?? string.Empty,
+            CreatedBy = "system",
+            CreatedAt = DateTime.UtcNow,
+            Orbit = null
+        };
+        
+        if (sOrbitParameters != null)
+        {
+            satellite.SetOrbit(sOrbitParameters);
+        }
+
+        return satellite;
     }
 }

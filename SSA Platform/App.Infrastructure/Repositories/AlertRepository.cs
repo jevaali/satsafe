@@ -14,7 +14,7 @@ public class AlertRepository : IAlertRepository
         _context = context;
     }
 
-    public async Task<Alert?> GetByIdAsync(Guid id)
+    public async Task<Alert?> GetByIdAsync(Guid? id)
     {
         return await _context.Alerts
             .Include(a => a.User)

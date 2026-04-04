@@ -1,0 +1,161 @@
+@model App.Domain.Entities.Satellite
+
+@{
+    ViewData["Title"] = "Delete Satellite";
+}
+
+<div class="container">
+    <div class="row py-4">
+        <div class="col-12">
+            <h1 class="display-4 fw-bold text-danger">Delete Satellite</h1>
+            <p class="lead text-muted mb-4">
+                Are you sure you want to delete this satellite? This action cannot be undone.
+            </p>
+        </div>
+    </div>
+
+    <div class="row py-2">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-area="Operator" asp-controller="Dashboard" asp-action="Index">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a asp-area="Operator" asp-controller="Satellite" asp-action="Index">Satellites</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Delete</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row py-3">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        <strong>Warning:</strong> This will soft-delete the satellite. The satellite will be marked as deleted and removed from your active fleet.
+                    </div>
+
+                    <h5 class="mb-3 text-muted border-bottom pb-2">
+                        <i class="bi bi-info-circle me-2"></i>Satellite Details
+                    </h5>
+
+                    <dl class="row">
+                        <dt class="col-sm-3">
+                            @Html.DisplayNameFor(model => model.Name)
+                        </dt>
+                        <dd class="col-sm-9">
+                            <strong>@Html.DisplayFor(model => model.Name)</strong>
+                        </dd>
+
+                        <dt class="col-sm-3">
+                            @Html.DisplayNameFor(model => model.NoradId)
+                        </dt>
+                        <dd class="col-sm-9">
+                            @Html.DisplayFor(model => model.NoradId)
+                        </dd>
+
+                        <dt class="col-sm-3">
+                            @Html.DisplayNameFor(model => model.Status)
+                        </dt>
+                        <dd class="col-sm-9">
+                            <span class="badge bg-@(Model.Status.ToString().ToLower())">
+                                @Html.DisplayFor(model => model.Status)
+                            </span>
+                        </dd>
+
+                        <dt class="col-sm-3">
+                            @Html.DisplayNameFor(model => model.LaunchDate)
+                        </dt>
+                        <dd class="col-sm-9">
+                            @Html.DisplayFor(model => model.LaunchDate)
+                        </dd>
+                    </dl>
+
+                    @if (Model.Orbit != null)
+                    {
+                        <h5 class="mb-3 text-muted border-bottom pb-2 mt-4">
+                            <i class="bi bi-planet me-2"></i>Orbital Parameters
+                        </h5>
+
+                        <dl class="row">
+                            <dt class="col-sm-3">
+                                Semi-Major Axis
+                            </dt>
+                            <dd class="col-sm-9">
+                                @Model.Orbit.Parameters.SemiMajorAxis.ToString("N0") km
+                            </dd>
+
+                            <dt class="col-sm-3">
+                                Eccentricity
+                            </dt>
+                            <dd class="col-sm-9">
+                                @Model.Orbit.Parameters.Eccentricity.ToString("F4")
+                            </dd>
+
+                            <dt class="col-sm-3">
+                                Inclination
+                            </dt>
+                            <dd class="col-sm-9">
+                                @Model.Orbit.Parameters.Inclination.ToString("F2")°
+                            </dd>
+                        </dl>
+                    }
+
+                    <form asp-action="Delete" method="post" class="mt-4">
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-danger btn-lg">
+                                <i class="bi bi-trash me-2"></i>Delete Satellite
+                            </button>
+                            <a asp-area="Operator" asp-controller="Satellite" asp-action="Index" class="btn btn-outline-secondary btn-lg">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm mt-3 mt-lg-0">
+                <div class="card-header bg-transparent">
+                    <h5 class="mb-0">
+                        <i class="bi bi-question-circle me-2"></i>What happens after deletion?
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled small">
+                        <li class="mb-2">
+                            <i class="bi bi-check text-warning me-2"></i>
+                            Satellite will be marked as deleted
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check text-warning me-2"></i>
+                            Removed from active fleet view
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check text-warning me-2"></i>
+                            Historical data preserved
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-x text-danger me-2"></i>
+                            Cannot be restored without admin
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .badge.bg-active {
+        background-color: #198754 !important;
+    }
+    .badge.bg-inactive {
+        background-color: #6c757d !important;
+    }
+    .badge.bg-deleted {
+        background-color: #dc3545 !important;
+    }
+</style>

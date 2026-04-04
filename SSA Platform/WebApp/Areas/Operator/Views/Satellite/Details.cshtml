@@ -1,0 +1,195 @@
+@model App.Domain.Entities.Satellite
+
+@{
+    ViewData["Title"] = "Satellite Details";
+}
+
+<div class="container">
+    <div class="row py-4">
+        <div class="col-12">
+            <h1 class="display-4 fw-bold text-primary">@Model.Name</h1>
+            <p class="lead text-muted mb-4">
+                <span class="badge bg-@(Model.Status.ToString().ToLower())">@Html.DisplayFor(model => model.Status)</span>
+                <span class="ms-2">Satellite Details</span>
+            </p>
+        </div>
+    </div>
+
+    <div class="row py-2">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-area="Operator" asp-controller="Dashboard" asp-action="Index">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a asp-area="Operator" asp-controller="Satellite" asp-action="Index">Satellites</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Details</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row py-3">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="mb-3 text-muted border-bottom pb-2">
+                        <i class="bi bi-info-circle me-2"></i>Basic Information
+                    </h5>
+
+                    <dl class="row">
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.Name)
+                        </dt>
+                        <dd class="col-sm-8">
+                            <strong>@Html.DisplayFor(model => model.Name)</strong>
+                        </dd>
+
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.NoradId)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.NoradId)
+                        </dd>
+
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.Status)
+                        </dt>
+                        <dd class="col-sm-8">
+                            <span class="badge bg-@(Model.Status.ToString().ToLower())">
+                                @Html.DisplayFor(model => model.Status)
+                            </span>
+                        </dd>
+
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.LaunchDate)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.LaunchDate)
+                        </dd>
+                    </dl>
+
+                    @if (Model.Orbit != null)
+                    {
+                        <h5 class="mb-3 text-muted border-bottom pb-2 mt-4">
+                            <i class="bi bi-planet me-2"></i>Orbital Parameters
+                        </h5>
+
+                        <dl class="row">
+                            <dt class="col-sm-4">
+                                Semi-Major Axis
+                            </dt>
+                            <dd class="col-sm-8">
+                                @Model.Orbit.Parameters.SemiMajorAxis.ToString("N0") km
+                            </dd>
+
+                            <dt class="col-sm-4">
+                                Eccentricity
+                            </dt>
+                            <dd class="col-sm-8">
+                                @Model.Orbit.Parameters.Eccentricity.ToString("F4")
+                            </dd>
+
+                            <dt class="col-sm-4">
+                                Inclination
+                            </dt>
+                            <dd class="col-sm-8">
+                                @Model.Orbit.Parameters.Inclination.ToString("F2")°
+                            </dd>
+
+                            <dt class="col-sm-4">
+                                RAAN
+                            </dt>
+                            <dd class="col-sm-8">
+                                @Model.Orbit.Parameters.RAAN.ToString("F2")°
+                            </dd>
+                            <dt class="col-sm-4">
+                                Argument of Perigee
+                            </dt>
+                            <dd class="col-sm-8">
+                                @Model.Orbit.Parameters.ArgumentOfPerigee.ToString("F2")°
+                            </dd>
+
+                            <dt class="col-sm-4">
+                                Mean Anomaly
+                            </dt>
+                            <dd class="col-sm-8">
+                                @Model.Orbit.Parameters.MeanAnomaly.ToString("F2")°
+                            </dd>
+                        </dl>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info mt-4">
+                            <i class="bi bi-info-circle me-2"></i>
+                            No orbital parameters available for this satellite.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm mt-3 mt-lg-0">
+                <div class="card-header bg-transparent">
+                    <h5 class="mb-0">
+                        <i class="bi bi-gear me-2"></i>Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a asp-area="Operator" asp-controller="Satellite" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+                            <i class="bi bi-pencil me-2"></i>Edit Satellite
+                        </a>
+                        <a asp-area="Operator" asp-controller="Satellite" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger">
+                            <i class="bi bi-trash me-2"></i>Delete Satellite
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm mt-3">
+                <div class="card-header bg-transparent">
+                    <h5 class="mb-0">
+                        <i class="bi bi-clock-history me-2"></i>Metadata
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-5">
+                            Created
+                        </dt>
+                        <dd class="col-sm-7">
+                            @Model.CreatedAt.ToString("g")
+                        </dd>
+
+                        <dt class="col-sm-5">
+                            Created By
+                        </dt>
+                        <dd class="col-sm-7">
+                            @Model.CreatedBy
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row py-3">
+        <div class="col-12">
+            <a asp-area="Operator" asp-controller="Satellite" asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-2"></i>Back to Satellites
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .badge.bg-active {
+        background-color: #198754 !important;
+    }
+    .badge.bg-inactive {
+        background-color: #6c757d !important;
+    }
+    .badge.bg-deleted {
+        background-color: #dc3545 !important;
+    }
+</style>

@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace App.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260401191350_TPH")]
-    partial class TPH
+    [Migration("20260403105343_Oparatorname")]
+    partial class Oparatorname
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -404,7 +404,7 @@ namespace App.Infrastructure.Migrations
                     b.HasIndex("OrbitId")
                         .IsUnique();
 
-                    b.ToTable("SpaceObject");
+                    b.ToTable("SpaceObjects");
 
                     b.HasDiscriminator<string>("SpaceObjectType").HasValue("SpaceObject");
 
@@ -642,7 +642,10 @@ namespace App.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("jsonb");
 
-                    b.Property<Guid>("OperatorId")
+                    b.Property<Guid?>("OperatorId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("OperatorName")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Status")
@@ -867,9 +870,7 @@ namespace App.Infrastructure.Migrations
                 {
                     b.HasOne("App.Domain.Entities.Operator", "Operator")
                         .WithMany("Satellites")
-                        .HasForeignKey("OperatorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("OperatorId");
 
                     b.Navigation("Operator");
                 });

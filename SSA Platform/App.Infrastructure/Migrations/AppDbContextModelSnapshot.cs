@@ -639,7 +639,10 @@ namespace App.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("jsonb");
 
-                    b.Property<Guid>("OperatorId")
+                    b.Property<Guid?>("OperatorId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("OperatorName")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Status")
@@ -864,9 +867,7 @@ namespace App.Infrastructure.Migrations
                 {
                     b.HasOne("App.Domain.Entities.Operator", "Operator")
                         .WithMany("Satellites")
-                        .HasForeignKey("OperatorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("OperatorId");
 
                     b.Navigation("Operator");
                 });

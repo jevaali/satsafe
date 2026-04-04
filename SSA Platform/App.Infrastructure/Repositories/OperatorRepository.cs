@@ -15,7 +15,7 @@ public class OperatorRepository : IOperatorRepository
         _context = context;
     }
 
-    public async Task<Operator?> GetByIdAsync(Guid id)
+    public async Task<Operator?> GetByIdAsync(Guid? id)
     {
         return await _context.Operators.FindAsync(id);
     }
