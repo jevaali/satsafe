@@ -17,12 +17,21 @@ public class GetHomeStatsUseCase
         var totalSatellites = await _unitOfWork.Satellites.GetCountAsync();
         var activeSatellites = await _unitOfWork.Satellites.GetActiveCountAsync();
         var debrisObjects = await _unitOfWork.DebrisObjects.GetCountAsync();
+        
+        var topSatellites = await _unitOfWork.Satellites.GetTopAsync(10); 
+
+        var satellitesDto = topSatellites.Select(s => new HomeStatsSatteliteDto
+        {
+            Name = s.Name,
+            Operator = s.OperatorName ?? "Unknown"
+        }).ToList();
 
         return new HomeStatsDto
         {
             TotalSpaceObjects = totalSatellites + debrisObjects,
             ActiveSatellites = activeSatellites,
-            DebrisObjects = debrisObjects
+            DebrisObjects = debrisObjects,
+            Satellites = satellitesDto
         };
     }
 }

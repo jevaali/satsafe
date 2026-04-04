@@ -72,6 +72,15 @@ public class SatelliteRepository : ISatelliteRepository
         return _context.SpaceObjects.OfType<Satellite>().CountAsync(s => s.Status == ESatelliteStatus.Active);
     }
 
+    public Task<List<Satellite>> GetTopAsync(int count)
+    {
+        return _context.SpaceObjects
+            .OfType<Satellite>()
+            .Include(s => s.Operator)
+            .Take(count)
+            .ToListAsync();
+    }
+
     public async Task Update(Satellite satellite)
     {
         _context.SpaceObjects.Update(satellite);
