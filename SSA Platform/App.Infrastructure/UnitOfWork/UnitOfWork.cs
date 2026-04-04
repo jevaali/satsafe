@@ -16,6 +16,7 @@ public class UnitOfWork : IUnitOfWork
     public IAlertRepository Alerts { get; }
     
     public ISpaceObjectsRepository SpaceObjects { get; set; }
+    public INotificationSettingRepository NotificationSettings { get; }
 
     public UnitOfWork(
         AppDbContext context,
@@ -25,7 +26,8 @@ public class UnitOfWork : IUnitOfWork
         IUserOperatorRepository userOperators,
         IConjunctionEventRepository conjunctionEvents,
         IAlertRepository alerts,
-        ISpaceObjectsRepository spaceObjects)
+        ISpaceObjectsRepository spaceObjects,
+        INotificationSettingRepository notificationSettings)
     {
         _context = context;
         Satellites = satellites;
@@ -35,6 +37,7 @@ public class UnitOfWork : IUnitOfWork
         ConjunctionEvents = conjunctionEvents;
         Alerts = alerts;
         SpaceObjects = spaceObjects;
+        NotificationSettings = notificationSettings;
     }
 
     public async Task CommitAsync()

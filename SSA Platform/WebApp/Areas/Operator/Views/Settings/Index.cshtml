@@ -1,8 +1,16 @@
+@model WebApp.Areas.Operator.Models.SettingsViewModel
+@using App.Domain.Entities.Enums
+
 @{
     ViewData["Title"] = "Settings";
+    var activeTab = TempData["ActiveTab"]?.ToString() ?? "profile";
+    var op = Model.Settings.Operator;
+    var helpers = Model.Settings.Helpers.ToList();
+    var satellites = Model.Settings.Satellites.ToList();
 }
 
 <link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/settings.css" asp-append-version="true" />
 
 <div class="ssa-container">
 
@@ -13,15 +21,326 @@
 
     <div class="header">
         <div>
-            <h3>Operator Settings</h3>
-            <small>Manage your account, notifications, and preferences</small>
+            <h3><i class="bi bi-gear-fill me-2"></i>Settings</h3>
+            <small>Manage your operator profile, team access, and notification preferences</small>
+        </div>
+        <div class="header-right">
+            <span class="badge bg-success">@satellites.Count(s => s.Status == ESatelliteStatus.Active) Active</span>
+            <span class="badge bg-secondary">@helpers.Count Team</span>
         </div>
     </div>
 
-    <div class="card">
-        <div class="empty-state">
-            <p>Settings management is coming soon.</p>
+    @if (TempData["SuccessMessage"] != null)
+    {
+    <div class="alert alert-success alert-dismissible fade show mb-3" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i>@TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+    <div class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>@TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    }
+
+    <!-- Tab navigation -->
+    <ul class="nav nav-tabs settings-tabs mb-3" id="settingsTabs">
+        <li class="nav-item">
+            <a class="nav-link @(activeTab == "profile" ? "active" : "")"
+               data-bs-toggle="tab" data-bs-target="#panel-profile" role="tab">
+                <i class="bi bi-building me-1"></i> Operator Profile
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(activeTab == "satellites" ? "active" : "")"
+               data-bs-toggle="tab" data-bs-target="#panel-satellites" role="tab">
+                <i class="bi bi-rocket-takeoff me-1"></i> Satellites
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(activeTab == "team" ? "active" : "")"
+               data-bs-toggle="tab" data-bs-target="#panel-team" role="tab">
+                <i class="bi bi-people-fill me-1"></i> Team Access
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(activeTab == "notifications" ? "active" : "")"
+               data-bs-toggle="tab" data-bs-target="#panel-notifications" role="tab">
+                <i class="bi bi-bell-fill me-1"></i> Notifications
+            </a>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+
+        <!-- ── Operator Profile ── -->
+        <div class="tab-pane fade @(activeTab == "profile" ? "show active" : "")" id="panel-profile" role="tabpanel">
+
+            <div class="card mb-3">
+                <div class="card-header">
+                    <span><i class="bi bi-info-circle me-1"></i> Current Profile</span>
+                </div>
+                <div class="info-grid p-2">
+                    <div>
+                        <div class="info-label">Operator Name</div>
+                        <div class="info-value">@op.Name</div>
+                    </div>
+                    <div>
+                        <div class="info-label">Country</div>
+                        <div class="info-value">@op.Country</div>
+                    </div>
+                    <div>
+                        <div class="info-label">Type</div>
+                        <div class="info-value">@(op.OperatorType?.ToString() ?? "—")</div>
+                    </div>
+                    <div>
+                        <div class="info-label">Operator ID</div>
+                        <div class="info-value mono">@op.Id</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span><i class="bi bi-pencil-square me-1"></i> Edit Profile</span>
+                </div>
+                <form asp-area="Operator" asp-controller="Settings" asp-action="UpdateOperator" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="row g-3 p-2">
+                        <div class="col-md-6">
+                            <label class="form-label" asp-for="OperatorForm.Name">Operator Name</label>
+                            <input asp-for="OperatorForm.Name" class="form-control" placeholder="e.g. National Space Agency" />
+                            <span asp-validation-for="OperatorForm.Name" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" asp-for="OperatorForm.Country">Country</label>
+                            <input asp-for="OperatorForm.Country" class="form-control" placeholder="e.g. Estonia" />
+                            <span asp-validation-for="OperatorForm.Country" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" asp-for="OperatorForm.OperatorType">Operator Type</label>
+                            <select asp-for="OperatorForm.OperatorType" class="form-select"
+                                    asp-items="Html.GetEnumSelectList<EOperatorType>()">
+                                <option value="">— Select type —</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="p-2 pt-0">
+                        <button type="submit" class="btn btn-dark btn-sm">
+                            <i class="bi bi-floppy me-1"></i> Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+
         </div>
+
+        <!-- ── Satellites ── -->
+        <div class="tab-pane fade @(activeTab == "satellites" ? "show active" : "")" id="panel-satellites" role="tabpanel">
+
+            <div class="card">
+                <div class="card-header">
+                    <span><i class="bi bi-rocket-takeoff me-1"></i> Registered Satellites (@satellites.Count)</span>
+                    <a asp-area="Operator" asp-controller="Satellite" asp-action="Create" class="btn-add">
+                        <i class="bi bi-plus-lg"></i> Add Satellite
+                    </a>
+                </div>
+
+                @if (satellites.Any())
+                {
+                    <table class="table table-sm table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Name</th>
+                                <th>NORAD</th>
+                                <th>Launch Date</th>
+                                <th>Status</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var sat in satellites.OrderBy(s => s.Name.ToString()))
+                        {
+                            <tr>
+                                <td class="fw-semibold">@sat.Name</td>
+                                <td class="font-monospace text-muted">#@sat.NoradId</td>
+                                <td>@sat.LaunchDate.ToString("yyyy-MM-dd")</td>
+                                <td><span class="badge-status @sat.Status.ToString().ToLower()">@sat.Status</span></td>
+                                <td class="text-end">
+                                    <a asp-area="Operator" asp-controller="Satellite" asp-action="Edit" asp-route-id="@sat.Id"
+                                       class="btn-sat btn-sat-edit">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                <div class="empty-state">
+                    <p>No satellites registered yet.</p>
+                </div>
+                }
+            </div>
+
+        </div>
+
+        <!-- ── Team Access ── -->
+        <div class="tab-pane fade @(activeTab == "team" ? "show active" : "")" id="panel-team" role="tabpanel">
+
+            <div class="card mb-3">
+                <div class="card-header">
+                    <span><i class="bi bi-people me-1"></i> Team Members (@helpers.Count)</span>
+                </div>
+
+                @if (helpers.Any())
+                {
+                    <div class="px-3">
+                    @foreach (var helper in helpers)
+                    {
+                        var user = helper.AppUser;
+                        var initials = user != null
+                            ? $"{user.FirstName.FirstOrDefault()}{user.LastName.FirstOrDefault()}".ToUpper().Trim()
+                            : "?";
+                        if (string.IsNullOrWhiteSpace(initials))
+                            initials = (user?.Email?.FirstOrDefault() ?? '?').ToString().ToUpper();
+
+                        <div class="helper-row">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="helper-avatar">@initials</div>
+                                <div>
+                                    <div class="fw-semibold" style="font-size:0.88rem">
+                                        @(user != null && (!string.IsNullOrWhiteSpace(user.FirstName) || !string.IsNullOrWhiteSpace(user.LastName))
+                                            ? $"{user.FirstName} {user.LastName}".Trim()
+                                            : user?.Email ?? "Unknown")
+                                    </div>
+                                    <div class="text-muted" style="font-size:0.75rem">@(user?.Email ?? "—")</div>
+                                </div>
+                            </div>
+                            <form asp-area="Operator" asp-controller="Settings" asp-action="RemoveHelper"
+                                  asp-route-id="@(helper.Id)" method="post" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn-sat btn-sat-delete"
+                                        onclick="return confirm('Remove this team member?')">
+                                    <i class="bi bi-person-x"></i> Remove
+                                </button>
+                            </form>
+                        </div>
+                    }
+                    </div>
+                }
+                else
+                {
+                <div class="empty-state" style="padding:2rem">
+                    <p>No additional team members yet.</p>
+                </div>
+                }
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span><i class="bi bi-person-plus me-1"></i> Add Team Member</span>
+                </div>
+                <p class="text-muted small px-3 pt-2 mb-2">
+                    Grant another registered user access to manage this operator's satellites.
+                </p>
+                <form asp-area="Operator" asp-controller="Settings" asp-action="AddHelper" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="row g-2 align-items-end px-3 pb-3">
+                        <div class="col-md-7">
+                            <label class="form-label" asp-for="HelperForm.Email">User Email</label>
+                            <input asp-for="HelperForm.Email" type="email" class="form-control"
+                                   placeholder="user@example.com" />
+                            <span asp-validation-for="HelperForm.Email" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-5">
+                            <button type="submit" class="btn btn-dark btn-sm w-100">
+                                <i class="bi bi-person-plus me-1"></i> Grant Access
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+        <!-- ── Notifications ── -->
+        <div class="tab-pane fade @(activeTab == "notifications" ? "show active" : "")" id="panel-notifications" role="tabpanel">
+
+            <div class="card">
+                <div class="card-header">
+                    <span><i class="bi bi-bell me-1"></i> Notification Preferences</span>
+                </div>
+                <form asp-area="Operator" asp-controller="Settings" asp-action="SaveNotifications" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="px-3 py-2">
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold" asp-for="NotificationForm.ThresholdDistance">
+                                Conjunction Alert Threshold (km)
+                            </label>
+                            <p class="text-muted small mb-2">
+                                Receive alerts when a conjunction is detected within this distance.
+                            </p>
+                            <div class="d-flex align-items-center gap-3" style="max-width:420px">
+                                <input type="range" min="0.1" max="100" step="0.1"
+                                       class="form-range flex-grow-1" id="thresholdRange"
+                                       value="@Model.NotificationForm.ThresholdDistance" />
+                                <input asp-for="NotificationForm.ThresholdDistance"
+                                       type="number" min="0.1" max="10000" step="0.1"
+                                       class="form-control" style="width:110px" id="thresholdNumber" />
+                            </div>
+                            <span asp-validation-for="NotificationForm.ThresholdDistance" class="text-danger small"></span>
+                        </div>
+
+                        <div class="toggle-row">
+                            <div>
+                                <div class="fw-semibold"><i class="bi bi-envelope me-2"></i>Email Notifications</div>
+                                <div class="text-muted small">Receive alerts via email when high-risk conjunctions are detected</div>
+                            </div>
+                            <div class="form-check form-switch mb-0">
+                                <input asp-for="NotificationForm.EmailEnabled"
+                                       class="form-check-input" type="checkbox" role="switch" id="emailSwitch" />
+                            </div>
+                        </div>
+
+                        <div class="toggle-row">
+                            <div>
+                                <div class="fw-semibold"><i class="bi bi-phone me-2"></i>SMS Notifications</div>
+                                <div class="text-muted small">Receive text message alerts for critical conjunction events</div>
+                            </div>
+                            <div class="form-check form-switch mb-0">
+                                <input asp-for="NotificationForm.SmsEnabled"
+                                       class="form-check-input" type="checkbox" role="switch" id="smsSwitch" />
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="px-3 pb-3">
+                        <button type="submit" class="btn btn-dark btn-sm">
+                            <i class="bi bi-floppy me-1"></i> Save Preferences
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
     </div>
 
 </div>
+
+<script>
+    (function () {
+        var range = document.getElementById('thresholdRange');
+        var num = document.getElementById('thresholdNumber');
+        if (range && num) {
+            range.addEventListener('input', function () { num.value = this.value; });
+            num.addEventListener('input', function () { range.value = this.value; });
+        }
+    })();
+</script>

@@ -32,6 +32,11 @@ builder.Services.AddScoped<AcknowledgeAlertUseCase>();
 builder.Services.AddScoped<ResolveConjunctionUseCase>();
 builder.Services.AddScoped<GetMainListUseCase>();
 builder.Services.AddScoped<RunConjunctionScreeningUseCase>();
+builder.Services.AddScoped<GetSettingsUseCase>();
+builder.Services.AddScoped<UpdateOperatorSettingsUseCase>();
+builder.Services.AddScoped<AddHelperUseCase>();
+builder.Services.AddScoped<RemoveHelperUseCase>();
+builder.Services.AddScoped<SaveNotificationsUseCase>();
 
 builder.Services.AddScoped<ConjunctionAnalysisService>();
 
@@ -42,6 +47,7 @@ builder.Services.AddScoped<IUserOperatorRepository, UserOperatorRepository>();
 builder.Services.AddScoped<IConjunctionEventRepository, ConjunctionEventRepository>();
 builder.Services.AddScoped<IAlertRepository, AlertRepository>();
 builder.Services.AddScoped<ISpaceObjectsRepository, SpaceObjectsRepository>();
+builder.Services.AddScoped<INotificationSettingRepository, NotificationSettingRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services

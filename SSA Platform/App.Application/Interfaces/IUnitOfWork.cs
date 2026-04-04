@@ -11,6 +11,7 @@ public interface IUnitOfWork
     IConjunctionEventRepository ConjunctionEvents { get; }
     IAlertRepository Alerts { get; }
     ISpaceObjectsRepository SpaceObjects { get; set; }
+    INotificationSettingRepository NotificationSettings { get; }
 
     Task CommitAsync();
 }

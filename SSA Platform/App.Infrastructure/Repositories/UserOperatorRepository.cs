@@ -42,8 +42,16 @@ public class UserOperatorRepository : IUserOperatorRepository
             .ToListAsync();
     }
 
-    public async Task<UserOperator?> GetByUserIdAsync(Guid userId)
-    {
-        return await _context.UserOperators.FirstOrDefaultAsync(u => u.AppUserId == userId);
-    }
+    public async Task<UserOperator?> GetByUserIdAsync(Guid userId) =>
+        await _context.UserOperators.FirstOrDefaultAsync(u => u.AppUserId == userId);
+
+    public async Task<IEnumerable<UserOperator>> GetByOperatorIdAsync(Guid operatorId) =>
+        await _context.UserOperators
+            .Include(u => u.AppUser)
+            .Where(u => u.OperatorId == operatorId)
+            .ToListAsync();
+
+    public async Task<UserOperator?> GetByUserAndOperatorAsync(Guid userId, Guid operatorId) =>
+        await _context.UserOperators
+            .FirstOrDefaultAsync(u => u.AppUserId == userId && u.OperatorId == operatorId);
 }

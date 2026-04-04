@@ -1,0 +1,85 @@
+/* ── Settings page ── */
+
+/* Tab nav — matches SSA system bar aesthetic */
+.settings-tabs .nav-link {
+    font-size: 0.78rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: #6c757d;
+    border: none;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    padding: 0.6rem 1.1rem;
+}
+.settings-tabs .nav-link:hover { color: #212529; background: none; }
+.settings-tabs .nav-link.active {
+    color: #212529;
+    background: none;
+    border-bottom: 2px solid #212529;
+    font-weight: 700;
+}
+
+/* Helper rows */
+.helper-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+.helper-row:last-child { border-bottom: none; }
+
+.helper-avatar {
+    width: 34px;
+    height: 34px;
+    background: #212529;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+/* Satellite list rows inside settings */
+.sat-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+.sat-row:last-child { border-bottom: none; }
+
+/* Toggle rows for notifications */
+.toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+.toggle-row:last-child { border-bottom: none; }
+
+/* Read-only info grid */
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1rem;
+}
+.info-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #6c757d;
+    margin-bottom: 2px;
+}
+.info-value {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #212529;
+}
+.info-value.mono { font-family: monospace; font-size: 0.78rem; color: #6c757d; }
