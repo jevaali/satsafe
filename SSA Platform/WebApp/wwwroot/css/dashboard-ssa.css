@@ -1,0 +1,264 @@
+/* --- BASE --- */
+body {
+    background: #f8f9fa;
+    color: #212529;
+    font-family: "Segoe UI", sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.ssa-container {
+    padding: 20px;
+}
+
+/* --- SYSTEM BAR --- */
+.system-bar {
+    font-size: 12px;
+    margin-bottom: 15px;
+    color: #495057;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    background: #28a745;
+    display: inline-block;
+    border-radius: 50%;
+    margin-right: 6px;
+    animation: blink 1s infinite alternate;
+}
+
+@keyframes blink {
+    from { opacity: 0.3; }
+    to { opacity: 1; }
+}
+
+/* --- HEADER --- */
+.header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.header h3 { margin: 0; }
+.header small { color: #6c757d; }
+
+.badge {
+    padding: 6px 10px;
+    border-radius: 8px;
+    color: #fff;
+}
+
+.badge.danger { background: #dc3545; }
+.badge.warning { background: #ffc107; color: #212529; }
+
+/* --- GRID LAYOUT --- */
+.grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+}
+
+/* --- CARD --- */
+.card {
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+/* --- ORBIT VISUALIZATION --- */
+.orbit-visualization {
+    position: relative;
+    height: 300px;
+    perspective: 600px; /* pseudo-3D */
+}
+
+/* Earth in the center */
+.earth {
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    background: radial-gradient(circle, #4a90d9, #1a4d7c);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Subtle orbit tracks */
+.orbit-track {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 50%;
+    border: 1px dashed rgba(108, 117, 125, 0.3);
+    pointer-events: none;
+}
+
+.orbit-track-1 { width: 220px; height: 220px; margin: -110px; }
+.orbit-track-2 { width: 200px; height: 200px; margin: -100px; }
+.orbit-track-3 { width: 240px; height: 240px; margin: -120px; }
+
+/* Orbit containers */
+.orbit {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 50%;
+    transform-origin: center;
+}
+
+/* Satellites on edge of orbit */
+.orbit .satellite {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translate(-50%, -50%);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    box-shadow: 0 0 6px rgba(0,0,0,0.2);
+    border: 1px solid #adb5bd;
+}
+
+/* Satellite colors */
+.safe { background: #28a745; }
+.medium-risk { background: #ffc107; color: #212529; }
+.high-risk {
+    background: #dc3545;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 5px #dc3545; }
+    50% { box-shadow: 0 0 20px #dc3545; }
+    100% { box-shadow: 0 0 5px #dc3545; }
+}
+
+/* Orbit animations */
+.orbit-1 { width: 220px; height: 220px; margin: -110px; transform: rotateX(10deg); animation: orbit1 10s linear infinite; }
+.orbit-2 { width: 200px; height: 200px; margin: -100px; transform: rotateX(-10deg) rotateZ(20deg); animation: orbit2 15s linear infinite reverse; }
+.orbit-3 { width: 240px; height: 240px; margin: -120px; transform: rotateX(15deg) rotateZ(-15deg); animation: orbit3 12s linear infinite; }
+
+@keyframes orbit1 { from { transform: rotate(0deg) rotateX(10deg); } to { transform: rotate(360deg) rotateX(10deg); } }
+@keyframes orbit2 { from { transform: rotate(0deg) rotateX(-10deg) rotateZ(20deg); } to { transform: rotate(360deg) rotateX(-10deg) rotateZ(20deg); } }
+@keyframes orbit3 { from { transform: rotate(0deg) rotateX(15deg) rotateZ(-15deg); } to { transform: rotate(360deg) rotateX(15deg) rotateZ(-15deg); } }
+
+/* --- ALERT FEED --- */
+.alert-feed {
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.alert-item {
+    padding: 8px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    background: #f1f3f5;
+    color: #212529;
+    animation: fadeIn 0.3s ease;
+}
+
+.alert-item.pending { border-left: 3px solid #ffc107; }
+.alert-item.ack { opacity: 0.6; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- SATELLITES GRID --- */
+.sat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.sat-tile {
+    background: #e9ecef;
+    padding: 10px;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+.sat-tile:hover { transform: scale(1.05); }
+
+.status.active { color: #28a745; }
+.status.inactive { color: #6c757d; }
+
+/* --- TIMELINE --- */
+.timeline-item {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.timeline-item.high { color: #dc3545; }
+
+.time {
+    width: 60px;
+    font-size: 12px;
+}
+
+.meta { font-size: 12px; color: #6c757d; }
+
+/* --- KPI BAR --- */
+.kpi-bar {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+    background: #ffffff;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.sat-tile {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0.8rem 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    background-color: #fff;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.sat-tile:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+}
+
+.sat-tile .status {
+    margin-top: 0.5rem;
+}
+
+.view-all-btn {
+    font-size: 0.85rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 6px;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.view-all-btn:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+}
+
+.kpi-bar div { text-align: center; }
+.green { color: #28a745; }
+.yellow { color: #ffc107; color: #212529; }
+.red { color: #dc3545; }

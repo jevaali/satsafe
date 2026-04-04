@@ -20,7 +20,7 @@ public class HomeController : Controller
     {
         if (User.IsInRole("Operator"))
         {
-            return RedirectToAction("Index", "Dashboard", new { area = "Operator" });
+            return RedirectToAction("Index", "Home", new { area = "Operator" });
         }
         
         var stats = await _getHomeStatsUseCase.ExecuteAsync();

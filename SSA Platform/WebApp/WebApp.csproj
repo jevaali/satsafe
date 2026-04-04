@@ -54,4 +54,8 @@
       <UpToDateCheckInput Remove="Areas\Admin\Views\Orbit\Index.cshtml" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Areas\User\" />
+    </ItemGroup>
+
 </Project>

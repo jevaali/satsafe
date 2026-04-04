@@ -41,7 +41,7 @@ public class SatelliteController : Controller
         var satellites = await _satelliteRepository.GetByOperatorIdAsync(operatorId);
         return View(satellites);
     }
-
+    
     [HttpGet]
     public IActionResult Create()
     {

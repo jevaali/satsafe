@@ -1,0 +1,167 @@
+@using App.Domain.Entities.Enums
+@model App.Application.DTO.OperatorDashboardDto
+
+@{
+    ViewData["Title"] = "Operator Dashboard";
+}
+
+<link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
+
+<div class="ssa-container">
+
+    <!-- SYSTEM STATUS BAR -->
+    <div class="system-bar">
+        <span class="status-dot"></span>
+        SYSTEM: NOMINAL |
+        LAST UPDATE: @DateTime.UtcNow.ToString("HH:mm:ss") UTC |
+        OPERATOR: @Model.OperatorName
+    </div>
+
+    <!-- HEADER -->
+    <div class="header">
+        <div>
+            <h3>@Model.OperatorName</h3>
+            <small>Space Situational Awareness</small>
+        </div>
+
+        <div class="header-right">
+            <span class="badge danger">@Model.HighRiskConjunctions HIGH RISK</span>
+            <span class="badge warning">@Model.UnacknowledgedAlerts ALERTS</span>
+        </div>
+    </div>
+    
+    <!-- MAIN GRID -->
+    <div class="grid">
+
+        <!-- ORBIT VISUALIZATION -->
+        <div class="card orbit-card">
+            <h5>Orbital View</h5>
+
+            <div class="orbit-visualization">
+                <div class="earth"></div>
+
+                <!-- subtle orbit tracks -->
+                <div class="orbit-track orbit-track-1"></div>
+                <div class="orbit-track orbit-track-2"></div>
+                <div class="orbit-track orbit-track-3"></div>
+
+                <!-- satellites on orbits -->
+                <div class="orbit orbit-1">
+                    <div class="satellite safe"></div>
+                </div>
+                <div class="orbit orbit-2">
+                    <div class="satellite medium-risk"></div>
+                </div>
+                <div class="orbit orbit-3">
+                    <div class="satellite high-risk"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ALERT FEED -->
+        <div class="card alert-card">
+            <h5>Live Alerts</h5>
+
+            <div class="alert-feed">
+                @foreach (var alert in Model.Alerts
+                              .OrderBy(a => a.IsAcknowledged)
+                              .ThenByDescending(a => a.CreatedAt)
+                              .Take(6))
+                {
+                    <div class="alert-item @(alert.IsAcknowledged ? "ack" : "pending")">
+                        <div>
+                            <strong>@alert.Severity</strong> - @alert.Message
+                        </div>
+                        <small>@alert.CreatedAt.ToString("HH:mm:ss")</small>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- SATELLITES -->
+        <div class="card satellites-card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Satellites</h5>
+                <form asp-controller="Satellite" asp-action="Index" method="get" class="m-0">
+                    <button type="submit" class="btn btn-primary btn-sm view-all-btn">
+                        View All
+                    </button>
+                </form>
+            </div>
+
+            <div class="sat-grid">
+                @foreach (var sat in Model.Satellites.Take(6))
+                {
+                    <a class="sat-tile" asp-action="Details" asp-controller="Satellite" asp-route-id="@sat.Id">
+                        <div class="tile-header">
+                            <h6 class="sat-name">@sat.Name</h6>
+                            <small class="norad-id">NORAD @sat.NoradId</small>
+                        </div>
+
+                        <span class="status @(sat.Status == ESatelliteStatus.Active ? "active" : "inactive")">
+                            @sat.Status
+                        </span>
+                    </a>
+                }
+            </div>
+        </div>
+
+        <!-- CONJUNCTION TIMELINE -->
+        <div class="card">
+            <div class="card-header">
+                <h5>Conjunction Timeline</h5>
+                <form asp-controller="Conjunctions" asp-action="Index" method="get" class="m-0">
+                    <button type="submit" class="btn btn-primary btn-sm view-all-btn">
+                        View All
+                    </button>
+                </form>
+            </div>
+
+            <div class="timeline">
+                @foreach (var conj in Model.Conjunctions
+                              .OrderByDescending(c => c.IsHighRisk())
+                              .ThenBy(c => c.TimeOfClosestApproach)
+                              .Take(6))
+                {
+                    <div class="timeline-item @(conj.IsHighRisk() ? "high" : "")">
+                        <div class="time">
+                            @conj.TimeOfClosestApproach.ToString("HH:mm")
+                        </div>
+                        <div class="content">
+                            @conj.PrimaryObjectId ↔ @conj.SecondaryObjectId
+                            <div class="meta">
+                                Miss: @conj.MissDistance.ToString("N0") m |
+                                @(conj.CollisionProbability * 100).ToString("F3")%
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+    </div>
+    
+    <!-- KPI STRIP -->
+    <div class="kpi-bar">
+        <div>
+            <span>Total</span>
+            <strong>@Model.TotalSatellites</strong>
+        </div>
+        <div>
+            <span>Active</span>
+            <strong class="green">@Model.ActiveSatellites</strong>
+        </div>
+        <div>
+            <span>Conjunctions</span>
+            <strong class="yellow">@Model.PendingConjunctions</strong>
+        </div>
+        <div>
+            <span>High Risk</span>
+            <strong class="red">@Model.HighRiskConjunctions</strong>
+        </div>
+        <div>
+            <span>Alerts</span>
+            <strong class="red">@Model.UnacknowledgedAlerts</strong>
+        </div>
+    </div>
+</div>

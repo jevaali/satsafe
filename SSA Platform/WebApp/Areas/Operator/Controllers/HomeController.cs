@@ -8,14 +8,14 @@ namespace WebApp.Areas.Operator.Controllers;
 
 [Area("Operator")]
 [Authorize]
-public class DashboardController : Controller
+public class HomeController : Controller
 {
     private readonly GetOperatorDashboardUseCase _getDashboardUseCase;
     private readonly AcknowledgeAlertUseCase _acknowledgeAlertUseCase;
     private readonly ResolveConjunctionUseCase _resolveConjunctionUseCase;
     private readonly IUserOperatorRepository _userOperatorRepository;
 
-    public DashboardController(
+    public HomeController(
         GetOperatorDashboardUseCase getDashboardUseCase,
         AcknowledgeAlertUseCase acknowledgeAlertUseCase,
         ResolveConjunctionUseCase resolveConjunctionUseCase,

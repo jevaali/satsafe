@@ -7,7 +7,7 @@
         @foreach (var sat in Model.Satellites)
         {
             <li>
-                <a class="dropdown-item" asp-area="Operator" asp-controller="Dashboard" asp-action="Satellites" asp-route-id="@sat.Id">
+                <a class="dropdown-item" asp-area="Operator" asp-controller="Home" asp-action="Satellites" asp-route-id="@sat.Id">
                     @sat.Name
                 </a>
             </li>
