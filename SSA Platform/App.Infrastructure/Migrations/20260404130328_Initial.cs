@@ -280,6 +280,7 @@ namespace App.Infrastructure.Migrations
                     LaunchDate = table.Column<DateTime>(type: "TEXT", nullable: true),
                     Status = table.Column<int>(type: "INTEGER", nullable: true),
                     OperatorId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    OperatorName = table.Column<string>(type: "TEXT", nullable: true),
                     CreatedBy = table.Column<string>(type: "TEXT", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     UpdatedBy = table.Column<string>(type: "TEXT", nullable: true),
@@ -294,8 +295,7 @@ namespace App.Infrastructure.Migrations
                         name: "FK_SpaceObjects_Operators_OperatorId",
                         column: x => x.OperatorId,
                         principalTable: "Operators",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_SpaceObjects_Orbits_OrbitId",
                         column: x => x.OrbitId,

@@ -1,7 +1,6 @@
-using App.Domain.Entities.Enums;
 using App.Domain.ValueObjects;
 
-namespace App.Infrastructure.Seeding;
+namespace App.Infrastructure.Seeding.dto;
 
 public class SatelliteSeedDto
 {

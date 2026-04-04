@@ -17,11 +17,13 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Migrations\" />
+      <None Update="Seeding\data\satellites.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
-
+    
     <ItemGroup>
-        <None Include="Seeding\satellites.json">
+        <None Update="Seeding\data\debris.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
     </ItemGroup>

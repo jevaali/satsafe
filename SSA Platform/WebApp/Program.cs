@@ -52,17 +52,13 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
 
-    var roleManager = services.GetRequiredService<RoleManager<AppRole>>();
-    foreach (var roleName in new[] { "Operator", "User", "Admin" })
-    {
-        if (!await roleManager.RoleExistsAsync(roleName))
-        {
-            await roleManager.CreateAsync(new AppRole { Name = roleName });
-        }
-    }
-    
     var dbContext = services.GetRequiredService<AppDbContext>();
-    SatelliteSeeder.Seed(dbContext);
+    var userManager = services.GetRequiredService<UserManager<AppUser>>();
+    var roleManager = services.GetRequiredService<RoleManager<AppRole>>();
+    
+    AppDataInit.MigrateDatabase(dbContext);
+    AppDataInit.SeedIdentity(userManager, roleManager);
+    AppDataInit.SeedAppData(dbContext);
 }
 
 // Configure the HTTP request pipeline.
