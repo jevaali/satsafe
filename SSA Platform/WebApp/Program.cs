@@ -29,6 +29,7 @@ builder.Services.AddScoped<GetOperatorDashboardUseCase>();
 builder.Services.AddScoped<GetHomeStatsUseCase>();
 builder.Services.AddScoped<AcknowledgeAlertUseCase>();
 builder.Services.AddScoped<ResolveConjunctionUseCase>();
+builder.Services.AddScoped<GetMainListUseCase>();
 
 builder.Services.AddScoped<ISatelliteRepository, SatelliteRepository>();
 builder.Services.AddScoped<IDebrisObjectRepository, DebrisObjectRepository>();

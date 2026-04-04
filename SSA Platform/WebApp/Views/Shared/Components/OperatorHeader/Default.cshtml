@@ -3,6 +3,7 @@
 <li class="nav-item dropdown">
     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">My Satellites</a>
     <ul class="dropdown-menu">
+        <a class="dropdown-item" asp-area="Operator" asp-controller="Satellite" asp-action="Index">All My Satellites</a>
         @foreach (var sat in Model.Satellites)
         {
             <li>
@@ -12,6 +13,9 @@
             </li>
         }
     </ul>
+</li>
+<li class="nav-item">
+    <a class="nav-link text-dark" asp-area="" asp-controller="MainList" asp-action="Index">All Space Objects</a>
 </li>
 <li class="nav-item">
     <a class="nav-link text-dark" asp-area="Operator" asp-controller="Conjunctions" asp-action="Index">Conjunction Events</a>

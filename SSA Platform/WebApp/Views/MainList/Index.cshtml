@@ -1,0 +1,96 @@
+@model App.Application.DTO.MainListDTO
+
+<link rel="stylesheet" href="~/css/main-list.css" />
+
+<div class="dashboard">
+
+    <!-- Search and Filters -->
+    <div class="filter-strip mb-4">
+        <input type="text" id="searchBox" placeholder="Search by name or ID..." class="filter-input" onkeyup="filterObjects()" />
+        <select id="typeFilter" class="filter-select" onchange="filterObjects()">
+            <option value="">All Types</option>
+            <option value="Satellite">Satellite</option>
+            <option value="Debris">Debris</option>
+        </select>
+    </div>
+
+    <!-- Space Objects Grid -->
+    <div class="space-grid" id="spaceGrid">
+
+        <!-- Satellites -->
+        @foreach (var sat in Model.Satellites)
+        {
+        <div class="space-tile" data-type="Satellite" data-name="@sat.Name" data-operator="@sat.Operator" onclick="showObjectDetails(this)">
+            <div class="tile-header">
+                <h6 class="object-name">@sat.Name</h6>
+                <small class="object-type">Satellite</small>
+                <small class="object-operator">@sat.Operator</small>
+            </div>
+        </div>
+        }
+
+        <!-- Debris -->
+        @foreach (var debris in Model.Debris)
+        {
+        <div class="space-tile debris-tile" data-type="Debris" data-name="@debris.NoradId" data-size="@debris.SizeEstimate" onclick="showObjectDetails(this)">
+            <div class="tile-header">
+                <h6 class="object-name">@debris.NoradId</h6>
+                <small class="object-type">Debris</small>
+                <small class="object-size">Size: @debris.SizeEstimate m</small>
+            </div>
+        </div>
+        }
+
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="objectModal" tabindex="-1" aria-labelledby="objectModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="objectModalLabel">Object Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="objectModalBody">
+                <!-- Content populated by JS -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function filterObjects() {
+        const searchValue = document.getElementById('searchBox').value.toLowerCase();
+        const typeValue = document.getElementById('typeFilter').value;
+
+        document.querySelectorAll('#spaceGrid .space-tile').forEach(tile => {
+            const name = tile.dataset.name.toLowerCase();
+            const type = tile.dataset.type;
+
+            const matchesSearch = name.includes(searchValue);
+            const matchesType = typeValue === "" || type === typeValue;
+
+            tile.style.display = (matchesSearch && matchesType) ? 'flex' : 'none';
+        });
+    }
+
+    function showObjectDetails(tile) {
+        const type = tile.dataset.type;
+        const name = tile.dataset.name;
+        let content = `<p><strong>Name/ID:</strong> ${name}</p><p><strong>Type:</strong> ${type}</p>`;
+
+        if (type === "Satellite") {
+            const operator = tile.dataset.operator || "Unknown";
+            content += `<p><strong>Operator:</strong> ${operator}</p>`;
+        } else if (type === "Debris") {
+            const size = tile.dataset.size || "N/A";
+            content += `<p><strong>Size Estimate:</strong> ${size} m</p>`;
+        }
+
+        document.getElementById('objectModalBody').innerHTML = content;
+
+        const modal = new bootstrap.Modal(document.getElementById('objectModal'));
+        modal.show();
+    }
+</script>

@@ -21,6 +21,15 @@
 
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
+                    @if (User.Identity is { IsAuthenticated: false })
+                    {
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="MainList" asp-action="Index">
+                            All Space Objects
+                        </a>
+                    </li>
+                    }
+                    
                     @if (User.IsInRole("Operator") || User.IsInRole("OperatorHelper"))
                     {
                         @await Component.InvokeAsync("OperatorHeader")
