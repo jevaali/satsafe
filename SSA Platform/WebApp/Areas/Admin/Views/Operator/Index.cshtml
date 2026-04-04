@@ -1,47 +1,78 @@
 @model IEnumerable<App.Domain.Entities.Operator>
+@using App.Domain.Entities.Enums
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Operators";
 }
 
-<h1>Index</h1>
+<link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Country)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.OperatorType)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Country)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.OperatorType)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="ssa-container">
+
+    <div class="system-bar">
+        <span class="status-dot"></span>
+        ADMIN | OPERATOR REGISTRY |
+        @DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") UTC |
+        @Model.Count() OPERATORS
+    </div>
+
+    <div class="header">
+        <div>
+            <h3>Operator Registry</h3>
+            <small>All registered space operators and their organisations</small>
+        </div>
+        <div class="header-right">
+            <a asp-action="Create" class="btn-add"><i class="bi bi-plus-lg"></i> Add Operator</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Country</th>
+                    <th>Type</th>
+                    <th>Satellites</th>
+                    <th>Users</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.OrderBy(o => o.Name.ToString()))
+                {
+                    <tr>
+                        <td><strong>@item.Name</strong></td>
+                        <td>@item.Country</td>
+                        <td>
+                            @if (item.OperatorType.HasValue)
+                            {
+                                <span class="badge bg-secondary">@item.OperatorType</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">—</span>
+                            }
+                        </td>
+                        <td>@item.Satellites.Count</td>
+                        <td>@item.UserOperators.Count</td>
+                        <td class="text-nowrap">
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Details</a>
+                            <a asp-action="Edit"    asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Edit</a>
+                            <a asp-action="Delete"  asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        @if (!Model.Any())
+        {
+            <div class="empty-state">
+                <p>No operators registered yet.</p>
+                <a asp-action="Create" class="btn-add"><i class="bi bi-plus-lg"></i> Add Operator</a>
+            </div>
+        }
+    </div>
+
+</div>

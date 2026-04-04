@@ -1,65 +1,161 @@
 @model IEnumerable<App.Domain.Entities.ConjunctionEvent>
+@using App.Domain.Entities
+@using App.Domain.Entities.Enums
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Conjunction Events";
 }
 
-<h1>Index</h1>
+<link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.PrimaryObject)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SecondaryObject)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TimeOfClosestApproach)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MissDistance)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CollisionProbability)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RiskAssessmentId)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.TimeOfClosestApproach)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MissDistance)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CollisionProbability)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RiskAssessmentId)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+<div class="ssa-container">
+
+    <div class="system-bar">
+        <span class="status-dot"></span>
+        ADMIN | CONJUNCTION EVENTS |
+        @DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") UTC |
+        @Model.Count() EVENTS
+    </div>
+
+    <div class="header">
+        <div>
+            <h3>Conjunction Events</h3>
+            <small>All detected conjunction events across the catalogue</small>
+        </div>
+        <div class="header-right">
+            <span class="badge danger">@Model.Count(c => c.IsHighRisk()) High Risk</span>
+            <span class="badge warning">@Model.Count(c => c.Status == EConjunctionEventStatus.Pending) Pending</span>
+            <a asp-action="Create" class="btn-add"><i class="bi bi-plus-lg"></i> Add Event</a>
+        </div>
+    </div>
+
+    <div class="card mb-3 p-3">
+        <div class="d-flex gap-3 align-items-center flex-wrap">
+            <input type="text" id="searchInput" class="form-control w-auto"
+                   placeholder="Search by object name or NORAD ID..." />
+            <select id="statusFilter" class="form-select w-auto">
+                <option value="">All Statuses</option>
+                @foreach (var status in Enum.GetValues<EConjunctionEventStatus>())
+                {
+                    <option value="@status">@status</option>
+                }
+            </select>
+            <select id="riskFilter" class="form-select w-auto">
+                <option value="">All Risk Levels</option>
+                <option value="high">High Risk</option>
+                <option value="normal">Normal</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="card">
+        <table class="table table-hover mb-0" id="conjunctionTable">
+            <thead>
+                <tr>
+                    <th>Primary Object</th>
+                    <th>Secondary Object</th>
+                    <th>TCA (UTC)</th>
+                    <th>Miss Distance</th>
+                    <th>Collision Prob.</th>
+                    <th>Status</th>
+                    <th>Risk</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var c in Model.OrderByDescending(c => c.IsHighRisk()).ThenBy(c => c.TimeOfClosestApproach))
+                {
+                    var primaryName = c.PrimaryObject switch {
+                        Satellite s    => s.Name.ToString(),
+                        DebrisObject d => $"DEBRIS-{d.NoradId}",
+                        _              => c.PrimaryObjectId.ToString()[..8]
+                    };
+                    var secondaryName = c.SecondaryObject switch {
+                        Satellite s    => s.Name.ToString(),
+                        DebrisObject d => $"DEBRIS-{d.NoradId}",
+                        _              => c.SecondaryObjectId.ToString()[..8]
+                    };
+                    var tca       = DateTime.UtcNow.AddSeconds(c.TimeOfClosestApproach);
+                    var isHighRisk = c.IsHighRisk();
+
+                    <tr class="conjunction-row @(isHighRisk ? "table-danger" : "")"
+                        data-primary="@primaryName.ToLower()"
+                        data-secondary="@secondaryName.ToLower()"
+                        data-status="@c.Status"
+                        data-risk="@(isHighRisk ? "high" : "normal")">
+                        <td><strong>@primaryName</strong></td>
+                        <td><strong>@secondaryName</strong></td>
+                        <td>@tca.ToString("yyyy-MM-dd HH:mm")</td>
+                        <td>
+                            <span class="@(c.MissDistance < 1000 ? "text-danger fw-bold" : c.MissDistance < 5000 ? "text-warning" : "")">
+                                @(c.MissDistance < 1000
+                                    ? $"{c.MissDistance:N0} m"
+                                    : $"{c.MissDistance / 1000:F2} km")
+                            </span>
+                        </td>
+                        <td>@((c.CollisionProbability * 100).ToString("F4"))%</td>
+                        <td>
+                            <span class="badge @(c.Status switch {
+                                EConjunctionEventStatus.Pending  => "bg-warning text-dark",
+                                EConjunctionEventStatus.Resolved => "bg-success",
+                                _                                => "bg-secondary"
+                            })">@c.Status</span>
+                        </td>
+                        <td>
+                            @if (isHighRisk)
+                            {
+                                <span class="badge danger">HIGH</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">NORMAL</span>
+                            }
+                        </td>
+                        <td class="text-nowrap">
+                            <a asp-action="Details" asp-route-id="@c.Id" class="btn btn-sm btn-outline-primary">Details</a>
+                            <a asp-action="Edit"    asp-route-id="@c.Id" class="btn btn-sm btn-outline-secondary">Edit</a>
+                            <a asp-action="Delete"  asp-route-id="@c.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        @if (!Model.Any())
+        {
+            <div class="empty-state">
+                <p>No conjunction events found.</p>
+            </div>
+        }
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        const searchInput  = document.getElementById('searchInput');
+        const statusFilter = document.getElementById('statusFilter');
+        const riskFilter   = document.getElementById('riskFilter');
+        const rows         = document.querySelectorAll('.conjunction-row');
+
+        function applyFilters() {
+            const search = searchInput.value.toLowerCase();
+            const status = statusFilter.value.toLowerCase();
+            const risk   = riskFilter.value.toLowerCase();
+
+            rows.forEach(row => {
+                const matchSearch = !search ||
+                    row.dataset.primary.includes(search) ||
+                    row.dataset.secondary.includes(search);
+                const matchStatus = !status || row.dataset.status.toLowerCase() === status;
+                const matchRisk   = !risk   || row.dataset.risk === risk;
+
+                row.style.display = matchSearch && matchStatus && matchRisk ? '' : 'none';
+            });
+        }
+
+        searchInput.addEventListener('input', applyFilters);
+        statusFilter.addEventListener('change', applyFilters);
+        riskFilter.addEventListener('change', applyFilters);
+    </script>
 }
-    </tbody>
-</table>

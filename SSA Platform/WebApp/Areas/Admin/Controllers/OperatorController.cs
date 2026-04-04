@@ -24,7 +24,10 @@ namespace WebApp.Areas.Admin.Controllers
         // GET: Admin/Operator
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Operators.ToListAsync());
+            var operators = _context.Operators
+                .Include(o => o.Satellites)
+                .Include(o => o.UserOperators);
+            return View(await operators.ToListAsync());
         }
 
         // GET: Admin/Operator/Details/5

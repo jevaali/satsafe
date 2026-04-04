@@ -1,14 +1,27 @@
 @{
-    ViewData["Title"] = "Alerts Management";
+    ViewData["Title"] = "Alerts";
 }
 
-<div class="container">
-    <div class="row py-4">
-        <div class="col-12">
-            <h1 class="display-4 fw-bold text-primary">Alerts Management</h1>
-            <p class="lead text-muted mb-4">
-                See and manage all alerts in the system. You can view details, edit, or delete alerts as needed. Use the search and filter options to quickly find specific alerts.
-            </p>
+<link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
+
+<div class="ssa-container">
+
+    <div class="system-bar">
+        <span class="status-dot"></span>
+        ALERTS | @DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") UTC
+    </div>
+
+    <div class="header">
+        <div>
+            <h3>Alerts</h3>
+            <small>System-generated alerts for your conjunction events</small>
         </div>
     </div>
+
+    <div class="card">
+        <div class="empty-state">
+            <p>Alert management is coming soon.</p>
+        </div>
+    </div>
+
 </div>

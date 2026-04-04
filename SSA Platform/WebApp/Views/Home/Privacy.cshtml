@@ -1,6 +1,25 @@
-﻿@{
+@{
     ViewData["Title"] = "Privacy Policy";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
+
+<div class="ssa-container">
+
+    <div class="system-bar">
+        <span class="status-dot"></span>
+        PRIVACY POLICY | @DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") UTC
+    </div>
+
+    <div class="header">
+        <div>
+            <h3>Privacy Policy</h3>
+            <small>How we collect, use, and protect your data</small>
+        </div>
+    </div>
+
+    <div class="card">
+        <p class="text-muted">Use this page to detail your site's privacy policy.</p>
+    </div>
+
+</div>

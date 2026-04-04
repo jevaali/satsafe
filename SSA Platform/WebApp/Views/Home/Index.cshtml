@@ -1,174 +1,150 @@
-﻿@model App.Application.DTO.HomeStatsDto
+@model App.Application.DTO.HomeStatsDto
 @{
     ViewData["Title"] = "Space Situational Awareness Platform";
 }
+
+<link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/orbit.css" asp-append-version="true" />
 
-<div class="container">
-    <!-- Hero Section -->
-    <div class="row align-items-center py-5">
+<div class="ssa-container">
+
+    <div class="system-bar">
+        <span class="status-dot"></span>
+        SSA PLATFORM | SYSTEM: NOMINAL |
+        @DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") UTC |
+        @Model.TotalSpaceObjects.ToString("N0") OBJECTS TRACKED
+    </div>
+
+    <!-- Hero -->
+    <div class="row align-items-center py-4 mb-2">
         <div class="col-lg-6">
-            <h1 class="display-4 fw-bold text-primary">Space Situational Awareness Platform</h1>
-            <p class="lead text-muted mb-4">
-                Monitor, track, and analyze objects in Earth orbit to ensure safe and sustainable space operations.
-                Join our community of space professionals and enthusiasts.
+            <p class="mb-2" style="font-family:'Share Tech Mono',monospace;font-size:0.72rem;letter-spacing:0.15em;color:#8a9bb0;text-transform:uppercase;">
+                Space Situational Awareness
             </p>
-            <div class="d-flex gap-3">
-                <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-primary btn-lg">
-                    Get Started
+            <h1 style="font-family:'Share Tech Mono',monospace;font-size:2.2rem;font-weight:700;color:#1a2332;line-height:1.2;margin-bottom:1rem;">
+                Monitor. Track.<br />Stay Safe.
+            </h1>
+            <p class="mb-4" style="color:#5a6a7a;font-size:1rem;line-height:1.6;max-width:480px;">
+                Access real-time orbital data for satellites and debris objects.
+                Get notified about close approaches and manage your satellite fleet.
+            </p>
+            <div class="d-flex gap-3 flex-wrap">
+                <a asp-area="Identity" asp-page="/Account/Register" class="btn-add">
+                    <i class="bi bi-person-plus"></i> Get Started
                 </a>
-                <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-secondary btn-lg">
+                <a asp-area="Identity" asp-page="/Account/Login"
+                   class="btn btn-outline-secondary">
                     Sign In
                 </a>
             </div>
         </div>
-        <div class="col-lg-6 text-center">
-            <div class="position-relative">
-                <div class="orbit-visualization">
-                    <div class="earth"></div>
-                    <div class="orbit-track"></div>
-                    <div class="satellite sat-1"></div>
-                    <div class="satellite sat-2"></div>
-                    <div class="satellite sat-3"></div>
-                </div>
+        <div class="col-lg-6 text-center mt-4 mt-lg-0">
+            <div class="orbit-visualization">
+                <div class="earth"></div>
+                <div class="orbit-track"></div>
+                <div class="satellite sat-1"></div>
+                <div class="satellite sat-2"></div>
+                <div class="satellite sat-3"></div>
             </div>
         </div>
     </div>
 
-    <!-- Stats Section -->
-    <div class="row py-4">
-        <div class="col-12 text-center mb-4">
-            <h2 class="h4 text-muted">Platform Statistics</h2>
+    <!-- KPI Strip -->
+    <div class="kpi-bar mb-4">
+        <div>
+            <div style="font-size:0.68rem;letter-spacing:0.1em;color:#8a9bb0;text-transform:uppercase;margin-bottom:4px;">Total Objects</div>
+            <strong style="font-family:'Share Tech Mono',monospace;font-size:1.5rem;color:#1a2332;">@Model.TotalSpaceObjects.ToString("N0")</strong>
         </div>
-        <div class="col-md-4 mb-3">
-            <div class="card text-center h-100 border-0 shadow-sm">
-                <div class="card-body">
-                    <h3 class="display-6 fw-bold text-primary">@Model.TotalSpaceObjects.ToString("N0")</h3>
-                    <p class="text-muted mb-0">Tracked Space Objects</p>
-                </div>
+        <div>
+            <div style="font-size:0.68rem;letter-spacing:0.1em;color:#8a9bb0;text-transform:uppercase;margin-bottom:4px;">Active Satellites</div>
+            <strong style="font-family:'Share Tech Mono',monospace;font-size:1.5rem;" class="green">@Model.ActiveSatellites.ToString("N0")</strong>
+        </div>
+        <div>
+            <div style="font-size:0.68rem;letter-spacing:0.1em;color:#8a9bb0;text-transform:uppercase;margin-bottom:4px;">Debris Objects</div>
+            <strong style="font-family:'Share Tech Mono',monospace;font-size:1.5rem;" class="yellow">@Model.DebrisObjects.ToString("N0")</strong>
+        </div>
+    </div>
+
+    <!-- Top Satellites -->
+    @if (Model.Satellites != null && Model.Satellites.Any())
+    {
+        <div class="header mt-2">
+            <div><h3>Top Satellites</h3></div>
+            <div class="header-right">
+                <a asp-controller="MainList" asp-action="Index" class="btn btn-outline-secondary btn-sm">View Full Catalogue</a>
             </div>
         </div>
-        <div class="col-md-4 mb-3">
-            <div class="card text-center h-100 border-0 shadow-sm">
-                <div class="card-body">
-                    <h3 class="display-6 fw-bold text-success">@Model.ActiveSatellites.ToString("N0")</h3>
-                    <p class="text-muted mb-0">Active Satellites</p>
+        <div class="sat-grid mb-4">
+            @foreach (var sat in Model.Satellites)
+            {
+                <div class="sat-tile">
+                    <div>
+                        <div class="sat-name" style="font-size:0.85rem;">@sat.Name</div>
+                        <div class="sat-norad">@sat.Operator</div>
+                    </div>
+                    <span class="badge-status active" style="align-self:flex-start;margin-top:0.5rem;">Active</span>
                 </div>
+            }
+        </div>
+    }
+
+    <!-- Features -->
+    <div class="header mt-2">
+        <div><h3>Platform Capabilities</h3></div>
+    </div>
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <h5><i class="bi bi-broadcast me-2 text-primary"></i>Real-Time Tracking</h5>
+                <p class="text-muted small mb-0">Access up-to-date orbital data for all catalogued satellites and debris objects.</p>
             </div>
         </div>
-        <div class="col-md-4 mb-3">
-            <div class="card text-center h-100 border-0 shadow-sm">
-                <div class="card-body">
-                    <h3 class="display-6 fw-bold text-warning">@Model.DebrisObjects.ToString("N0")</h3>
-                    <p class="text-muted mb-0">Debris Objects</p>
-                </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <h5><i class="bi bi-exclamation-triangle me-2 text-warning"></i>Conjunction Alerts</h5>
+                <p class="text-muted small mb-0">Automated screening detects potential close approaches and notifies registered operators.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <h5><i class="bi bi-building me-2 text-success"></i>Operator Management</h5>
+                <p class="text-muted small mb-0">Register your organisation to manage your satellite fleet and receive risk assessments.</p>
             </div>
         </div>
     </div>
 
-    <!-- Top Satellites Section -->
-    <div class="row py-5">
-        <div class="col-12 text-center mb-4">
-            <h2 class="h4 text-muted">Top Satellites</h2>
-            <p class="text-muted">Quick overview of the most relevant satellites tracked by our platform.</p>
-        </div>
-        @if (Model.Satellites != null && Model.Satellites.Any())
-        {
-            <div class="col-12">
-                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-5 g-3">
-                    @foreach (var sat in Model.Satellites)
-                    {
-                        <div class="col">
-                            <div class="card text-center h-100 border-0 shadow-sm hover-scale">
-                                <div class="card-body">
-                                    <h5 class="card-title fw-bold">@sat.Name</h5>
-                                    <p class="card-text text-muted">@sat.Operator</p>
-                                </div>
-                            </div>
-                        </div>
-                    }
-                </div>
-            </div>
-        }
-        else
-        {
-            <div class="col-12 text-center">
-                <p class="text-muted">No satellites available at the moment.</p>
-            </div>
-        }
+    <!-- Registration -->
+    <div class="header mt-2">
+        <div><h3>Join the Platform</h3></div>
     </div>
-
-    <!-- Features Section -->
-    <div class="row py-5">
-        <div class="col-12 text-center mb-4">
-            <h2 class="h4 text-muted">Why Join Our Platform</h2>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 border-0 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title fw-bold">Real-Time Tracking</h5>
-                    <p class="card-text text-muted">Access up-to-date orbital data for satellites and debris objects.</p>
-                </div>
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <div class="card h-100">
+                <h5>Regular User</h5>
+                <ul class="list-unstyled small mt-2 mb-3">
+                    <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>View orbital data and statistics</li>
+                    <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>Receive conjunction alerts</li>
+                    <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>Customise notification settings</li>
+                </ul>
+                <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-outline-primary w-100">
+                    Register as User
+                </a>
             </div>
         </div>
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 border-0 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title fw-bold">Conjunction Alerts</h5>
-                    <p class="card-text text-muted">Get notified about potential close approaches that may pose risks.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 border-0 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title fw-bold">Operator Management</h5>
-                    <p class="card-text text-muted">Register your organization to manage and monitor your satellite fleet.</p>
-                </div>
+        <div class="col-md-6">
+            <div class="card h-100">
+                <h5>Space Operator</h5>
+                <ul class="list-unstyled small mt-2 mb-3">
+                    <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>All user features</li>
+                    <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>Register and manage satellites</li>
+                    <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>Upload TLE data</li>
+                    <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>Operator-specific analytics</li>
+                </ul>
+                <a asp-area="Identity" asp-page="/Account/Register" class="btn-add w-100 justify-content-center">
+                    <i class="bi bi-building"></i> Register as Operator
+                </a>
             </div>
         </div>
     </div>
 
-    <!-- Registration Options -->
-    <div class="row py-5">
-        <div class="col-12 text-center mb-4">
-            <h2 class="h4 text-muted">Join Our Community</h2>
-        </div>
-        <div class="col-md-6 mb-4">
-            <div class="card h-100 border-primary">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Regular User</h5>
-                </div>
-                <div class="card-body">
-                    <ul class="list-unstyled">
-                        <li class="mb-2">✓ View orbital data and statistics</li>
-                        <li class="mb-2">✓ Receive conjunction alerts</li>
-                        <li class="mb-2">✓ Customize notification settings</li>
-                        <li class="mb-2">✓ Access community features</li>
-                    </ul>
-                    <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-outline-primary w-100">
-                        Register as User
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 mb-4">
-            <div class="card h-100 border-success">
-                <div class="card-header bg-success text-white">
-                    <h5 class="mb-0">Space Operator</h5>
-                </div>
-                <div class="card-body">
-                    <ul class="list-unstyled">
-                        <li class="mb-2">✓ All user features</li>
-                        <li class="mb-2">✓ Register and manage your satellites</li>
-                        <li class="mb-2">✓ Upload TLE data for your objects</li>
-                        <li class="mb-2">✓ Operator-specific analytics</li>
-                    </ul>
-                    <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-success w-100">
-                        Register as Operator
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>

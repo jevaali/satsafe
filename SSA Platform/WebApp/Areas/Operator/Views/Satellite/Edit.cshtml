@@ -4,165 +4,140 @@
     ViewData["Title"] = "Edit Satellite";
 }
 
-<div class="container">
-    <div class="row py-4">
-        <div class="col-12">
-            <h1 class="display-4 fw-bold text-primary">Edit Satellite</h1>
-            <p class="lead text-muted mb-4">
-                Update the satellite details and orbital parameters.
-            </p>
+<link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
+
+<div class="ssa-container">
+
+    <div class="system-bar">
+        <span class="status-dot"></span>
+        SATELLITE MANAGEMENT | EDIT SATELLITE |
+        @DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") UTC
+    </div>
+
+    <div class="header">
+        <div>
+            <h3>Edit Satellite</h3>
+            <small>Update satellite details and orbital parameters</small>
+        </div>
+        <div class="header-right">
+            <a asp-area="Operator" asp-controller="Satellite" asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-arrow-left me-1"></i> Back
+            </a>
         </div>
     </div>
 
-    <div class="row py-2">
-        <div class="col-12">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a asp-area="Operator" asp-controller="Dashboard" asp-action="Index">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a asp-area="Operator" asp-controller="Satellite" asp-action="Index">Satellites</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Edit</li>
-                </ol>
-            </nav>
+    <div class="grid">
+
+        <div class="card">
+            <form asp-action="Edit" method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                <input asp-for="SatelliteId" type="hidden" />
+                <input asp-for="OperatorId" type="hidden" />
+
+                <h5 class="mb-3 border-bottom pb-2" style="font-size:0.85rem;letter-spacing:0.05em;text-transform:uppercase;color:#6b7c93;">
+                    <i class="bi bi-info-circle me-2"></i>Basic Information
+                </h5>
+
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label"></label>
+                    <input asp-for="Name" class="form-control" placeholder="Enter satellite name" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="LaunchDate" class="form-label"></label>
+                    <input asp-for="LaunchDate" type="date" class="form-control" />
+                    <span asp-validation-for="LaunchDate" class="text-danger"></span>
+                </div>
+
+                <h5 class="mb-3 border-bottom pb-2 mt-4" style="font-size:0.85rem;letter-spacing:0.05em;text-transform:uppercase;color:#6b7c93;">
+                    <i class="bi bi-arrow-repeat me-2"></i>Orbital Parameters
+                </h5>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="SemiMajorAxis" class="form-label"></label>
+                        <div class="input-group">
+                            <input asp-for="SemiMajorAxis" class="form-control" placeholder="e.g., 6778" />
+                            <span class="input-group-text">km</span>
+                        </div>
+                        <span asp-validation-for="SemiMajorAxis" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Eccentricity" class="form-label"></label>
+                        <input asp-for="Eccentricity" class="form-control" placeholder="e.g., 0.001" step="0.001" min="0" max="1" />
+                        <span asp-validation-for="Eccentricity" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Inclination" class="form-label"></label>
+                        <div class="input-group">
+                            <input asp-for="Inclination" class="form-control" placeholder="e.g., 98.2" />
+                            <span class="input-group-text">°</span>
+                        </div>
+                        <span asp-validation-for="Inclination" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="RAAN" class="form-label"></label>
+                        <div class="input-group">
+                            <input asp-for="RAAN" class="form-control" placeholder="e.g., 0.0" />
+                            <span class="input-group-text">°</span>
+                        </div>
+                        <span asp-validation-for="RAAN" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="ArgumentOfPerigee" class="form-label"></label>
+                        <div class="input-group">
+                            <input asp-for="ArgumentOfPerigee" class="form-control" placeholder="e.g., 0.0" />
+                            <span class="input-group-text">°</span>
+                        </div>
+                        <span asp-validation-for="ArgumentOfPerigee" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="MeanAnomaly" class="form-label"></label>
+                        <div class="input-group">
+                            <input asp-for="MeanAnomaly" class="form-control" placeholder="e.g., 0.0" />
+                            <span class="input-group-text">°</span>
+                        </div>
+                        <span asp-validation-for="MeanAnomaly" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn-add">
+                        <i class="bi bi-check-circle"></i> Save Changes
+                    </button>
+                    <a asp-area="Operator" asp-controller="Satellite" asp-action="Index" class="btn btn-outline-secondary">
+                        Cancel
+                    </a>
+                </div>
+            </form>
         </div>
+
+        <div class="card">
+            <h5>Orbital Parameters Guide</h5>
+            <h6 class="mt-3" style="font-size:0.78rem;letter-spacing:0.06em;text-transform:uppercase;color:#8a9bb0;">Common Orbit Types</h6>
+            <table class="table table-sm mb-3">
+                <tr><td>LEO</td><td class="font-monospace text-end">6,500 – 8,400 km</td></tr>
+                <tr><td>MEO</td><td class="font-monospace text-end">~20,200 km</td></tr>
+                <tr><td>GEO</td><td class="font-monospace text-end">42,164 km</td></tr>
+            </table>
+            <h6 style="font-size:0.78rem;letter-spacing:0.06em;text-transform:uppercase;color:#8a9bb0;">Sample Inclinations</h6>
+            <table class="table table-sm mb-0">
+                <tr><td>Equatorial</td><td class="font-monospace text-end">0°</td></tr>
+                <tr><td>Sun-Synchronous</td><td class="font-monospace text-end">~98°</td></tr>
+                <tr><td>Polar</td><td class="font-monospace text-end">~90°</td></tr>
+            </table>
+        </div>
+
     </div>
 
-    <div class="row py-3">
-        <div class="col-lg-8">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body">
-                    <form asp-action="Edit" method="post">
-                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
-                        
-                        <input asp-for="SatelliteId" type="hidden" />
-                        <input asp-for="OperatorId" type="hidden" />
-                        
-                        <h5 class="mb-3 text-muted border-bottom pb-2">
-                            <i class="bi bi-info-circle me-2"></i>Basic Information
-                        </h5>
-                        
-                        <div class="row">
-                            <div class="col-md-12 mb-3">
-                                <label asp-for="Name" class="form-label"></label>
-                                <input asp-for="Name" class="form-control" placeholder="Enter satellite name" />
-                                <span asp-validation-for="Name" class="text-danger"></span>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="LaunchDate" class="form-label"></label>
-                                <input asp-for="LaunchDate" type="date" class="form-control" />
-                                <span asp-validation-for="LaunchDate" class="text-danger"></span>
-                            </div>
-                        </div>
-
-                        <h5 class="mb-3 text-muted border-bottom pb-2 mt-4">
-                            <i class="bi bi-planet me-2"></i>Orbital Parameters
-                        </h5>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="SemiMajorAxis" class="form-label"></label>
-                                <div class="input-group">
-                                    <input asp-for="SemiMajorAxis" class="form-control" placeholder="e.g., 6778" />
-                                    <span class="input-group-text">km</span>
-                                </div>
-                                <span asp-validation-for="SemiMajorAxis" class="text-danger"></span>
-                                <div class="form-text">Semi-major axis (6500-50000 km for typical orbits)</div>
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Eccentricity" class="form-label"></label>
-                                <input asp-for="Eccentricity" class="form-control" placeholder="e.g., 0.001" step="0.001" min="0" max="1" />
-                                <span asp-validation-for="Eccentricity" class="text-danger"></span>
-                                <div class="form-text">Eccentricity (0-1)</div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Inclination" class="form-label"></label>
-                                <div class="input-group">
-                                    <input asp-for="Inclination" class="form-control" placeholder="e.g., 98.2" />
-                                    <span class="input-group-text">°</span>
-                                </div>
-                                <span asp-validation-for="Inclination" class="text-danger"></span>
-                                <div class="form-text">Inclination (0-180°)</div>
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="RAAN" class="form-label"></label>
-                                <div class="input-group">
-                                    <input asp-for="RAAN" class="form-control" placeholder="e.g., 0.0" />
-                                    <span class="input-group-text">°</span>
-                                </div>
-                                <span asp-validation-for="RAAN" class="text-danger"></span>
-                                <div class="form-text">Right Ascension of Ascending Node (0-360°)</div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="ArgumentOfPerigee" class="form-label"></label>
-                                <div class="input-group">
-                                    <input asp-for="ArgumentOfPerigee" class="form-control" placeholder="e.g., 0.0" />
-                                    <span class="input-group-text">°</span>
-                                </div>
-                                <span asp-validation-for="ArgumentOfPerigee" class="text-danger"></span>
-                                <div class="form-text">Argument of Perigee (0-360°)</div>
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="MeanAnomaly" class="form-label"></label>
-                                <div class="input-group">
-                                    <input asp-for="MeanAnomaly" class="form-control" placeholder="e.g., 0.0" />
-                                    <span class="input-group-text">°</span>
-                                </div>
-                                <span asp-validation-for="MeanAnomaly" class="text-danger"></span>
-                                <div class="form-text">Mean Anomaly (0-360°)</div>
-                            </div>
-                        </div>
-
-                        <div class="row mt-4">
-                            <div class="col-12 d-flex gap-2">
-                                <button type="submit" class="btn btn-warning btn-lg">
-                                    <i class="bi bi-check-circle me-2"></i>Save Changes
-                                </button>
-                                <a asp-area="Operator" asp-controller="Satellite" asp-action="Index" class="btn btn-outline-secondary btn-lg">
-                                    Cancel
-                                </a>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-4">
-            <div class="card border-0 shadow-sm mt-3 mt-lg-0">
-                <div class="card-header bg-transparent">
-                    <h5 class="mb-0">
-                        <i class="bi bi-lightbulb me-2"></i>Orbital Parameters Guide
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <h6>Common Orbit Types:</h6>
-                    <ul class="list-unstyled small">
-                        <li class="mb-2"><strong>LEO:</strong> 6500-2000 km</li>
-                        <li class="mb-2"><strong>MEO:</strong> 20000-2000 km</li>
-                        <li class="mb-2"><strong>GEO:</strong> ~42,164 km</li>
-                    </ul>
-                    <hr />
-                    <h6>Sample Inclinations:</h6>
-                    <ul class="list-unstyled small">
-                        <li class="mb-2"><strong>Equatorial:</strong> 0°</li>
-                        <li class="mb-2"><strong>Sun-Synchronous:</strong> ~98°</li>
-                        <li class="mb-2"><strong>Polar:</strong> ~90°</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 @section Scripts {

@@ -1,96 +1,102 @@
 @model App.Application.DTO.MainListDTO
 
-<link rel="stylesheet" href="~/css/main-list.css" />
+@{
+    ViewData["Title"] = "Space Object Catalogue";
+}
 
-<div class="dashboard">
+<link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
 
-    <!-- Search and Filters -->
-    <div class="filter-strip mb-4">
-        <input type="text" id="searchBox" placeholder="Search by name or ID..." class="filter-input" onkeyup="filterObjects()" />
-        <select id="typeFilter" class="filter-select" onchange="filterObjects()">
-            <option value="">All Types</option>
-            <option value="Satellite">Satellite</option>
-            <option value="Debris">Debris</option>
-        </select>
+<div class="ssa-container">
+
+    <div class="system-bar">
+        <span class="status-dot"></span>
+        SPACE OBJECT CATALOGUE |
+        @DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") UTC |
+        @(Model.Satellites.Count + Model.Debris.Count) OBJECTS
     </div>
 
-    <!-- Space Objects Grid -->
-    <div class="space-grid" id="spaceGrid">
-
-        <!-- Satellites -->
-        @foreach (var sat in Model.Satellites)
-        {
-        <div class="space-tile" data-type="Satellite" data-name="@sat.Name" data-operator="@sat.Operator" onclick="showObjectDetails(this)">
-            <div class="tile-header">
-                <h6 class="object-name">@sat.Name</h6>
-                <small class="object-type">Satellite</small>
-                <small class="object-operator">@sat.Operator</small>
-            </div>
+    <div class="header">
+        <div>
+            <h3>Space Object Catalogue</h3>
+            <small>All tracked satellites and debris objects in the registry</small>
         </div>
-        }
-
-        <!-- Debris -->
-        @foreach (var debris in Model.Debris)
-        {
-        <div class="space-tile debris-tile" data-type="Debris" data-name="@debris.NoradId" data-size="@debris.SizeEstimate" onclick="showObjectDetails(this)">
-            <div class="tile-header">
-                <h6 class="object-name">@debris.NoradId</h6>
-                <small class="object-type">Debris</small>
-                <small class="object-size">Size: @debris.SizeEstimate m</small>
-            </div>
+        <div class="header-right">
+            <span class="badge bg-primary">@Model.Satellites.Count Satellites</span>
+            <span class="badge warning">@Model.Debris.Count Debris</span>
         </div>
-        }
-
     </div>
+
+    <!-- Filter bar -->
+    <div class="card mb-3 p-3">
+        <div class="d-flex gap-3 align-items-center flex-wrap">
+            <input type="text" id="searchBox" class="form-control w-auto"
+                   placeholder="Search by name or NORAD ID..." />
+            <select id="typeFilter" class="form-select w-auto">
+                <option value="">All Types</option>
+                <option value="Satellite">Satellite</option>
+                <option value="Debris">Debris</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="card">
+        <table class="table table-hover mb-0" id="catalogueTable">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Name / NORAD ID</th>
+                    <th>Operator / Size</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var sat in Model.Satellites)
+                {
+                    <tr data-type="Satellite" data-name="@sat.Name.ToLower()">
+                        <td><span class="badge bg-primary">Satellite</span></td>
+                        <td><strong>@sat.Name</strong></td>
+                        <td class="text-muted">@sat.Operator</td>
+                    </tr>
+                }
+                @foreach (var debris in Model.Debris)
+                {
+                    <tr data-type="Debris" data-name="@debris.NoradId">
+                        <td><span class="badge warning">Debris</span></td>
+                        <td><span class="font-monospace">NORAD @debris.NoradId</span></td>
+                        <td class="text-muted">@debris.SizeEstimate.ToString("F1") m</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        @if (!Model.Satellites.Any() && !Model.Debris.Any())
+        {
+            <div class="empty-state">
+                <p>No objects in the catalogue.</p>
+            </div>
+        }
+    </div>
+
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="objectModal" tabindex="-1" aria-labelledby="objectModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="objectModalLabel">Object Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="objectModalBody">
-                <!-- Content populated by JS -->
-            </div>
-        </div>
-    </div>
-</div>
+@section Scripts {
+    <script>
+        const searchBox  = document.getElementById('searchBox');
+        const typeFilter = document.getElementById('typeFilter');
+        const rows       = document.querySelectorAll('#catalogueTable tbody tr');
 
-<script>
-    function filterObjects() {
-        const searchValue = document.getElementById('searchBox').value.toLowerCase();
-        const typeValue = document.getElementById('typeFilter').value;
+        function filterObjects() {
+            const search = searchBox.value.toLowerCase();
+            const type   = typeFilter.value;
 
-        document.querySelectorAll('#spaceGrid .space-tile').forEach(tile => {
-            const name = tile.dataset.name.toLowerCase();
-            const type = tile.dataset.type;
-
-            const matchesSearch = name.includes(searchValue);
-            const matchesType = typeValue === "" || type === typeValue;
-
-            tile.style.display = (matchesSearch && matchesType) ? 'flex' : 'none';
-        });
-    }
-
-    function showObjectDetails(tile) {
-        const type = tile.dataset.type;
-        const name = tile.dataset.name;
-        let content = `<p><strong>Name/ID:</strong> ${name}</p><p><strong>Type:</strong> ${type}</p>`;
-
-        if (type === "Satellite") {
-            const operator = tile.dataset.operator || "Unknown";
-            content += `<p><strong>Operator:</strong> ${operator}</p>`;
-        } else if (type === "Debris") {
-            const size = tile.dataset.size || "N/A";
-            content += `<p><strong>Size Estimate:</strong> ${size} m</p>`;
+            rows.forEach(row => {
+                const matchSearch = !search || row.dataset.name.includes(search);
+                const matchType   = !type   || row.dataset.type === type;
+                row.style.display = matchSearch && matchType ? '' : 'none';
+            });
         }
 
-        document.getElementById('objectModalBody').innerHTML = content;
-
-        const modal = new bootstrap.Modal(document.getElementById('objectModal'));
-        modal.show();
-    }
-</script>
+        searchBox.addEventListener('input', filterObjects);
+        typeFilter.addEventListener('change', filterObjects);
+    </script>
+}

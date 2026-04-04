@@ -174,21 +174,12 @@ body {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* --- SATELLITES GRID --- */
+/* --- SATELLITES GRID (tiles) --- */
 .sat-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.75rem;
 }
-
-.sat-tile {
-    background: #e9ecef;
-    padding: 10px;
-    border-radius: 8px;
-    transition: 0.3s;
-}
-
-.sat-tile:hover { transform: scale(1.05); }
 
 .status.active { color: #28a745; }
 .status.inactive { color: #6c757d; }
@@ -237,9 +228,7 @@ body {
     box-shadow: 0 6px 16px rgba(0,0,0,0.12);
 }
 
-.sat-tile .status {
-    margin-top: 0.5rem;
-}
+.sat-tile .status { margin-top: 0.5rem; }
 
 .view-all-btn {
     font-size: 0.85rem;
@@ -252,13 +241,184 @@ body {
     cursor: pointer;
     transition: background-color 0.2s, transform 0.2s;
 }
-
-.view-all-btn:hover {
-    background-color: #0056b3;
-    transform: translateY(-1px);
-}
+.view-all-btn:hover { background-color: #0056b3; transform: translateY(-1px); }
 
 .kpi-bar div { text-align: center; }
-.green { color: #28a745; }
-.yellow { color: #ffc107; color: #212529; }
-.red { color: #dc3545; }
+.green  { color: #28a745; }
+.yellow { color: #e6a817; }
+.red    { color: #dc3545; }
+
+/* --- ADD BUTTON (admin/shared) --- */
+.btn-add {
+    background: #1565c0;
+    border: none;
+    color: #fff;
+    padding: 0.45rem 1.1rem;
+    border-radius: 6px;
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: background 0.15s;
+    white-space: nowrap;
+}
+.btn-add:hover { background: #0d47a1; color: #fff; }
+
+/* --- SATELLITE CARD GRID (admin) --- */
+.sat-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.1rem;
+}
+
+.sat-card {
+    background: #ffffff;
+    border: 1px solid #dce4ed;
+    border-radius: 10px;
+    padding: 1.4rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.sat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 10px 10px 0 0;
+}
+.sat-card.status-active::before   { background: linear-gradient(90deg, #1565c0, #00bfa5); }
+.sat-card.status-inactive::before { background: linear-gradient(90deg, #90a4ae, #b0bec5); }
+.sat-card.status-deleted::before  { background: linear-gradient(90deg, #e53935, #ff7043); }
+
+.sat-card:hover {
+    border-color: #a8c4e0;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(21,101,192,0.1);
+}
+
+.sat-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.sat-icon {
+    width: 40px; height: 40px;
+    background: #e8f0fb;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 1rem;
+    color: #1565c0;
+}
+
+.sat-name {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1a2332;
+    line-height: 1.2;
+    margin-bottom: 2px;
+}
+
+.sat-norad { font-size: 0.7rem; letter-spacing: 0.09em; color: #8a9bb0; text-transform: uppercase; }
+
+.badge-status {
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    padding: 0.28em 0.65em;
+    border-radius: 4px;
+    text-transform: uppercase;
+    font-weight: 700;
+    white-space: nowrap;
+}
+.badge-status.active   { background: #e6faf5; color: #0a8c6a; border: 1px solid #a7e8d6; }
+.badge-status.inactive { background: #f0f2f5; color: #5a6a7a; border: 1px solid #c8d0da; }
+.badge-status.deleted  { background: #fdecea; color: #c62828; border: 1px solid #f5b8b3; }
+
+.sat-divider { border: none; border-top: 1px solid #edf1f7; margin: 0.85rem 0; }
+
+.sat-meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.55rem 1rem;
+    margin-bottom: 0.9rem;
+}
+
+.sat-meta-label {
+    font-size: 0.64rem;
+    letter-spacing: 0.09em;
+    color: #8a9bb0;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
+
+.sat-meta-value {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.83rem;
+    color: #2c3e50;
+}
+.sat-meta-value.highlight { color: #1565c0; font-weight: 700; }
+.sat-meta-value.muted     { color: #b0bec5; }
+
+.sat-orbit-bar {
+    background: #f4f7fb;
+    border: 1px solid #dce4ed;
+    border-radius: 6px;
+    padding: 0.55rem 0.8rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.sat-orbit-icon { font-size: 0.75rem; color: #8a9bb0; }
+.sat-orbit-text { font-family: 'Share Tech Mono', monospace; font-size: 0.75rem; color: #5a7090; }
+
+.sat-actions {
+    display: flex;
+    gap: 0.45rem;
+    justify-content: flex-end;
+}
+
+.btn-sat {
+    padding: 0.35rem 0.8rem;
+    font-size: 0.73rem;
+    letter-spacing: 0.04em;
+    border-radius: 5px;
+    text-transform: uppercase;
+    font-weight: 600;
+    border: 1px solid;
+    transition: all 0.15s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+.btn-sat-view   { color: #1565c0; border-color: #90b8e0; background: #eaf2fb; }
+.btn-sat-view:hover   { background: #d0e6f7; border-color: #1565c0; color: #0d47a1; }
+.btn-sat-edit   { color: #b45309; border-color: #f0c97a; background: #fef9ed; }
+.btn-sat-edit:hover   { background: #fdefc8; border-color: #d97706; color: #92400e; }
+.btn-sat-delete { color: #c62828; border-color: #f5b8b3; background: #fdecea; }
+.btn-sat-delete:hover { background: #fbd5d1; border-color: #e53935; color: #b71c1c; }
+
+.empty-state {
+    text-align: center;
+    padding: 5rem 2rem;
+    color: #8a9bb0;
+}
+.sat-card-grid .empty-state { grid-column: 1 / -1; }
+.empty-state p { font-size: 0.9rem; margin-bottom: 1.5rem; }
+
+@media (max-width: 600px) {
+    .sat-meta-grid { grid-template-columns: 1fr; }
+    .header        { flex-direction: column; align-items: flex-start; }
+}

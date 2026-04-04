@@ -1,53 +1,138 @@
 @model IEnumerable<App.Domain.Entities.Alert>
+@using App.Domain.Entities.Enums
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Alerts";
 }
 
-<h1>Index</h1>
+<link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Severity)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsAcknowledged)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ConjunctionEvent)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Severity)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsAcknowledged)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ConjunctionEvent.Status)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+<div class="ssa-container">
+
+    <div class="system-bar">
+        <span class="status-dot"></span>
+        ADMIN | ALERTS |
+        @DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") UTC |
+        @Model.Count() ALERTS
+    </div>
+
+    <div class="header">
+        <div>
+            <h3>Alerts</h3>
+            <small>All system-generated alerts for conjunction events</small>
+        </div>
+        <div class="header-right">
+            <span class="badge danger">@Model.Count(a => !a.IsAcknowledged) Unacknowledged</span>
+            <span class="badge warning">@Model.Count(a => a.Severity == EAlertSeverity.Critical) Critical</span>
+            <a asp-action="Create" class="btn-add"><i class="bi bi-plus-lg"></i> Add Alert</a>
+        </div>
+    </div>
+
+    <div class="card mb-3 p-3">
+        <div class="d-flex gap-3 align-items-center flex-wrap">
+            <select id="severityFilter" class="form-select w-auto">
+                <option value="">All Severities</option>
+                @foreach (var sev in Enum.GetValues<EAlertSeverity>())
+                {
+                    <option value="@sev">@sev</option>
+                }
+            </select>
+            <select id="ackFilter" class="form-select w-auto">
+                <option value="">All</option>
+                <option value="false">Unacknowledged</option>
+                <option value="true">Acknowledged</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="card">
+        <table class="table table-hover mb-0" id="alertTable">
+            <thead>
+                <tr>
+                    <th>Severity</th>
+                    <th>Message</th>
+                    <th>User</th>
+                    <th>Conjunction</th>
+                    <th>Created</th>
+                    <th>Acknowledged</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.OrderBy(a => a.IsAcknowledged).ThenByDescending(a => a.Severity))
+                {
+                    <tr data-severity="@item.Severity" data-ack="@item.IsAcknowledged.ToString().ToLower()">
+                        <td>
+                            <span class="badge @(item.Severity switch {
+                                EAlertSeverity.Critical => "bg-danger",
+                                EAlertSeverity.High     => "bg-warning text-dark",
+                                EAlertSeverity.Medium   => "bg-info text-dark",
+                                _                       => "bg-secondary"
+                            })">@item.Severity</span>
+                        </td>
+                        <td>@(item.Message?.ToString() ?? "—")</td>
+                        <td>@(item.User != null ? $"{item.User.FirstName} {item.User.LastName}".Trim() : "—")</td>
+                        <td>
+                            @if (item.ConjunctionEvent != null)
+                            {
+                                <a asp-area="Admin" asp-controller="ConjunctionEvent" asp-action="Details"
+                                   asp-route-id="@item.ConjunctionEventId" class="text-decoration-none">
+                                    @item.ConjunctionEvent.Status
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="text-muted">—</span>
+                            }
+                        </td>
+                        <td><small>@item.CreatedAt.ToString("yyyy-MM-dd HH:mm")</small></td>
+                        <td>
+                            @if (item.IsAcknowledged)
+                            {
+                                <span class="badge bg-success">Yes</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning text-dark">No</span>
+                            }
+                        </td>
+                        <td class="text-nowrap">
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Details</a>
+                            <a asp-action="Edit"    asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Edit</a>
+                            <a asp-action="Delete"  asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        @if (!Model.Any())
+        {
+            <div class="empty-state">
+                <p>No alerts found.</p>
+            </div>
+        }
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        const severityFilter = document.getElementById('severityFilter');
+        const ackFilter      = document.getElementById('ackFilter');
+        const rows           = document.querySelectorAll('#alertTable tbody tr');
+
+        function applyFilters() {
+            const sev = severityFilter.value.toLowerCase();
+            const ack = ackFilter.value.toLowerCase();
+            rows.forEach(row => {
+                const matchSev = !sev || row.dataset.severity.toLowerCase() === sev;
+                const matchAck = !ack || row.dataset.ack === ack;
+                row.style.display = matchSev && matchAck ? '' : 'none';
+            });
+        }
+
+        severityFilter.addEventListener('change', applyFilters);
+        ackFilter.addEventListener('change', applyFilters);
+    </script>
 }
-    </tbody>
-</table>

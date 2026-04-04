@@ -1,14 +1,27 @@
 @{
-    ViewData["Title"] = "Operator Management";
+    ViewData["Title"] = "Settings";
 }
 
-<div class="container">
-    <div class="row py-4">
-        <div class="col-12">
-            <h1 class="display-4 fw-bold text-primary">Operator Settings</h1>
-            <p class="lead text-muted mb-4">
-                Manage your operator account settings. Update your profile information, change your password, and configure notification preferences.
-            </p>
+<link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
+
+<div class="ssa-container">
+
+    <div class="system-bar">
+        <span class="status-dot"></span>
+        OPERATOR SETTINGS | @DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") UTC
+    </div>
+
+    <div class="header">
+        <div>
+            <h3>Operator Settings</h3>
+            <small>Manage your account, notifications, and preferences</small>
         </div>
     </div>
+
+    <div class="card">
+        <div class="empty-state">
+            <p>Settings management is coming soon.</p>
+        </div>
+    </div>
+
 </div>
