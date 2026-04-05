@@ -113,6 +113,37 @@ namespace App.Infrastructure.Migrations
                     b.ToTable("ConjunctionEvents");
                 });
 
+            modelBuilder.Entity("App.Domain.Entities.Identity.AppRefreshToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("AppUserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("ExpirationDT")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("PreviousExpirationDT")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PreviousRefreshToken")
+                        .HasMaxLength(64)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RefreshToken")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.ToTable("RefreshTokens");
+                });
+
             modelBuilder.Entity("App.Domain.Entities.Identity.AppRole", b =>
                 {
                     b.Property<Guid>("Id")
@@ -711,6 +742,17 @@ namespace App.Infrastructure.Migrations
                     b.Navigation("SecondaryObject");
                 });
 
+            modelBuilder.Entity("App.Domain.Entities.Identity.AppRefreshToken", b =>
+                {
+                    b.HasOne("App.Domain.Entities.Identity.AppUser", "AppUser")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+                });
+
             modelBuilder.Entity("App.Domain.Entities.NotificationSetting", b =>
                 {
                     b.HasOne("App.Domain.Entities.Identity.AppUser", "AppUser")
@@ -908,6 +950,8 @@ namespace App.Infrastructure.Migrations
                     b.Navigation("AppUserRoles");
 
                     b.Navigation("NotificationSettings");
+
+                    b.Navigation("RefreshTokens");
 
                     b.Navigation("UserOperators");
                 });

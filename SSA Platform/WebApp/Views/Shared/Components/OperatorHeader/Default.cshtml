@@ -1,7 +1,7 @@
 @model OperatorHeaderViewModel
 
 <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">My Satellites</a>
+    <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">My Satellites</a>
     <ul class="dropdown-menu">
         <a class="dropdown-item" asp-area="Operator" asp-controller="Satellite" asp-action="Index">All My Satellites</a>
         @foreach (var sat in Model.Satellites)

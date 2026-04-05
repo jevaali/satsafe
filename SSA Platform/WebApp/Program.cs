@@ -1,3 +1,4 @@
+using System.Globalization;
 using App.Application.Interfaces;
 using App.Application.Interfaces.IRepositories;
 using App.Application.UseCases;
@@ -7,7 +8,9 @@ using App.Infrastructure.Persistence;
 using App.Infrastructure.Repositories;
 using App.Infrastructure.Seeding;
 using App.Infrastructure.UnitOfWork;
+using Asp.Versioning;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
@@ -57,6 +60,50 @@ builder.Services
     .AddDefaultTokenProviders();
 
 builder.Services.AddControllersWithViews();
+
+var supportedCultures = builder.Configuration
+    .GetSection("SupportedCultures")
+    .GetChildren()
+    .Select(x => new CultureInfo(x.Value!))
+    .ToArray();
+
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    // datetime and currency support
+    options.SupportedCultures = supportedCultures;
+    // UI translated strings
+    options.SupportedUICultures = supportedCultures;
+    // if nothing is found, use this
+    options.DefaultRequestCulture = new RequestCulture("et-EE", "et-EE");
+    options.SetDefaultCulture("et-EE");
+
+    options.RequestCultureProviders = new List<IRequestCultureProvider>
+    {
+        // Order is important, it's in which order they will be evaluated
+        new QueryStringRequestCultureProvider(),
+        new CookieRequestCultureProvider()
+    };
+});
+
+
+var apiVersioningBuilder = builder.Services.AddApiVersioning(options =>
+{
+    options.ReportApiVersions = true;
+    // in case of no explicit version
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+});
+
+apiVersioningBuilder.AddApiExplorer(options =>
+{
+    // add the versioned api explorer, which also adds IApiVersionDescriptionProvider service
+    // note: the specified format code will format the version as "'v'major[.minor][-status]"
+    options.GroupNameFormat = "'v'VVV";
+
+    // note: this option is only necessary when versioning by url segment. the SubstitutionFormat
+    // can also be used to control the format of the API version in route templates
+    options.SubstituteApiVersionInUrl = true;
+});
+
 
 var app = builder.Build();
 

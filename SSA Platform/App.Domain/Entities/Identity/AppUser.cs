@@ -11,6 +11,7 @@ public class AppUser: IdentityUser<Guid>
     public DateTime UpdatedAt { get; set; } = DateTime.Now;
     
     public virtual ICollection<AppUserRole>? AppUserRoles { get; set; }
+    public ICollection<AppRefreshToken>? RefreshTokens { get; set; }
     
     public ICollection<Alert>? Alerts { get; set; } = [];
     public ICollection<NotificationSetting>? NotificationSettings { get; set; } = [];

@@ -21,6 +21,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
     public DbSet<SpaceObject> SpaceObjects { get; set; } = null!;
     public DbSet<TleRecord> TleRecords { get; set; } = null!;
     public DbSet<UserOperator> UserOperators { get; set; } = null!;
+    
+    public DbSet<AppRefreshToken> RefreshTokens { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
