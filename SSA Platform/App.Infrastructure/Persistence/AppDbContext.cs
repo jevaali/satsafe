@@ -53,7 +53,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
         modelBuilder.Entity<SpaceObject>()
             .HasOne(s => s.Orbit)
             .WithOne(o => o.SpaceObject)
-            .HasForeignKey<SpaceObject>(s => s.OrbitId);
+            .HasForeignKey<Orbit>(o => o.SpaceObjectId);
 
         modelBuilder.Entity<TleRecord>()
             .HasOne(t => t.SpaceObject)

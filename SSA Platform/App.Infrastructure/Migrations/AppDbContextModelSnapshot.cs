@@ -353,6 +353,9 @@ namespace App.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("SpaceObjectId")
+                        .IsUnique();
+
                     b.ToTable("Orbits");
                 });
 
@@ -431,9 +434,6 @@ namespace App.Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OrbitId")
-                        .IsUnique();
 
                     b.ToTable("SpaceObjects");
 
@@ -766,6 +766,12 @@ namespace App.Infrastructure.Migrations
 
             modelBuilder.Entity("App.Domain.Entities.Orbit", b =>
                 {
+                    b.HasOne("App.Domain.Entities.SpaceObject", "SpaceObject")
+                        .WithOne("Orbit")
+                        .HasForeignKey("App.Domain.Entities.Orbit", "SpaceObjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.OwnsOne("App.Domain.ValueObjects.OrbitParameters", "Parameters", b1 =>
                         {
                             b1.Property<Guid>("OrbitId")
@@ -805,6 +811,8 @@ namespace App.Infrastructure.Migrations
 
                     b.Navigation("Parameters")
                         .IsRequired();
+
+                    b.Navigation("SpaceObject");
                 });
 
             modelBuilder.Entity("App.Domain.Entities.RiskAssessment", b =>
@@ -816,15 +824,6 @@ namespace App.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("ConjunctionEvent");
-                });
-
-            modelBuilder.Entity("App.Domain.Entities.SpaceObject", b =>
-                {
-                    b.HasOne("App.Domain.Entities.Orbit", "Orbit")
-                        .WithOne("SpaceObject")
-                        .HasForeignKey("App.Domain.Entities.SpaceObject", "OrbitId");
-
-                    b.Navigation("Orbit");
                 });
 
             modelBuilder.Entity("App.Domain.Entities.TleRecord", b =>
@@ -963,14 +962,10 @@ namespace App.Infrastructure.Migrations
                     b.Navigation("UserOperators");
                 });
 
-            modelBuilder.Entity("App.Domain.Entities.Orbit", b =>
-                {
-                    b.Navigation("SpaceObject")
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("App.Domain.Entities.SpaceObject", b =>
                 {
+                    b.Navigation("Orbit");
+
                     b.Navigation("PrimaryConjunctionEvents");
 
                     b.Navigation("SecondaryConjunctionEvents");

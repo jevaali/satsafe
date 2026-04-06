@@ -70,7 +70,7 @@
                 <table class="table mb-0">
                     <tr>
                         <td class="text-muted">Semi-Major Axis</td>
-                        <td class="fw-bold">@p.SemiMajorAxis.ToString("N0") km</td>
+                        <td class="fw-bold">@p.SemiMajorAxis.ToString("N0") m</td>
                     </tr>
                     <tr>
                         <td class="text-muted">Eccentricity</td>
@@ -92,6 +92,20 @@
                         <td class="text-muted">Mean Anomaly</td>
                         <td class="font-monospace">@p.MeanAnomaly.ToString("F2")°</td>
                     </tr>
+                    <tr>
+                        <td class="text-muted">Orbital Period</td>
+                        <td class="font-monospace">
+                            @{
+                                var periodSec = 2 * Math.PI * Math.Sqrt(Math.Pow(p.SemiMajorAxis, 3) / (3.986004418e14));
+                                var periodMin = periodSec / 60;
+                            }
+                            @periodMin.ToString("F1") min
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted">Altitude (approx)</td>
+                        <td class="font-monospace">@((p.SemiMajorAxis - 6_371_000).ToString("N0")) m</td>
+                    </tr>
                 </table>
             }
             else
@@ -105,6 +119,51 @@
         </div>
 
     </div>
+
+    @* Orbit visualisation — only shown when orbital data exists *@
+    @if (Model.Orbit?.Parameters != null)
+    {
+        <div class="card mt-3 orbit-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <h5 style="margin:0;">Orbital View</h5>
+                <small style="color:#6c757d;">
+                    @Model.Name &nbsp;·&nbsp;
+                    Alt ~@(((Model.Orbit.Parameters.SemiMajorAxis - 6_371_000) / 1000).ToString("N0")) km &nbsp;·&nbsp;
+                    Inc @Model.Orbit.Parameters.Inclination.ToString("F1")°
+                </small>
+            </div>
+            <div class="orbit-visualization">
+                <canvas id="orbitCanvas"></canvas>
+            </div>
+        </div>
+
+        <script>
+            var satelliteData = [@Html.Raw(Json.Serialize(new {
+                id   = Model.Id,
+                name = Model.Name.ToString(),
+                orbit = new {
+                    semiMajorAxis     = Model.Orbit.Parameters.SemiMajorAxis,
+                    eccentricity      = Model.Orbit.Parameters.Eccentricity,
+                    inclination       = Model.Orbit.Parameters.Inclination,
+                    raan              = Model.Orbit.Parameters.RAAN,
+                    argumentOfPerigee = Model.Orbit.Parameters.ArgumentOfPerigee,
+                    meanAnomaly       = Model.Orbit.Parameters.MeanAnomaly
+                }
+            }))];
+        </script>
+
+        <script src="~/js/orbitalMechanics.js"></script>
+        <script src="~/js/orbitRenderer.js"></script>
+
+        <script>
+            OrbitRenderer.init({
+                canvasId:   'orbitCanvas',
+                satellites: satelliteData,
+                timeScale:  300,
+                showLabels: true,
+            });
+        </script>
+    }
 
     <div class="card mt-3 p-3">
         <a asp-area="Operator" asp-controller="Satellite" asp-action="Index" class="btn btn-outline-secondary">

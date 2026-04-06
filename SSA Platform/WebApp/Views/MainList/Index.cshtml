@@ -2,9 +2,13 @@
 
 @{
     ViewData["Title"] = "Space Object Catalogue";
+    var allObjects = Model.Satellites.Cast<object>().Concat(Model.Debris.Cast<object>()).ToList();
 }
 
 <link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/catalogue.css" asp-append-version="true" />
+
+
 
 <div class="ssa-container">
 
@@ -12,13 +16,13 @@
         <span class="status-dot"></span>
         SPACE OBJECT CATALOGUE |
         @DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") UTC |
-        @(Model.Satellites.Count + Model.Debris.Count) OBJECTS
+        @(Model.Satellites.Count + Model.Debris.Count) OBJECTS TRACKED
     </div>
 
     <div class="header">
         <div>
             <h3>Space Object Catalogue</h3>
-            <small>All tracked satellites and debris objects in the registry</small>
+            <small>All tracked satellites and debris objects — click any object to inspect orbit</small>
         </div>
         <div class="header-right">
             <span class="badge bg-primary">@Model.Satellites.Count Satellites</span>
@@ -26,77 +30,262 @@
         </div>
     </div>
 
-    <!-- Filter bar -->
-    <div class="card mb-3 p-3">
-        <div class="d-flex gap-3 align-items-center flex-wrap">
-            <input type="text" id="searchBox" class="form-control w-auto"
-                   placeholder="Search by name or NORAD ID..." />
-            <select id="typeFilter" class="form-select w-auto">
+    <div class="card mb-3">
+        <div class="filter-bar">
+            <input type="text" id="searchBox" placeholder="Search name or NORAD ID…" />
+            <select id="typeFilter">
                 <option value="">All Types</option>
-                <option value="Satellite">Satellite</option>
-                <option value="Debris">Debris</option>
+                <option value="satellite">Satellites</option>
+                <option value="debris">Debris</option>
             </select>
+            <select id="orbitFilter">
+                <option value="">All Objects</option>
+                <option value="1">Has Orbit Data</option>
+                <option value="0">No Orbit Data</option>
+            </select>
+            <span class="obj-count" id="objCount">@(Model.Satellites.Count + Model.Debris.Count) objects</span>
         </div>
     </div>
 
-    <!-- Table -->
-    <div class="card">
-        <table class="table table-hover mb-0" id="catalogueTable">
-            <thead>
-                <tr>
-                    <th>Type</th>
-                    <th>Name / NORAD ID</th>
-                    <th>Operator / Size</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var sat in Model.Satellites)
-                {
-                    <tr data-type="Satellite" data-name="@sat.Name.ToLower()">
-                        <td><span class="badge bg-primary">Satellite</span></td>
-                        <td><strong>@sat.Name</strong></td>
-                        <td class="text-muted">@sat.Operator</td>
-                    </tr>
-                }
-                @foreach (var debris in Model.Debris)
-                {
-                    <tr data-type="Debris" data-name="@debris.NoradId">
-                        <td><span class="badge warning">Debris</span></td>
-                        <td><span class="font-monospace">NORAD @debris.NoradId</span></td>
-                        <td class="text-muted">@debris.SizeEstimate.ToString("F1") m</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+    <div class="catalogue-grid" id="catalogueGrid">
 
-        @if (!Model.Satellites.Any() && !Model.Debris.Any())
+        @foreach (var sat in Model.Satellites)
         {
-            <div class="empty-state">
-                <p>No objects in the catalogue.</p>
+            var hasOrbit = sat.HasOrbit ? "1" : "0";
+            var altKm    = sat.HasOrbit ? ((sat.SemiMajorAxis!.Value - 6_371_000) / 1000).ToString("N0") : null;
+            var orbitJson = sat.HasOrbit ? System.Text.Json.JsonSerializer.Serialize(new {
+                id   = sat.Id,
+                name = sat.Name,
+                orbit = new {
+                    semiMajorAxis     = sat.SemiMajorAxis,
+                    eccentricity      = sat.Eccentricity,
+                    inclination       = sat.Inclination,
+                    raan              = sat.Raan,
+                    argumentOfPerigee = sat.ArgumentOfPerigee,
+                    meanAnomaly       = sat.MeanAnomaly
+                }
+            }) : "null";
+
+            <div class="obj-card type-satellite"
+                 data-type="satellite"
+                 data-name="@sat.Name.ToLower()"
+                 data-has-orbit="@hasOrbit"
+                 data-orbit='@orbitJson'
+                 data-title="@sat.Name"
+                 data-sub="Satellite · @sat.Operator"
+                 data-params='@(sat.HasOrbit ? $"{sat.SemiMajorAxis!.Value:N0} m · e={sat.Eccentricity:F4} · i={sat.Inclination:F1}°" : "")'
+                 onclick="openModal(this)">
+                <div class="obj-card-header">
+                    <div>
+                        <div class="obj-name">@sat.Name</div>
+                        <div class="obj-sub">@sat.Operator</div>
+                    </div>
+                    <span class="obj-badge satellite">Satellite</span>
+                </div>
+                <div class="obj-orbit-hint">
+                    <div class="orbit-dot @(sat.HasOrbit ? "" : "none")"></div>
+                    @if (sat.HasOrbit)
+                    {
+                        <span>Alt ~@altKm km · Inc @sat.Inclination!.Value.ToString("F1")°</span>
+                    }
+                    else
+                    {
+                        <span>No orbit data</span>
+                    }
+                </div>
             </div>
         }
+
+        @foreach (var d in Model.Debris)
+        {
+            var hasOrbit  = d.HasOrbit ? "1" : "0";
+            var altKm     = d.HasOrbit ? ((d.SemiMajorAxis!.Value - 6_371_000) / 1000).ToString("N0") : null;
+            var orbitJson = d.HasOrbit ? System.Text.Json.JsonSerializer.Serialize(new {
+                id   = d.Id,
+                name = $"DEBRIS-{d.NoradId}",
+                orbit = new {
+                    semiMajorAxis     = d.SemiMajorAxis,
+                    eccentricity      = d.Eccentricity,
+                    inclination       = d.Inclination,
+                    raan              = d.Raan,
+                    argumentOfPerigee = d.ArgumentOfPerigee,
+                    meanAnomaly       = d.MeanAnomaly
+                }
+            }) : "null";
+
+            <div class="obj-card type-debris"
+                 data-type="debris"
+                 data-name="@d.NoradId"
+                 data-has-orbit="@hasOrbit"
+                 data-orbit='@orbitJson'
+                 data-title="DEBRIS-@d.NoradId"
+                 data-sub="Debris · @d.SizeEstimate.ToString("F1") m estimated size"
+                 data-params='@(d.HasOrbit ? $"{d.SemiMajorAxis!.Value:N0} m · e={d.Eccentricity:F4} · i={d.Inclination:F1}°" : "")'
+                 onclick="openModal(this)">
+                <div class="obj-card-header">
+                    <div>
+                        <div class="obj-name">DEBRIS-@d.NoradId</div>
+                        <div class="obj-sub">Size ~@d.SizeEstimate.ToString("F1") m</div>
+                    </div>
+                    <span class="obj-badge debris">Debris</span>
+                </div>
+                <div class="obj-orbit-hint">
+                    <div class="orbit-dot @(d.HasOrbit ? "" : "none")"></div>
+                    @if (d.HasOrbit)
+                    {
+                        <span>Alt ~@altKm km · Inc @d.Inclination!.Value.ToString("F1")°</span>
+                    }
+                    else
+                    {
+                        <span>No orbit data</span>
+                    }
+                </div>
+            </div>
+        }
+
     </div>
+
+    @if (!Model.Satellites.Any() && !Model.Debris.Any())
+    {
+        <div class="empty-state mt-3">
+            <p>No objects in the catalogue.</p>
+        </div>
+    }
 
 </div>
 
+<!-- ── Orbit popup modal ── -->
+<div class="orbit-modal-overlay" id="orbitModalOverlay" onclick="closeModalOnOverlay(event)">
+    <div class="orbit-modal">
+        <div class="orbit-modal-header">
+            <div>
+                <div class="orbit-modal-title" id="modalTitle">—</div>
+                <div class="orbit-modal-sub"  id="modalSub">—</div>
+            </div>
+            <button class="orbit-modal-close" onclick="closeModal()">✕</button>
+        </div>
+
+        <div id="modalOrbitArea">
+            <!-- filled by JS -->
+        </div>
+    </div>
+</div>
+
 @section Scripts {
+    <script src="~/js/orbitalMechanics.js"></script>
+    <script src="~/js/orbitRenderer.js"></script>
     <script>
-        const searchBox  = document.getElementById('searchBox');
-        const typeFilter = document.getElementById('typeFilter');
-        const rows       = document.querySelectorAll('#catalogueTable tbody tr');
+        // ── Filter ────────────────────────────────────────────────────────────
+        const searchBox   = document.getElementById('searchBox');
+        const typeFilter  = document.getElementById('typeFilter');
+        const orbitFilter = document.getElementById('orbitFilter');
+        const grid        = document.getElementById('catalogueGrid');
+        const countEl     = document.getElementById('objCount');
+        const cards       = Array.from(grid.querySelectorAll('.obj-card'));
 
         function filterObjects() {
             const search = searchBox.value.toLowerCase();
             const type   = typeFilter.value;
+            const orbit  = orbitFilter.value;
+            let visible  = 0;
 
-            rows.forEach(row => {
-                const matchSearch = !search || row.dataset.name.includes(search);
-                const matchType   = !type   || row.dataset.type === type;
-                row.style.display = matchSearch && matchType ? '' : 'none';
+            cards.forEach(card => {
+                const matchSearch = !search || card.dataset.name.includes(search);
+                const matchType   = !type   || card.dataset.type === type;
+                const matchOrbit  = !orbit  || card.dataset.hasOrbit === orbit;
+                const show        = matchSearch && matchType && matchOrbit;
+                card.style.display = show ? '' : 'none';
+                if (show) visible++;
             });
+
+            countEl.textContent = visible + ' object' + (visible !== 1 ? 's' : '');
         }
 
-        searchBox.addEventListener('input', filterObjects);
+        searchBox.addEventListener('input',  filterObjects);
         typeFilter.addEventListener('change', filterObjects);
+        orbitFilter.addEventListener('change', filterObjects);
+
+        // ── Modal ─────────────────────────────────────────────────────────────
+        let activeRenderer = null;
+
+        function openModal(card) {
+            const title    = card.dataset.title;
+            const sub      = card.dataset.sub;
+            const orbitRaw = card.dataset.orbit;
+            const params   = card.dataset.params;
+
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalSub').textContent   = sub;
+
+            const area = document.getElementById('modalOrbitArea');
+
+            // Destroy previous renderer if any
+            if (activeRenderer) { activeRenderer.destroy(); activeRenderer = null; }
+
+            if (orbitRaw && orbitRaw !== 'null') {
+                const orbitData = JSON.parse(orbitRaw);
+
+                area.innerHTML = `
+                    <div class="orbit-modal-canvas-wrap">
+                        <canvas id="modalOrbitCanvas"></canvas>
+                    </div>
+                    <div class="orbit-modal-params">
+                        <div class="param-cell">
+                            <div class="param-label">Semi-major axis</div>
+                            <div class="param-value">${Number(orbitData.orbit.semiMajorAxis).toLocaleString()} m</div>
+                        </div>
+                        <div class="param-cell">
+                            <div class="param-label">Eccentricity</div>
+                            <div class="param-value">${Number(orbitData.orbit.eccentricity).toFixed(5)}</div>
+                        </div>
+                        <div class="param-cell">
+                            <div class="param-label">Inclination</div>
+                            <div class="param-value">${Number(orbitData.orbit.inclination).toFixed(2)}°</div>
+                        </div>
+                        <div class="param-cell">
+                            <div class="param-label">RAAN</div>
+                            <div class="param-value">${Number(orbitData.orbit.raan).toFixed(2)}°</div>
+                        </div>
+                        <div class="param-cell">
+                            <div class="param-label">Arg of perigee</div>
+                            <div class="param-value">${Number(orbitData.orbit.argumentOfPerigee).toFixed(2)}°</div>
+                        </div>
+                        <div class="param-cell">
+                            <div class="param-label">Mean anomaly</div>
+                            <div class="param-value">${Number(orbitData.orbit.meanAnomaly).toFixed(2)}°</div>
+                        </div>
+                    </div>`;
+
+                // Small delay so the DOM paints before the renderer measures the canvas
+                setTimeout(() => {
+                    activeRenderer = OrbitRenderer.init({
+                        canvasId:   'modalOrbitCanvas',
+                        satellites: [orbitData],
+                        timeScale:  300,
+                        showLabels: false,
+                    });
+                }, 30);
+            } else {
+                area.innerHTML = `<div class="no-orbit-msg">No orbital data available for this object.</div>`;
+            }
+
+            document.getElementById('orbitModalOverlay').classList.add('open');
+            document.addEventListener('keydown', onEsc);
+        }
+
+        function closeModal() {
+            document.getElementById('orbitModalOverlay').classList.remove('open');
+            document.removeEventListener('keydown', onEsc);
+            if (activeRenderer) { activeRenderer.destroy(); activeRenderer = null; }
+            document.getElementById('modalOrbitArea').innerHTML = '';
+        }
+
+        function closeModalOnOverlay(e) {
+            if (e.target === document.getElementById('orbitModalOverlay')) closeModal();
+        }
+
+        function onEsc(e) {
+            if (e.key === 'Escape') closeModal();
+        }
     </script>
 }

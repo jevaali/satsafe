@@ -1,0 +1,234 @@
+
+.catalogue-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+    margin-top: 4px;
+}
+
+.obj-card {
+    background: #fff;
+    border: 1px solid #e3e8ef;
+    border-radius: 10px;
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+    position: relative;
+    overflow: hidden;
+}
+
+.obj-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 10px 10px 0 0;
+}
+
+.obj-card.type-satellite::before { background: #1565c0; }
+.obj-card.type-debris::before    { background: #e6a817; }
+
+.obj-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+    border-color: #b8cde8;
+}
+
+.obj-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+}
+
+.obj-name {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #1a2332;
+    line-height: 1.2;
+}
+
+.obj-sub {
+    font-size: 0.75rem;
+    color: #8a9bb0;
+    margin-top: 2px;
+}
+
+.obj-badge {
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    padding: 0.22em 0.6em;
+    border-radius: 4px;
+    text-transform: uppercase;
+    font-weight: 700;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.obj-badge.satellite { background: #e8f0fb; color: #1565c0; border: 1px solid #b8d0f0; }
+.obj-badge.debris    { background: #fef9ed; color: #b45309; border: 1px solid #f0c97a; }
+
+.obj-orbit-hint {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.72rem;
+    color: #8a9bb0;
+    margin-top: 8px;
+}
+
+.orbit-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #28a745;
+    flex-shrink: 0;
+}
+
+.orbit-dot.none { background: #ced4da; }
+
+/* ── Filter bar ── */
+.filter-bar {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 12px 16px;
+}
+
+.filter-bar input,
+.filter-bar select {
+    background: #f8f9fa;
+    border: 1px solid #dce4ed;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    color: #212529;
+    outline: none;
+    transition: border-color 0.15s;
+}
+
+.filter-bar input:focus,
+.filter-bar select:focus { border-color: #1565c0; }
+
+.filter-bar input { min-width: 220px; }
+
+.obj-count {
+    margin-left: auto;
+    font-size: 0.8rem;
+    color: #8a9bb0;
+}
+
+/* ── Modal overlay ── */
+.orbit-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 15, 25, 0.65);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(3px);
+}
+
+.orbit-modal-overlay.open {
+    display: flex;
+}
+
+.orbit-modal {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 16px;
+    width: 480px;
+    max-width: 95vw;
+    overflow: hidden;
+    animation: modalIn 0.2s ease;
+}
+
+@keyframes modalIn {
+     from { opacity: 0; transform: scale(0.95) translateY(8px); }
+     to   { opacity: 1; transform: scale(1) translateY(0); }
+ }
+
+.orbit-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 18px 20px 0;
+}
+
+.orbit-modal-title {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #e6edf3;
+    line-height: 1.2;
+}
+
+.orbit-modal-sub {
+    font-size: 0.75rem;
+    color: #8b949e;
+    margin-top: 3px;
+}
+
+.orbit-modal-close {
+    background: none;
+    border: none;
+    color: #8b949e;
+    font-size: 1.3rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0 0 0 12px;
+    transition: color 0.15s;
+}
+
+.orbit-modal-close:hover { color: #e6edf3; }
+
+.orbit-modal-canvas-wrap {
+    position: relative;
+    height: 300px;
+    margin: 14px 0 0;
+    background: #0d1117;
+}
+
+#modalOrbitCanvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.orbit-modal-params {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+    border-top: 1px solid #21262d;
+}
+
+.param-cell {
+    padding: 10px 16px;
+    border-right: 1px solid #21262d;
+}
+
+.param-cell:last-child { border-right: none; }
+
+.param-label {
+    font-size: 0.62rem;
+    letter-spacing: 0.09em;
+    color: #8b949e;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
+
+.param-value {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.82rem;
+    color: #c9d1d9;
+}
+
+.no-orbit-msg {
+    text-align: center;
+    padding: 40px 20px;
+    color: #8b949e;
+    font-size: 0.85rem;
+    background: #0d1117;
+}

@@ -23,7 +23,7 @@ public class SatelliteRepository : ISatelliteRepository
             .Include(s => s.Operator)
             .Include(s => s.Orbit)
             .Include(s => s.TleRecords)
-            .FirstOrDefaultAsync(s => s.Id == id);
+            .FirstOrDefaultAsync(s => s.Id == id && s.Status != ESatelliteStatus.Deleted);
     }
 
     public async Task AddAsync(Satellite satellite)
@@ -48,6 +48,7 @@ public class SatelliteRepository : ISatelliteRepository
             .Include(s => s.Operator)
             .Include(s => s.Orbit)
             .Include(s => s.TleRecords)
+            .Where(s => s.Status != ESatelliteStatus.Deleted)
             .ToListAsync();
     }
 
@@ -58,7 +59,7 @@ public class SatelliteRepository : ISatelliteRepository
             .Include(s => s.Operator)
             .Include(s => s.Orbit)
             .Include(s => s.TleRecords)
-            .Where(s => s.OperatorId == operatorId)
+            .Where(s => s.OperatorId == operatorId && s.Status != ESatelliteStatus.Deleted)
             .ToListAsync();
     }
 

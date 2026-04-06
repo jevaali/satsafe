@@ -7,6 +7,8 @@
 }
 
 <link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
+<script src="~/js/orbitalMechanics.js"></script>
+<script src="~/js/orbitRenderer.js"></script>
 
 <div class="ssa-container">
 
@@ -37,25 +39,27 @@
         <!-- ORBIT VISUALIZATION -->
         <div class="card orbit-card">
             <h5>Orbital View</h5>
-
             <div class="orbit-visualization">
-                <div class="earth"></div>
-
-                <!-- subtle orbit tracks -->
-                <div class="orbit-track orbit-track-1"></div>
-                <div class="orbit-track orbit-track-2"></div>
-                <div class="orbit-track orbit-track-3"></div>
-
-                <!-- satellites on orbits -->
-                <div class="orbit orbit-1">
-                    <div class="satellite safe"></div>
-                </div>
-                <div class="orbit orbit-2">
-                    <div class="satellite medium-risk"></div>
-                </div>
-                <div class="orbit orbit-3">
-                    <div class="satellite high-risk"></div>
-                </div>
+                <canvas id="orbitCanvas"></canvas>
+                <script>
+                    OrbitRenderer.init({
+                        canvasId: 'orbitCanvas',
+                        satellites: @Html.Raw(Json.Serialize(Model.Satellites
+                                        .Where(s => s.Orbit != null)
+                                        .Select(s => new {
+                                            id   = s.Id,
+                                            name = s.Name.ToString(),
+                                            orbit = new {
+                                                semiMajorAxis     = s.Orbit!.Parameters.SemiMajorAxis,
+                                                eccentricity      = s.Orbit!.Parameters.Eccentricity,
+                                                inclination       = s.Orbit!.Parameters.Inclination,
+                                                raan              = s.Orbit!.Parameters.RAAN,
+                                                argumentOfPerigee = s.Orbit!.Parameters.ArgumentOfPerigee,
+                                                meanAnomaly       = s.Orbit!.Parameters.MeanAnomaly
+                                            }
+                                        }))),
+                    });
+                </script>
             </div>
         </div>
 

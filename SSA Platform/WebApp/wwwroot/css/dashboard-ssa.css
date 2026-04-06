@@ -76,8 +76,10 @@ body {
 /* --- ORBIT VISUALIZATION --- */
 .orbit-visualization {
     position: relative;
-    height: 300px;
-    perspective: 600px; /* pseudo-3D */
+    height: 380px;
+    background: #0d1117;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 /* Earth in the center */
