@@ -1,0 +1,291 @@
+@* _GroundTrack.cshtml
+   Include in SatelliteDetails.cshtml:
+   @await Html.PartialAsync("_GroundTrack", Model)
+*@
+@model App.Domain.Entities.Satellite
+@using System.Globalization
+
+@if (Model.Orbit?.Parameters == null) { return; }
+
+@{
+var p   = Model.Orbit.Parameters;
+var inv = CultureInfo.InvariantCulture;
+
+var periodSec = 2 * Math.PI * Math.Sqrt(Math.Pow(p.SemiMajorAxis, 3) / 3.986004418e14);
+var periodMin = periodSec / 60;
+}
+
+<style>
+    .gt-card { margin-top: 16px; }
+
+    .gt-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .gt-header h5 { margin: 0; }
+
+    .gt-controls {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .gt-btn {
+        font-size: 0.72rem;
+        letter-spacing: 0.06em;
+        padding: 4px 12px;
+        border-radius: 5px;
+        border: 1px solid #dce4ed;
+        background: #f8f9fa;
+        color: #5a6a7a;
+        cursor: pointer;
+        transition: all 0.15s;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .gt-btn:hover,
+    .gt-btn.active {
+        background: #1565c0;
+        border-color: #1565c0;
+        color: #fff;
+    }
+
+    #groundTrackMap {
+        height: 360px;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #dce4ed;
+        z-index: 0;
+    }
+
+    .gt-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 0;
+        border: 1px solid #e3e8ef;
+        border-radius: 8px;
+        overflow: hidden;
+        margin-top: 12px;
+    }
+
+    .gt-stat {
+        padding: 10px 16px;
+        border-right: 1px solid #e3e8ef;
+        background: #f8f9fa;
+    }
+
+    .gt-stat:last-child { border-right: none; }
+
+    .gt-stat-label {
+        font-size: 0.62rem;
+        letter-spacing: 0.09em;
+        color: #8a9bb0;
+        text-transform: uppercase;
+        margin-bottom: 3px;
+    }
+
+    .gt-stat-value {
+        font-family: 'Share Tech Mono', monospace;
+        font-size: 0.88rem;
+        color: #1a2332;
+        font-weight: 700;
+    }
+
+    .gt-stat-value.live { color: #1565c0; }
+</style>
+
+@* <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" /> *@
+
+<div class="card gt-card">
+    <div class="gt-header">
+        <h5>Ground Track</h5>
+        <div class="gt-controls">
+            <span style="font-size:0.75rem;color:#8a9bb0;">Show:</span>
+            <button class="gt-btn active" data-orbits="1">1 orbit</button>
+            <button class="gt-btn"        data-orbits="3">3 orbits</button>
+            <button class="gt-btn"        data-orbits="6">6 orbits</button>
+            <button class="gt-btn"        data-orbits="12">12 orbits</button>
+        </div>
+    </div>
+
+    <div id="groundTrackMap"></div>
+
+    <div class="gt-stats">
+        <div class="gt-stat">
+            <div class="gt-stat-label">Latitude</div>
+            <div class="gt-stat-value live" id="gtLat">—</div>
+        </div>
+        <div class="gt-stat">
+            <div class="gt-stat-label">Longitude</div>
+            <div class="gt-stat-value live" id="gtLng">—</div>
+        </div>
+        <div class="gt-stat">
+            <div class="gt-stat-label">Altitude</div>
+            <div class="gt-stat-value live" id="gtAlt">—</div>
+        </div>
+        <div class="gt-stat">
+            <div class="gt-stat-label">Velocity</div>
+            <div class="gt-stat-value live" id="gtVel">—</div>
+        </div>
+        <div class="gt-stat">
+            <div class="gt-stat-label">Period</div>
+            <div class="gt-stat-value">@periodMin.ToString("F1", inv) min</div>
+        </div>
+        <div class="gt-stat">
+            <div class="gt-stat-label">Inclination</div>
+            <div class="gt-stat-value">@p.Inclination.ToString("F2", inv)°</div>
+        </div>
+    </div>
+</div>
+
+@*<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>*@
+<script src="~/js/groundTrack.js"></script>
+
+<script>
+    (function () {
+        var orbitParams = {
+            semiMajorAxis:     @p.SemiMajorAxis.ToString(inv),
+            eccentricity:      @p.Eccentricity.ToString(inv),
+            inclination:       @p.Inclination.ToString(inv),
+            raan:              @p.RAAN.ToString(inv),
+            argumentOfPerigee: @p.ArgumentOfPerigee.ToString(inv),
+            meanAnomaly:       @p.MeanAnomaly.ToString(inv)
+        };
+
+        // ── Leaflet map ───────────────────────────────────────────────────────
+        var map = L.map('groundTrackMap', {
+            center: [20, 0],
+            zoom: 2,
+            minZoom: 1,
+            maxZoom: 6,
+            worldCopyJump: true,
+        });
+
+    @* L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OpenStreetMap &copy; CARTO',
+            subdomains: 'abcd',
+            maxZoom: 19
+        }).addTo(map);*@
+
+        var trackGroup  = L.layerGroup().addTo(map);
+        var futureGroup = L.layerGroup().addTo(map);
+
+        // ── Position marker ───────────────────────────────────────────────────
+        var posIcon = L.divIcon({
+            className: '',
+            html: '<div style="width:12px;height:12px;background:#4fc3f7;border:2px solid #fff;border-radius:50%;box-shadow:0 0 8px rgba(79,195,247,0.8);"></div>',
+            iconSize:   [12, 12],
+            iconAnchor: [6, 6]
+        });
+
+        var posMarker = L.marker([0, 0], { icon: posIcon }).addTo(map);
+
+        // ── Footprint ─────────────────────────────────────────────────────────
+        var altKm    = (orbitParams.semiMajorAxis - 6371000) / 1000;
+        var fpRadius = GroundTrack.footprintRadiusDeg(altKm);
+        var footprint = L.circle([0, 0], {
+            radius:      fpRadius * 111320,
+            color:       '#4fc3f7',
+            weight:      1,
+            fillColor:   '#4fc3f7',
+            fillOpacity: 0.07,
+        }).addTo(map);
+
+        // ── Track drawing ─────────────────────────────────────────────────────
+        var currentOrbits = 1;
+        var simTime       = 0;
+
+        function renderPolylines(points, color, opacity, group) {
+            var segment = [];
+            for (var i = 0; i < points.length; i++) {
+                var pt = points[i];
+                if (pt === null) {
+                    if (segment.length > 1) {
+                        L.polyline(segment, { color: color, weight: 1.8, opacity: opacity }).addTo(group);
+                    }
+                    segment = [];
+                } else {
+                    segment.push([pt.lat, pt.lng]);
+                }
+            }
+            if (segment.length > 1) {
+                L.polyline(segment, { color: color, weight: 1.8, opacity: opacity }).addTo(group);
+            }
+        }
+
+        function drawTrack(orbits) {
+            trackGroup.clearLayers();
+            futureGroup.clearLayers();
+
+            var T = GroundTrack.period(orbitParams);
+
+            // Past — half orbit behind current position
+            var pastPoints = GroundTrack.compute(orbitParams, {
+                orbits:        0.5,
+                stepsPerOrbit: 120,
+                tOffset:       simTime - T * 0.5
+            });
+            renderPolylines(pastPoints, '#4fc3f7', 0.4, trackGroup);
+
+            // Future
+            var futurePoints = GroundTrack.compute(orbitParams, {
+                orbits:        orbits,
+                stepsPerOrbit: 180,
+                tOffset:       simTime
+            });
+            renderPolylines(futurePoints, '#4fc3f7', 0.9, futureGroup);
+        }
+
+        // ── Orbit selector buttons ────────────────────────────────────────────
+        document.querySelectorAll('.gt-btn').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                currentOrbits = parseInt(btn.dataset.orbits);
+                document.querySelectorAll('.gt-btn').forEach(function (b) {
+                    b.classList.remove('active');
+                });
+                btn.classList.add('active');
+                drawTrack(currentOrbits);
+            });
+        });
+
+        // ── Animation loop ────────────────────────────────────────────────────
+        var lastTs    = null;
+        var lastDraw  = -999;
+        var TIME_SCALE = 60; // 1 wall second = 60 simulated seconds
+
+        function tick(ts) {
+            if (lastTs !== null) simTime += ((ts - lastTs) / 1000) * TIME_SCALE;
+            lastTs = ts;
+
+            var pos = GroundTrack.currentPosition(orbitParams, simTime);
+
+            posMarker.setLatLng([pos.lat, pos.lng]);
+            footprint.setLatLng([pos.lat, pos.lng]);
+
+            document.getElementById('gtLat').textContent = pos.lat.toFixed(4) + '°';
+            document.getElementById('gtLng').textContent = pos.lng.toFixed(4) + '°';
+            document.getElementById('gtAlt').textContent = pos.altitudeKm.toFixed(1) + ' km';
+            document.getElementById('gtVel').textContent = pos.velocityKms.toFixed(3) + ' km/s';
+
+            // Redraw track every 30 simulated seconds to keep future path fresh
+            if (simTime - lastDraw > 30) {
+                drawTrack(currentOrbits);
+                lastDraw = simTime;
+            }
+
+            requestAnimationFrame(tick);
+        }
+
+        // ── Boot ──────────────────────────────────────────────────────────────
+        drawTrack(currentOrbits);
+        requestAnimationFrame(tick);
+
+    })();
+</script>

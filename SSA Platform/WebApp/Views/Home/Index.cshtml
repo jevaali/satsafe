@@ -4,7 +4,49 @@
 }
 
 <link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
-<link rel="stylesheet" href="~/css/orbit.css" asp-append-version="true" />
+
+<style>
+    .hero-orbit-wrap {
+        position: relative;
+        height: 340px;
+        border-radius: 16px;
+        overflow: hidden;
+        background: #0d1117;
+        border: 1px solid #21262d;
+    }
+
+    #heroOrbitCanvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+
+    .hero-orbit-labels {
+        position: absolute;
+        bottom: 14px;
+        left: 16px;
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+    }
+
+    .hero-orbit-label {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.7rem;
+        color: rgba(200,210,220,0.75);
+        font-family: 'Share Tech Mono', monospace;
+        letter-spacing: 0.05em;
+    }
+
+    .hero-orbit-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        flex-shrink: 0;
+    }
+</style>
 
 <div class="ssa-container">
 
@@ -32,19 +74,26 @@
                 <a asp-area="Identity" asp-page="/Account/Register" class="btn-add">
                     <i class="bi bi-person-plus"></i> Get Started
                 </a>
-                <a asp-area="Identity" asp-page="/Account/Login"
-                   class="btn btn-outline-secondary">
+                <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-secondary">
                     Sign In
                 </a>
             </div>
         </div>
-        <div class="col-lg-6 text-center mt-4 mt-lg-0">
-            <div class="orbit-visualization">
-                <div class="earth"></div>
-                <div class="orbit-track"></div>
-                <div class="satellite sat-1"></div>
-                <div class="satellite sat-2"></div>
-                <div class="satellite sat-3"></div>
+
+        <div class="col-lg-6 mt-4 mt-lg-0">
+            <div class="hero-orbit-wrap">
+                <canvas id="heroOrbitCanvas"></canvas>
+                <div class="hero-orbit-labels">
+                    <div class="hero-orbit-label">
+                        <div class="hero-orbit-dot" style="background:#4fc3f7;"></div>ISS-TYPE LEO
+                    </div>
+                    <div class="hero-orbit-label">
+                        <div class="hero-orbit-dot" style="background:#81c784;"></div>SUN-SYNC SSO
+                    </div>
+                    <div class="hero-orbit-label">
+                        <div class="hero-orbit-dot" style="background:#ffb74d;"></div>POLAR ORBIT
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -148,3 +197,54 @@
     </div>
 
 </div>
+
+@section Scripts {
+    <script src="~/js/orbitalMechanics.js"></script>
+    <script src="~/js/orbitRenderer.js"></script>
+    <script>
+        // Three representative orbits — purely decorative, no real satellite data needed
+        OrbitRenderer.init({
+            canvasId: 'heroOrbitCanvas',
+            satellites: [
+                {
+                    id: 'demo-iss',
+                    name: 'ISS-TYPE',
+                    orbit: {
+                        semiMajorAxis:     6778000,   // ~400 km altitude
+                        eccentricity:      0.0001,
+                        inclination:       51.6,
+                        raan:              0,
+                        argumentOfPerigee: 0,
+                        meanAnomaly:       0
+                    }
+                },
+                {
+                    id: 'demo-sso',
+                    name: 'SUN-SYNC',
+                    orbit: {
+                        semiMajorAxis:     6928000,   // ~550 km altitude
+                        eccentricity:      0.001,
+                        inclination:       98.1,
+                        raan:              60,
+                        argumentOfPerigee: 90,
+                        meanAnomaly:       120
+                    }
+                },
+                {
+                    id: 'demo-polar',
+                    name: 'POLAR',
+                    orbit: {
+                        semiMajorAxis:     7071000,   // ~700 km altitude
+                        eccentricity:      0.002,
+                        inclination:       90.0,
+                        raan:              150,
+                        argumentOfPerigee: 45,
+                        meanAnomaly:       240
+                    }
+                }
+            ],
+            timeScale:  400,
+            showLabels: false,
+        });
+    </script>
+}
