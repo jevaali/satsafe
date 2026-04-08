@@ -22,33 +22,38 @@ public class UpdateSatelliteRequest
     [Display(Name = "Operator")]
     public Guid? OperatorId { get; set; }
 
+    [Required(ErrorMessage = "NORAD ID is required")]
+    [Range(1, 99999999, ErrorMessage = "NORAD ID must be a positive number")]
+    [Display(Name = "NORAD ID")]
+    public int? NoradId { get; set; }
+
     [Required(ErrorMessage = "Semi-major axis is required")]
-    [Range(6500, 50000, ErrorMessage = "Semi-major axis must be between 6,500 and 50,000 km")]
-    [Display(Name = "Semi-Major Axis (km)")]
-    public double SemiMajorAxis { get; set; }
+    [Range(6_500_000, 50_000_000, ErrorMessage = "Semi-major axis must be between 6,500,000 and 50,000,000 m")]
+    [Display(Name = "Semi-Major Axis (m)")]
+    public double? SemiMajorAxis { get; set; }
 
     [Required(ErrorMessage = "Eccentricity is required")]
     [Range(0, 1, ErrorMessage = "Eccentricity must be between 0 and 1")]
     [Display(Name = "Eccentricity")]
-    public double Eccentricity { get; set; }
+    public double? Eccentricity { get; set; }
 
     [Required(ErrorMessage = "Inclination is required")]
     [Range(0, 180, ErrorMessage = "Inclination must be between 0 and 180 degrees")]
     [Display(Name = "Inclination (degrees)")]
-    public double Inclination { get; set; }
+    public double? Inclination { get; set; }
 
     [Required(ErrorMessage = "RAAN is required")]
     [Range(0, 360, ErrorMessage = "RAAN must be between 0 and 360 degrees")]
     [Display(Name = "RAAN (degrees)")]
-    public double RAAN { get; set; }
+    public double? RAAN { get; set; }
 
     [Required(ErrorMessage = "Argument of perigee is required")]
     [Range(0, 360, ErrorMessage = "Argument of perigee must be between 0 and 360 degrees")]
     [Display(Name = "Argument of Perigee (degrees)")]
-    public double ArgumentOfPerigee { get; set; }
+    public double? ArgumentOfPerigee { get; set; }
 
     [Required(ErrorMessage = "Mean anomaly is required")]
     [Range(0, 360, ErrorMessage = "Mean anomaly must be between 0 and 360 degrees")]
     [Display(Name = "Mean Anomaly (degrees)")]
-    public double MeanAnomaly { get; set; }
+    public double? MeanAnomaly { get; set; }
 }

@@ -48,6 +48,13 @@
                     <span asp-validation-for="LaunchDate" class="text-danger"></span>
                 </div>
 
+                <div class="mb-3">
+                    <label asp-for="NoradId" class="form-label"></label>
+                    <input asp-for="NoradId" type="number" class="form-control" placeholder="e.g., 25544" min="1" />
+                    <div class="form-text">The NORAD catalog number assigned to this satellite (e.g. 25544 for ISS)</div>
+                    <span asp-validation-for="NoradId" class="text-danger"></span>
+                </div>
+
                 <h5 class="mb-3 border-bottom pb-2 mt-4" style="font-size:0.85rem;letter-spacing:0.05em;text-transform:uppercase;color:#6b7c93;">
                     <i class="bi bi-arrow-repeat me-2"></i>Orbital Parameters
                 </h5>
@@ -56,14 +63,16 @@
                     <div class="col-md-6 mb-3">
                         <label asp-for="SemiMajorAxis" class="form-label"></label>
                         <div class="input-group">
-                            <input asp-for="SemiMajorAxis" class="form-control" placeholder="e.g., 6778" />
-                            <span class="input-group-text">km</span>
+                            <input asp-for="SemiMajorAxis" type="number" class="form-control" placeholder="e.g., 6778000" step="any" min="6500000" max="50000000" />
+                            <span class="input-group-text">m</span>
                         </div>
+                        <div class="form-text">Distance from Earth's centre. LEO: 6,500,000–8,400,000 m</div>
                         <span asp-validation-for="SemiMajorAxis" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label asp-for="Eccentricity" class="form-label"></label>
-                        <input asp-for="Eccentricity" class="form-control" placeholder="e.g., 0.001" step="0.001" min="0" max="1" />
+                        <input asp-for="Eccentricity" type="number" class="form-control" placeholder="e.g., 0.001" step="any" min="0" max="1" />
+                        <div class="form-text">0 = circular, &lt;1 = elliptical. Most LEO satellites: &lt;0.01</div>
                         <span asp-validation-for="Eccentricity" class="text-danger"></span>
                     </div>
                 </div>
@@ -72,17 +81,19 @@
                     <div class="col-md-6 mb-3">
                         <label asp-for="Inclination" class="form-label"></label>
                         <div class="input-group">
-                            <input asp-for="Inclination" class="form-control" placeholder="e.g., 98.2" />
+                            <input asp-for="Inclination" type="number" class="form-control" placeholder="e.g., 98.2" step="any" min="0" max="180" />
                             <span class="input-group-text">°</span>
                         </div>
+                        <div class="form-text">Angle to equatorial plane. Sun-sync: ~98°, polar: ~90°</div>
                         <span asp-validation-for="Inclination" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label asp-for="RAAN" class="form-label"></label>
                         <div class="input-group">
-                            <input asp-for="RAAN" class="form-control" placeholder="e.g., 0.0" />
+                            <input asp-for="RAAN" type="number" class="form-control" placeholder="e.g., 235.6" step="any" min="0" max="360" />
                             <span class="input-group-text">°</span>
                         </div>
+                        <div class="form-text">Right ascension of ascending node (0–360°)</div>
                         <span asp-validation-for="RAAN" class="text-danger"></span>
                     </div>
                 </div>
@@ -91,17 +102,19 @@
                     <div class="col-md-6 mb-3">
                         <label asp-for="ArgumentOfPerigee" class="form-label"></label>
                         <div class="input-group">
-                            <input asp-for="ArgumentOfPerigee" class="form-control" placeholder="e.g., 0.0" />
+                            <input asp-for="ArgumentOfPerigee" type="number" class="form-control" placeholder="e.g., 90.0" step="any" min="0" max="360" />
                             <span class="input-group-text">°</span>
                         </div>
+                        <div class="form-text">Angle from ascending node to perigee (0–360°)</div>
                         <span asp-validation-for="ArgumentOfPerigee" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label asp-for="MeanAnomaly" class="form-label"></label>
                         <div class="input-group">
-                            <input asp-for="MeanAnomaly" class="form-control" placeholder="e.g., 0.0" />
+                            <input asp-for="MeanAnomaly" type="number" class="form-control" placeholder="e.g., 0.0" step="any" min="0" max="360" />
                             <span class="input-group-text">°</span>
                         </div>
+                        <div class="form-text">Satellite position along orbit at epoch (0–360°)</div>
                         <span asp-validation-for="MeanAnomaly" class="text-danger"></span>
                     </div>
                 </div>
@@ -119,11 +132,11 @@
 
         <div class="card">
             <h5>Orbital Parameters Guide</h5>
-            <h6 class="mt-3" style="font-size:0.78rem;letter-spacing:0.06em;text-transform:uppercase;color:#8a9bb0;">Common Orbit Types</h6>
+            <h6 class="mt-3" style="font-size:0.78rem;letter-spacing:0.06em;text-transform:uppercase;color:#8a9bb0;">Common Orbit Types (Semi-Major Axis in metres)</h6>
             <table class="table table-sm mb-3">
-                <tr><td>LEO</td><td class="font-monospace text-end">6,500 – 8,400 km</td></tr>
-                <tr><td>MEO</td><td class="font-monospace text-end">~20,200 km</td></tr>
-                <tr><td>GEO</td><td class="font-monospace text-end">42,164 km</td></tr>
+                <tr><td>LEO</td><td class="font-monospace text-end">6,500,000 – 8,400,000 m</td></tr>
+                <tr><td>MEO</td><td class="font-monospace text-end">~26,560,000 m</td></tr>
+                <tr><td>GEO</td><td class="font-monospace text-end">42,164,000 m</td></tr>
             </table>
             <h6 style="font-size:0.78rem;letter-spacing:0.06em;text-transform:uppercase;color:#8a9bb0;">Sample Inclinations</h6>
             <table class="table table-sm mb-0">

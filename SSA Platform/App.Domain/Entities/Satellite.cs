@@ -39,7 +39,7 @@ public class Satellite : SpaceObject
             CreatedAt = DateTime.UtcNow
         };
     }
-    public void UpdateDetails(string name, DateTime launchDate, Operator op, OrbitParameters orbitParams)
+    public void UpdateDetails(string name, DateTime launchDate, Operator op, OrbitParameters orbitParams, string updatedBy)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException("Name is required");
@@ -48,6 +48,9 @@ public class Satellite : SpaceObject
         LaunchDate = launchDate;
         Operator = op;
         OperatorId = op.Id;
+        SetOrbit(orbitParams);
+        UpdatedBy = updatedBy;
+        UpdatedAt = DateTime.UtcNow;
     }
     
     public void SoftDelete(string deletedBy)

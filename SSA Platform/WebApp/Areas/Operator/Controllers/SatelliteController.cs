@@ -93,12 +93,13 @@ public class SatelliteController : Controller
             Name = satellite.Name,
             LaunchDate = satellite.LaunchDate,
             OperatorId = satellite.OperatorId,
-            SemiMajorAxis = satellite.Orbit?.Parameters?.SemiMajorAxis ?? 0,
-            Eccentricity = satellite.Orbit?.Parameters?.Eccentricity ?? 0,
-            Inclination = satellite.Orbit?.Parameters?.Inclination ?? 0,
-            RAAN = satellite.Orbit?.Parameters?.RAAN ?? 0,
-            ArgumentOfPerigee = satellite.Orbit?.Parameters?.ArgumentOfPerigee ?? 0,
-            MeanAnomaly = satellite.Orbit?.Parameters?.MeanAnomaly ?? 0
+            NoradId = satellite.NoradId == 0 ? null : satellite.NoradId,
+            SemiMajorAxis = satellite.Orbit?.Parameters?.SemiMajorAxis,
+            Eccentricity = satellite.Orbit?.Parameters?.Eccentricity,
+            Inclination = satellite.Orbit?.Parameters?.Inclination,
+            RAAN = satellite.Orbit?.Parameters?.RAAN,
+            ArgumentOfPerigee = satellite.Orbit?.Parameters?.ArgumentOfPerigee,
+            MeanAnomaly = satellite.Orbit?.Parameters?.MeanAnomaly
         };
 
         return View(request);
@@ -118,7 +119,8 @@ public class SatelliteController : Controller
         try
         {
             request.OperatorId = operatorId;
-            await _updateSatelliteUseCase.Execute(request.SatelliteId, request);
+            var username = User.FindFirstValue(ClaimTypes.Name) ?? "operator";
+            await _updateSatelliteUseCase.Execute(request.SatelliteId, request, username);
             TempData["SuccessMessage"] = "Satellite updated successfully.";
             return RedirectToAction(nameof(Index));
         }

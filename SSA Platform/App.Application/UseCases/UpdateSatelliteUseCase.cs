@@ -13,7 +13,7 @@ public class UpdateSatelliteUseCase
         _uow = uow;
     }
 
-    public async Task Execute(Guid satelliteId, UpdateSatelliteRequest request)
+    public async Task Execute(Guid satelliteId, UpdateSatelliteRequest request, string updatedBy)
     {
         var satellite = await _uow.Satellites.GetByIdAsync(satelliteId);
         if (satellite == null || satellite.DeletedAt != null)
@@ -22,17 +22,19 @@ public class UpdateSatelliteUseCase
         var op = await _uow.Operators.GetByIdAsync(request.OperatorId);
         if (op == null)
             throw new Exception("Operator not found");
-        
+
+        satellite.NoradId = request.NoradId!.Value;
+
         var orbitParams = new OrbitParameters(
-            request.SemiMajorAxis,
-            request.Eccentricity,
-            request.Inclination,
-            request.RAAN,
-            request.ArgumentOfPerigee,
-            request.MeanAnomaly
+            request.SemiMajorAxis!.Value,
+            request.Eccentricity!.Value,
+            request.Inclination!.Value,
+            request.RAAN!.Value,
+            request.ArgumentOfPerigee!.Value,
+            request.MeanAnomaly!.Value
         );
 
-        satellite.UpdateDetails(request.Name, request.LaunchDate, op, orbitParams);
+        satellite.UpdateDetails(request.Name, request.LaunchDate, op, orbitParams, updatedBy);
 
         await _uow.Satellites.UpdateAsync(satellite);
         await _uow.CommitAsync();

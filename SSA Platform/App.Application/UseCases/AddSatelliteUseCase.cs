@@ -28,13 +28,15 @@ public class AddSatelliteUseCase
             op
         );
 
+        satellite.NoradId = request.NoradId!.Value;
+
         var orbitParams = new OrbitParameters(
-            request.SemiMajorAxis,
-            request.Eccentricity,
-            request.Inclination,
-            request.RAAN,
-            request.ArgumentOfPerigee,
-            request.MeanAnomaly
+            request.SemiMajorAxis!.Value,
+            request.Eccentricity!.Value,
+            request.Inclination!.Value,
+            request.RAAN!.Value,
+            request.ArgumentOfPerigee!.Value,
+            request.MeanAnomaly!.Value
         );
 
         satellite.SetOrbit(orbitParams);

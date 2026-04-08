@@ -25,7 +25,7 @@ public class OrbitParameters
         SemiMajorAxis = semiMajorAxis;
         Eccentricity = eccentricity;
         Inclination = inclination;
-        RAAN = RAAN;
+        this.RAAN = RAAN;
         ArgumentOfPerigee = argumentOfPerigee;
         MeanAnomaly = meanAnomaly;
     }
