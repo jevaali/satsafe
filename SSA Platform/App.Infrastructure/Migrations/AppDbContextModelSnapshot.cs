@@ -95,8 +95,8 @@ namespace App.Infrastructure.Migrations
                     b.Property<double>("Threshold")
                         .HasColumnType("REAL");
 
-                    b.Property<double>("TimeOfClosestApproach")
-                        .HasColumnType("REAL");
+                    b.Property<DateTime>("TimeOfClosestApproach")
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("TEXT");
@@ -256,8 +256,14 @@ namespace App.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<double>("AlertThresholdKm")
+                        .HasColumnType("REAL");
+
                     b.Property<Guid>("AppUserId")
                         .HasColumnType("TEXT");
+
+                    b.Property<double>("ConjunctionThresholdKm")
+                        .HasColumnType("REAL");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
@@ -271,9 +277,6 @@ namespace App.Infrastructure.Migrations
 
                     b.Property<bool>("SmsEnabled")
                         .HasColumnType("INTEGER");
-
-                    b.Property<double>("ThresholdDistance")
-                        .HasColumnType("REAL");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("TEXT");

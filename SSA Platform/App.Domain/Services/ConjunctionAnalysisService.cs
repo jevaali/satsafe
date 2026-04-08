@@ -87,7 +87,7 @@ public class ConjunctionAnalysisService
             return null;
 
         return new ConjunctionEvent(
-            primary.Id, secondary.Id, tca, minDistance, threshold);
+            primary.Id, secondary.Id, DateTime.UtcNow.AddSeconds(tca), minDistance, threshold);
     }
 
     private static double Distance(

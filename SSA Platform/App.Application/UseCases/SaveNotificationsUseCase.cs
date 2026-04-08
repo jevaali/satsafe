@@ -23,7 +23,8 @@ public class SaveNotificationsUseCase
             {
                 Id = Guid.NewGuid(),
                 AppUserId = userId,
-                ThresholdDistance = request.ThresholdDistance,
+                ConjunctionThresholdKm = request.ConjunctionThresholdKm,
+                AlertThresholdKm = request.AlertThresholdKm,
                 EmailEnabled = request.EmailEnabled,
                 SmsEnabled = request.SmsEnabled,
                 CreatedAt = DateTime.UtcNow,
@@ -33,7 +34,8 @@ public class SaveNotificationsUseCase
         }
         else
         {
-            setting.ThresholdDistance = request.ThresholdDistance;
+            setting.ConjunctionThresholdKm = request.ConjunctionThresholdKm;
+            setting.AlertThresholdKm = request.AlertThresholdKm;
             setting.EmailEnabled = request.EmailEnabled;
             setting.SmsEnabled = request.SmsEnabled;
             await _uow.NotificationSettings.UpdateAsync(setting);

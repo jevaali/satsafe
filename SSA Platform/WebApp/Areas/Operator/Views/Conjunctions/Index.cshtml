@@ -76,7 +76,7 @@
                         DebrisObject d   => $"DEBRIS-{d.NoradId}",
                         _                => c.SecondaryObjectId.ToString()[..8]
                     };
-                    var tca = DateTime.UtcNow.AddSeconds(c.TimeOfClosestApproach);
+                    var tca = c.TimeOfClosestApproach;
                     var isHighRisk = c.IsHighRisk();
 
                     <tr class="conjunction-row @(isHighRisk ? "table-danger" : "")"
@@ -97,12 +97,13 @@
                         <td>@((c.CollisionProbability * 100).ToString("F4"))%</td>
                         <td>
                             <span class="badge @(c.Status switch {
-                                EConjunctionEventStatus.Pending  => "bg-warning text-dark",
-                                EConjunctionEventStatus.Resolved => "bg-success",
-                                _                                => "bg-secondary"
-                            })">
-                                @c.Status
-                            </span>
+                                EConjunctionEventStatus.Resolved        => "bg-success",
+                                EConjunctionEventStatus.Imminent        => "bg-danger",
+                                EConjunctionEventStatus.Potential       => "bg-warning text-dark",
+                                EConjunctionEventStatus.Pending         => "bg-info text-dark",
+                                EConjunctionEventStatus.AlreadyOccurred => "bg-secondary",
+                                _                                       => "bg-secondary"
+                            })">@c.Status</span>
                         </td>
                         <td>
                             @if (isHighRisk)

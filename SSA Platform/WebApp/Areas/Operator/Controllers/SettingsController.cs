@@ -152,7 +152,8 @@ public class SettingsController : Controller
         {
             await _saveNotifications.ExecuteAsync(userId, new SaveNotificationsRequest
             {
-                ThresholdDistance = form.ThresholdDistance,
+                ConjunctionThresholdKm = form.ConjunctionThresholdKm,
+                AlertThresholdKm = form.AlertThresholdKm,
                 EmailEnabled = form.EmailEnabled,
                 SmsEnabled = form.SmsEnabled
             });
@@ -192,9 +193,10 @@ public class SettingsController : Controller
         },
         NotificationForm = settings.NotificationSetting == null ? new NotificationForm() : new NotificationForm
         {
-            ThresholdDistance = settings.NotificationSetting.ThresholdDistance,
-            EmailEnabled = settings.NotificationSetting.EmailEnabled,
-            SmsEnabled = settings.NotificationSetting.SmsEnabled
+            ConjunctionThresholdKm = settings.NotificationSetting.ConjunctionThresholdKm,
+            AlertThresholdKm       = settings.NotificationSetting.AlertThresholdKm,
+            EmailEnabled           = settings.NotificationSetting.EmailEnabled,
+            SmsEnabled             = settings.NotificationSetting.SmsEnabled
         }
     };
 }

@@ -27,6 +27,7 @@ public class OperatorHeaderViewComponent : ViewComponent
             return Content(""); // return empty if no operator context
 
         var satellites = await _dashboardUseCase.GetSatellitesAsync(operatorId);
+        var alerts = await _dashboardUseCase.GetAlertsAsync(operatorId);
 
         var vm = new OperatorHeaderViewModel
         {
@@ -34,7 +35,8 @@ public class OperatorHeaderViewComponent : ViewComponent
             {
                 Id = s.Id,
                 Name = s.Name
-            }).ToList()
+            }).ToList(),
+            UnacknowledgedAlertCount = alerts.Count(a => !a.IsAcknowledged)
         };
 
         return View(vm); 

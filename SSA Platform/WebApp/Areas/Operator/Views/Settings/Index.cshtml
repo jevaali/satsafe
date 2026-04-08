@@ -280,21 +280,43 @@
                     <div class="px-3 py-2">
 
                         <div class="mb-4">
-                            <label class="form-label fw-semibold" asp-for="NotificationForm.ThresholdDistance">
-                                Conjunction Alert Threshold (km)
+                            <label class="form-label fw-semibold" asp-for="NotificationForm.ConjunctionThresholdKm">
+                                Conjunction Detection Threshold (km)
                             </label>
                             <p class="text-muted small mb-2">
-                                Receive alerts when a conjunction is detected within this distance.
+                                Only record conjunction events where the miss distance is below this value.
+                                Higher values catch more events; lower values reduce noise.
+                            </p>
+                            <div class="d-flex align-items-center gap-3" style="max-width:420px">
+                                <input type="range" min="1" max="500" step="1"
+                                       class="form-range flex-grow-1" id="conjunctionRange"
+                                       value="@Model.NotificationForm.ConjunctionThresholdKm" />
+                                <input asp-for="NotificationForm.ConjunctionThresholdKm"
+                                       type="number" min="0.1" max="10000" step="0.1"
+                                       class="form-control" style="width:110px" id="conjunctionNumber" />
+                                <span class="text-muted small">km</span>
+                            </div>
+                            <span asp-validation-for="NotificationForm.ConjunctionThresholdKm" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold" asp-for="NotificationForm.AlertThresholdKm">
+                                Alert Threshold (km)
+                            </label>
+                            <p class="text-muted small mb-2">
+                                Generate an alert only when a recorded conjunction is within this distance.
+                                Must be less than or equal to the detection threshold above.
                             </p>
                             <div class="d-flex align-items-center gap-3" style="max-width:420px">
                                 <input type="range" min="0.1" max="100" step="0.1"
-                                       class="form-range flex-grow-1" id="thresholdRange"
-                                       value="@Model.NotificationForm.ThresholdDistance" />
-                                <input asp-for="NotificationForm.ThresholdDistance"
+                                       class="form-range flex-grow-1" id="alertRange"
+                                       value="@Model.NotificationForm.AlertThresholdKm" />
+                                <input asp-for="NotificationForm.AlertThresholdKm"
                                        type="number" min="0.1" max="10000" step="0.1"
-                                       class="form-control" style="width:110px" id="thresholdNumber" />
+                                       class="form-control" style="width:110px" id="alertNumber" />
+                                <span class="text-muted small">km</span>
                             </div>
-                            <span asp-validation-for="NotificationForm.ThresholdDistance" class="text-danger small"></span>
+                            <span asp-validation-for="NotificationForm.AlertThresholdKm" class="text-danger small"></span>
                         </div>
 
                         <div class="toggle-row">
@@ -336,11 +358,14 @@
 
 <script>
     (function () {
-        var range = document.getElementById('thresholdRange');
-        var num = document.getElementById('thresholdNumber');
-        if (range && num) {
-            range.addEventListener('input', function () { num.value = this.value; });
-            num.addEventListener('input', function () { range.value = this.value; });
+        function syncSlider(rangeId, numberId) {
+            var range = document.getElementById(rangeId);
+            var num   = document.getElementById(numberId);
+            if (!range || !num) return;
+            range.addEventListener('input', function () { num.value  = this.value; });
+            num.addEventListener('input',   function () { range.value = this.value; });
         }
+        syncSlider('conjunctionRange', 'conjunctionNumber');
+        syncSlider('alertRange',       'alertNumber');
     })();
 </script>

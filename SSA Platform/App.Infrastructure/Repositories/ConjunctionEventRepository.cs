@@ -20,6 +20,7 @@ public class ConjunctionEventRepository : IConjunctionEventRepository
             .Include(c => c.PrimaryObject)
             .Include(c => c.SecondaryObject)
             .Include(c => c.RiskAssessment)
+            .Include(c => c.Alerts)
             .FirstOrDefaultAsync(c => c.Id == id);
     }
 

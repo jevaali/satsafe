@@ -24,11 +24,15 @@ public class RunConjunctionScreeningUseCase
     var withOrbits = satellites.Where(s => s.Orbit != null).ToList();
     if (withOrbits.Count < 2) return;
 
+    var settings = await _unitOfWork.NotificationSettings.GetByUserIdAsync(userId);
+    var conjunctionThresholdM = (settings?.ConjunctionThresholdKm ?? 50.0) * 1000;
+    var alertThresholdM       = (settings?.AlertThresholdKm       ?? 5.0)  * 1000;
+
     var allObjects = await _unitOfWork.SpaceObjects.GetAllWithOrbitsAsync();
 
     var newEvents = _conjunctionService
         .ScreenAll(allObjects.ToList(),
-            thresholdMeters: 50_000,
+            thresholdMeters: conjunctionThresholdM,
             windowSeconds:   86_400,
             timeStepSeconds: 60)
         .ToList();
@@ -57,22 +61,27 @@ public class RunConjunctionScreeningUseCase
     if (toSave.Count == 0) return; // ✅ exit early, nothing new
 
     foreach (var evt in toSave)
+    {
+        evt.RefreshStatus();
         await _unitOfWork.ConjunctionEvents.AddAsync(evt);
+    }
 
     await _unitOfWork.CommitAsync();
 
-    foreach (var evt in toSave.Where(e => e.IsHighRisk()))
+    foreach (var evt in toSave.Where(e => e.MissDistance <= alertThresholdM))
     {
+        var severity = evt.MissDistance <= alertThresholdM / 5
+            ? EAlertSeverity.Critical
+            : EAlertSeverity.High;
+
         var alert = new Alert
         {
             ConjunctionEventId = evt.Id,
             UserId             = userId,
-            Severity           = evt.MissDistance < 1000
-                                    ? EAlertSeverity.Critical
-                                    : EAlertSeverity.High,
+            Severity           = severity,
             Message            = $"Conjunction detected: miss distance " +
                                  $"{evt.MissDistance / 1000:F2} km in " +
-                                 $"{TimeSpan.FromSeconds(evt.TimeOfClosestApproach).TotalHours:F1}h",
+                                 $"{(evt.TimeOfClosestApproach - DateTime.UtcNow).TotalHours:F1}h",
             IsAcknowledged     = false,
             CreatedAt          = DateTime.UtcNow,
             CreatedBy          = "system"

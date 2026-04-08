@@ -1,7 +1,6 @@
 using System.Security.Claims;
 using App.Application.UseCases;
 using App.Application.Interfaces.IRepositories;
-using App.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,23 +12,28 @@ public class ConjunctionsController : Controller
 {
     private readonly GetOperatorDashboardUseCase _dashboardUseCase;
     private readonly ResolveConjunctionUseCase _resolveUseCase;
+    private readonly RefreshConjunctionStatusesUseCase _refreshUseCase;
     private readonly IUserOperatorRepository _userOperatorRepository;
 
     public ConjunctionsController(
         GetOperatorDashboardUseCase dashboardUseCase,
         ResolveConjunctionUseCase resolveUseCase,
+        RefreshConjunctionStatusesUseCase refreshUseCase,
         IUserOperatorRepository userOperatorRepository)
     {
-        _dashboardUseCase        = dashboardUseCase;
-        _resolveUseCase          = resolveUseCase;
-        _userOperatorRepository  = userOperatorRepository;
+        _dashboardUseCase       = dashboardUseCase;
+        _resolveUseCase         = resolveUseCase;
+        _refreshUseCase         = refreshUseCase;
+        _userOperatorRepository = userOperatorRepository;
     }
 
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        var operatorId = await GetOperatorIdAsync();
+        var (userId, operatorId) = await GetOperatorContextAsync();
         if (operatorId == Guid.Empty) return Forbid();
+
+        await _refreshUseCase.ExecuteAsync(operatorId, userId);
 
         var conjunctions = await _dashboardUseCase.GetConjunctionsAsync(operatorId);
         return View(conjunctions);
@@ -38,7 +42,7 @@ public class ConjunctionsController : Controller
     [HttpGet]
     public async Task<IActionResult> Details(Guid id)
     {
-        var operatorId = await GetOperatorIdAsync();
+        var (_, operatorId) = await GetOperatorContextAsync();
         if (operatorId == Guid.Empty) return Forbid();
 
         var conjunction = await _dashboardUseCase.GetConjunctionByIdAsync(id, operatorId);
@@ -51,18 +55,18 @@ public class ConjunctionsController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Resolve(Guid id)
     {
-        var operatorId = await GetOperatorIdAsync();
+        var (_, operatorId) = await GetOperatorContextAsync();
         if (operatorId == Guid.Empty) return Forbid();
 
         await _resolveUseCase.ExecuteAsync(id, operatorId);
         return RedirectToAction(nameof(Index));
     }
 
-    private async Task<Guid> GetOperatorIdAsync()
+    private async Task<(Guid userId, Guid operatorId)> GetOperatorContextAsync()
     {
         var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (!Guid.TryParse(userIdClaim, out var userId)) return Guid.Empty;
+        if (!Guid.TryParse(userIdClaim, out var userId)) return (Guid.Empty, Guid.Empty);
         var userOperator = await _userOperatorRepository.GetByUserIdAsync(userId);
-        return userOperator?.OperatorId ?? Guid.Empty;
+        return (userId, userOperator?.OperatorId ?? Guid.Empty);
     }
 }

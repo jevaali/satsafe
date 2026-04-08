@@ -81,4 +81,17 @@ public class GetOperatorDashboardUseCase
         var conjunctionIds = conjunctions.Select(c => c.Id).ToList();
         return await _unitOfWork.Alerts.GetByConjunctionIdsAsync(conjunctionIds);
     }
+
+    public async Task<App.Domain.Entities.Alert?> GetAlertByIdAsync(Guid alertId, Guid operatorId)
+    {
+        var satellites = await _unitOfWork.Satellites.GetByOperatorIdAsync(operatorId);
+        var satelliteIds = satellites.Select(s => s.Id).ToList();
+        var conjunctions = await _unitOfWork.ConjunctionEvents.GetBySatelliteIdsAsync(satelliteIds);
+        var conjunctionIds = conjunctions.Select(c => c.Id).ToList();
+
+        var alert = await _unitOfWork.Alerts.GetByIdAsync(alertId);
+        if (alert == null || !conjunctionIds.Contains(alert.ConjunctionEventId))
+            return null;
+        return alert;
+    }
 }

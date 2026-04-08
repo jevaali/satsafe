@@ -75,7 +75,7 @@
                         DebrisObject d => $"DEBRIS-{d.NoradId}",
                         _              => c.SecondaryObjectId.ToString()[..8]
                     };
-                    var tca       = DateTime.UtcNow.AddSeconds(c.TimeOfClosestApproach);
+                    var tca       = c.TimeOfClosestApproach;
                     var isHighRisk = c.IsHighRisk();
 
                     <tr class="conjunction-row @(isHighRisk ? "table-danger" : "")"

@@ -7,6 +7,7 @@
 }
 
 <link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
+
 <script src="~/js/orbitalMechanics.js"></script>
 <script src="~/js/orbitRenderer.js"></script>
 
@@ -73,12 +74,14 @@
                               .ThenByDescending(a => a.CreatedAt)
                               .Take(6))
                 {
-                    <div class="alert-item @(alert.IsAcknowledged ? "ack" : "pending")">
+                    <a asp-area="Operator" asp-controller="Alerts" asp-action="Details"
+                       asp-route-id="@alert.Id"
+                       class="alert-item @(alert.IsAcknowledged ? "ack" : "pending") text-decoration-none">
                         <div>
                             <strong>@alert.Severity</strong> - @alert.Message
                         </div>
                         <small>@alert.CreatedAt.ToString("HH:mm:ss")</small>
-                    </div>
+                    </a>
                 }
             </div>
         </div>
@@ -128,9 +131,11 @@
                               .ThenBy(c => c.TimeOfClosestApproach)
                               .Take(6))
                 {
-                    <div class="timeline-item @(conj.IsHighRisk() ? "high" : "")">
+                    <a asp-area="Operator" asp-controller="Conjunctions" asp-action="Details"
+                       asp-route-id="@conj.Id"
+                       class="timeline-item @(conj.IsHighRisk() ? "high" : "") text-decoration-none">
                         <div class="time">
-                            @DateTime.UtcNow.AddSeconds(conj.TimeOfClosestApproach).ToString("HH:mm")
+                            @conj.TimeOfClosestApproach.ToString("HH:mm")
                         </div>
                         <div class="content">
                             @(conj.PrimaryObject switch {
@@ -149,7 +154,7 @@
                                 @((conj.CollisionProbability * 100).ToString("F3"))%
                             </div>
                         </div>
-                    </div>
+                    </a>
                 }
             </div>
         </div>

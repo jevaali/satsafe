@@ -26,7 +26,7 @@
                     {
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="MainList" asp-action="Index">
-                                All Space Objects
+                                Space Objects
                             </a>
                         </li>
                     }
@@ -34,6 +34,16 @@
                     @if (User.IsInRole("Operator") || User.IsInRole("OperatorHelper"))
                     {
                         @await Component.InvokeAsync("OperatorHeader")
+                    }
+                    
+                    @if (User.IsInRole("User"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="MainList" asp-action="Index">All Space Objects</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="Sandbox" asp-controller="Sandbox" asp-action="Index">Sandbox</a>
+                        </li>
                     }
 
                     @if (User.IsInRole("Admin"))
@@ -47,7 +57,6 @@
                             </ul>
                         </li>
                     }
-                    <partial name="_LanguageSelection"/>
                 </ul>
                 <partial name="_LoginPartial"/>
             </div>

@@ -1,0 +1,213 @@
+@model App.Domain.Entities.Alert
+@using App.Domain.Entities.Enums
+
+@{
+    ViewData["Title"] = "Alert Details";
+    var severityBadgeClass = Model.Severity switch {
+        EAlertSeverity.Critical => "danger",
+        EAlertSeverity.High     => "warning",
+        EAlertSeverity.Medium   => "bg-info text-dark",
+        _                       => "bg-secondary"
+    };
+    var message = Model.Message?.ToString() ?? "—";
+    var tcaIso = Model.ConjunctionEvent != null
+        ? Model.ConjunctionEvent.TimeOfClosestApproach.ToString("o")
+        : null;
+}
+
+<link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
+
+<div class="ssa-container">
+
+    <div class="system-bar">
+        <span class="status-dot"></span>
+        ALERT DETAIL | @DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") UTC
+    </div>
+
+    <div class="header">
+        <div>
+            <h3>Alert — @Model.Id.ToString()[..8]…</h3>
+            <small>@message</small>
+        </div>
+        <div class="header-right">
+            <span class="badge @severityBadgeClass">@Model.Severity</span>
+            @if (Model.IsAcknowledged)
+            {
+                <span class="badge bg-success">Acknowledged</span>
+            }
+            else
+            {
+                <span class="badge warning">Pending</span>
+            }
+        </div>
+    </div>
+
+    <div class="grid">
+
+        <!-- ALERT INFO -->
+        <div class="card">
+            <h5>Alert Information</h5>
+            <table class="table mb-0">
+                <tr>
+                    <td class="text-muted">Message</td>
+                    <td>@message</td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Severity</td>
+                    <td><span class="badge @severityBadgeClass">@Model.Severity</span></td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Status</td>
+                    <td>
+                        @if (Model.IsAcknowledged)
+                        {
+                            <span class="badge bg-success">Acknowledged</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning text-dark">Pending</span>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Created</td>
+                    <td>@Model.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss") UTC</td>
+                </tr>
+                @if (Model.UpdatedAt != null)
+                {
+                    <tr>
+                        <td class="text-muted">Updated</td>
+                        <td>@Model.UpdatedAt.Value.ToString("yyyy-MM-dd HH:mm:ss") UTC</td>
+                    </tr>
+                }
+                <tr>
+                    <td class="text-muted">Alert ID</td>
+                    <td><code>@Model.Id</code></td>
+                </tr>
+            </table>
+
+            <div class="mt-3 d-flex gap-2">
+                @if (!Model.IsAcknowledged)
+                {
+                    <form asp-action="Acknowledge" asp-route-id="@Model.Id" method="post">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-check-circle"></i> Acknowledge
+                        </button>
+                    </form>
+                }
+                <a asp-action="Index" class="btn btn-outline-secondary">Back to Alerts</a>
+            </div>
+        </div>
+
+        <!-- CONJUNCTION INFO -->
+        <div class="card">
+            <h5>Related Conjunction Event</h5>
+            @if (Model.ConjunctionEvent != null)
+            {
+                var c = Model.ConjunctionEvent;
+                var tca = c.TimeOfClosestApproach;
+                <table class="table mb-0">
+                    <tr>
+                        <td class="text-muted">Event ID</td>
+                        <td><code>@c.Id</code></td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted">TCA (UTC)</td>
+                        <td>@tca.ToString("yyyy-MM-dd HH:mm")</td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted">Miss Distance</td>
+                        <td class="fw-bold @(c.MissDistance < 1000 ? "text-danger" : c.MissDistance < 5000 ? "text-warning" : "")">
+                            @(c.MissDistance < 1000
+                                ? $"{c.MissDistance:N0} m"
+                                : $"{c.MissDistance / 1000:F3} km")
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted">Collision Prob.</td>
+                        <td>@((c.CollisionProbability * 100).ToString("F4"))%</td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted">Risk</td>
+                        <td>
+                            @if (c.IsHighRisk())
+                            {
+                                <span class="badge danger">HIGH RISK</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">NORMAL</span>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted">Status</td>
+                        <td>
+                            <span class="badge @(c.Status == App.Domain.Entities.Enums.EConjunctionEventStatus.Resolved ? "bg-success" : "bg-warning text-dark")">
+                                @c.Status
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted">Time to TCA</td>
+                        <td>
+                            <span id="tca-countdown" class="fw-bold font-monospace"></span>
+                        </td>
+                    </tr>
+                </table>
+                <div class="mt-3">
+                    <a asp-area="Operator" asp-controller="Conjunctions" asp-action="Details"
+                       asp-route-id="@c.Id" class="btn btn-outline-primary btn-sm">
+                        View Conjunction Details
+                    </a>
+                </div>
+            }
+            else
+            {
+                <div class="text-muted py-3">
+                    <p>Conjunction event details not available.</p>
+                    <a asp-area="Operator" asp-controller="Conjunctions" asp-action="Details"
+                       asp-route-id="@Model.ConjunctionEventId" class="btn btn-outline-primary btn-sm">
+                        View Conjunction
+                    </a>
+                </div>
+            }
+        </div>
+
+    </div>
+
+</div>
+
+@if (tcaIso != null)
+{
+    @section Scripts {
+        <script>
+            (function () {
+                const tca = new Date('@tcaIso');
+                const el  = document.getElementById('tca-countdown');
+                if (!el) return;
+
+                function update() {
+                    const diff = Math.floor((tca - Date.now()) / 1000);
+                    if (diff <= 0) {
+                        el.textContent = 'PASSED';
+                        el.classList.add('text-muted');
+                        return;
+                    }
+                    const d = Math.floor(diff / 86400);
+                    const h = Math.floor((diff % 86400) / 3600).toString().padStart(2, '0');
+                    const m = Math.floor((diff % 3600) / 60).toString().padStart(2, '0');
+                    const s = (diff % 60).toString().padStart(2, '0');
+                    el.textContent = d > 0 ? `${d}d ${h}:${m}:${s}` : `${h}:${m}:${s}`;
+
+                    const urgencyClass = diff < 3600 ? 'text-danger' : diff < 86400 ? 'text-warning' : '';
+                    el.className = 'fw-bold font-monospace ' + urgencyClass;
+                }
+
+                update();
+                setInterval(update, 1000);
+            })();
+        </script>
+    }
+}

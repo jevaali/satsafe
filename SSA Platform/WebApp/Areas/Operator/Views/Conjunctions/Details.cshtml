@@ -14,7 +14,7 @@
         DebrisObject d => $"DEBRIS-{d.NoradId}",
         _              => Model.SecondaryObjectId.ToString()
     };
-    var tca = DateTime.UtcNow.AddSeconds(Model.TimeOfClosestApproach);
+    var tca = Model.TimeOfClosestApproach;
 }
 
 <link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
@@ -37,9 +37,13 @@
             {
                 <span class="badge danger">HIGH RISK</span>
             }
-            <span class="badge @(Model.Status == EConjunctionEventStatus.Resolved ? "bg-success" : "warning")">
-                @Model.Status
-            </span>
+            <span class="badge @(Model.Status switch {
+                EConjunctionEventStatus.Resolved        => "bg-success",
+                EConjunctionEventStatus.Imminent        => "bg-danger",
+                EConjunctionEventStatus.Potential       => "warning",
+                EConjunctionEventStatus.AlreadyOccurred => "bg-secondary",
+                _                                       => "bg-info text-dark"
+            })">@Model.Status</span>
         </div>
     </div>
 
@@ -67,7 +71,7 @@
                 </tr>
                 <tr>
                     <td class="text-muted">Time Until TCA</td>
-                    <td>@TimeSpan.FromSeconds(Model.TimeOfClosestApproach).ToString(@"hh\:mm\:ss")</td>
+                    <td>@((Model.TimeOfClosestApproach - DateTime.UtcNow).ToString(@"hh\:mm\:ss"))</td>
                 </tr>
                 <tr>
                     <td class="text-muted">Threshold</td>
@@ -112,26 +116,90 @@
         </div>
 
     </div>
+    
+    @await Html.PartialAsync("_ConjunctionOrbit", Model)
+
+    <!-- ALERTS PANEL -->
+    @if (Model.Alerts.Any())
+    {
+        <div class="card mt-3">
+            <div class="d-flex justify-content-between align-items-center px-3 pt-3 pb-2">
+                <h5 class="mb-0">Related Alerts</h5>
+                <div>
+                    <span class="badge bg-danger me-1">@Model.Alerts.Count(a => !a.IsAcknowledged) unacknowledged</span>
+                    <span class="badge bg-secondary">@Model.Alerts.Count total</span>
+                </div>
+            </div>
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Severity</th>
+                        <th>Message</th>
+                        <th>Created</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var alert in Model.Alerts.OrderByDescending(a => !a.IsAcknowledged).ThenByDescending(a => a.Severity))
+                    {
+                        var severityBadge = alert.Severity switch {
+                            App.Domain.Entities.Enums.EAlertSeverity.Critical => "bg-danger",
+                            App.Domain.Entities.Enums.EAlertSeverity.High     => "bg-warning text-dark",
+                            App.Domain.Entities.Enums.EAlertSeverity.Medium   => "bg-info text-dark",
+                            _                                                  => "bg-secondary"
+                        };
+                        <tr class="@(alert.IsAcknowledged ? "opacity-50" : "")">
+                            <td><span class="badge @severityBadge">@alert.Severity</span></td>
+                            <td>@(alert.Message?.ToString() ?? "—")</td>
+                            <td>@alert.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                            <td>
+                                @if (alert.IsAcknowledged)
+                                {
+                                    <span class="badge bg-success">Acknowledged</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning text-dark">Pending</span>
+                                }
+                            </td>
+                            <td>
+                                <a asp-area="Operator" asp-controller="Alerts" asp-action="Details"
+                                   asp-route-id="@alert.Id" class="btn btn-sm btn-outline-primary">View</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
 
     <!-- ACTIONS -->
-    @if (Model.Status == EConjunctionEventStatus.Pending)
-    {
-        <div class="card mt-3 p-3">
-            <h5>Actions</h5>
-            <form asp-action="Resolve" asp-route-id="@Model.Id" method="post" class="d-inline">
-                @Html.AntiForgeryToken()
-                <button type="submit" class="btn btn-success">
-                    Mark as Resolved
-                </button>
-            </form>
-            <a asp-action="Index" class="btn btn-outline-secondary ms-2">Back to List</a>
-        </div>
+    @{
+        var canResolve = Model.Status != EConjunctionEventStatus.Resolved &&
+                         Model.Status != EConjunctionEventStatus.AlreadyOccurred;
+        var unackedCount = Model.Alerts.Count(a => !a.IsAcknowledged);
     }
-    else
-    {
-        <div class="card mt-3 p-3">
+    <div class="card mt-3 p-3">
+        <div class="d-flex gap-2 align-items-center flex-wrap">
+            @if (canResolve)
+            {
+                <form asp-action="Resolve" asp-route-id="@Model.Id" method="post" class="d-inline">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-success">
+                        @if (unackedCount > 0)
+                        {
+                            <text>Resolve &amp; Acknowledge @unackedCount Alert@(unackedCount != 1 ? "s" : "")</text>
+                        }
+                        else
+                        {
+                            <text>Mark as Resolved</text>
+                        }
+                    </button>
+                </form>
+            }
             <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
         </div>
-    }
+    </div>
 
 </div>

@@ -1,0 +1,444 @@
+@* _ConjunctionOrbit.cshtml
+   Include in ConjunctionDetails.cshtml:
+   @await Html.PartialAsync("_ConjunctionOrbit", Model)
+*@
+@model App.Domain.Entities.ConjunctionEvent
+@using App.Domain.Entities
+@using System.Globalization
+
+@{
+    var inv = CultureInfo.InvariantCulture;
+
+    var primaryOrbit   = (Model.PrimaryObject   as SpaceObject)?.Orbit?.Parameters;
+    var secondaryOrbit = (Model.SecondaryObject as SpaceObject)?.Orbit?.Parameters;
+
+    var primaryName = Model.PrimaryObject switch {
+        Satellite s    => s.Name.ToString(),
+        DebrisObject d => $"DEBRIS-{d.NoradId}",
+        _              => "Object A"
+    };
+    var secondaryName = Model.SecondaryObject switch {
+        Satellite s    => s.Name.ToString(),
+        DebrisObject d => $"DEBRIS-{d.NoradId}",
+        _              => "Object B"
+    };
+
+    bool hasPrimary   = primaryOrbit   != null;
+    bool hasSecondary = secondaryOrbit != null;
+    bool hasAny       = hasPrimary || hasSecondary;
+}
+
+@if (!hasAny)
+{
+    return;
+}
+
+<style>
+    .cj-orbit-card { margin-top: 16px; }
+
+    .cj-orbit-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .cj-orbit-header h5 { margin: 0; }
+
+    .cj-legend {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .cj-legend-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.75rem;
+        color: #5a6a7a;
+        font-family: 'Share Tech Mono', monospace;
+    }
+
+    .cj-legend-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        flex-shrink: 0;
+    }
+
+    .cj-canvas-wrap {
+        position: relative;
+        height: 380px;
+        background: #0d1117;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    #conjunctionCanvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+
+    .cj-tca-badge {
+        position: absolute;
+        top: 12px;
+        right: 14px;
+        background: rgba(220,53,69,0.18);
+        border: 1px solid rgba(220,53,69,0.5);
+        border-radius: 6px;
+        padding: 5px 12px;
+        font-family: 'Share Tech Mono', monospace;
+        font-size: 0.72rem;
+        color: #dc3545;
+        letter-spacing: 0.08em;
+        pointer-events: none;
+    }
+
+    .cj-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 0;
+        border: 1px solid #e3e8ef;
+        border-radius: 8px;
+        overflow: hidden;
+        margin-top: 12px;
+    }
+
+    .cj-stat {
+        padding: 10px 16px;
+        border-right: 1px solid #e3e8ef;
+        background: #f8f9fa;
+    }
+
+    .cj-stat:last-child { border-right: none; }
+
+    .cj-stat-label {
+        font-size: 0.62rem;
+        letter-spacing: 0.09em;
+        color: #8a9bb0;
+        text-transform: uppercase;
+        margin-bottom: 3px;
+    }
+
+    .cj-stat-value {
+        font-family: 'Share Tech Mono', monospace;
+        font-size: 0.85rem;
+        color: #1a2332;
+        font-weight: 700;
+    }
+
+    .cj-stat-value.danger { color: #dc3545; }
+    .cj-stat-value.warning { color: #e6a817; }
+</style>
+
+<div class="card cj-orbit-card">
+    <div class="cj-orbit-header">
+        <h5>Closest Approach Visualisation</h5>
+        <div class="cj-legend">
+            @if (hasPrimary)
+            {
+                <div class="cj-legend-item">
+                    <div class="cj-legend-dot" style="background:#4fc3f7;"></div>
+                    @primaryName
+                </div>
+            }
+            @if (hasSecondary)
+            {
+                <div class="cj-legend-item">
+                    <div class="cj-legend-dot" style="background:#ff7043;"></div>
+                    @secondaryName
+                </div>
+            }
+            <div class="cj-legend-item">
+                <div class="cj-legend-dot" style="background:#dc3545;border:2px solid #fff;box-shadow:0 0 6px #dc3545;"></div>
+                Closest approach
+            </div>
+        </div>
+    </div>
+
+    <div class="cj-canvas-wrap">
+        <canvas id="conjunctionCanvas"></canvas>
+        <div class="cj-tca-badge">
+            TCA @Model.TimeOfClosestApproach.ToString("yyyy-MM-dd HH:mm") UTC
+        </div>
+    </div>
+
+    <div class="cj-stats">
+        <div class="cj-stat">
+            <div class="cj-stat-label">Miss distance</div>
+            <div class="cj-stat-value @(Model.MissDistance < 1000 ? "danger" : Model.MissDistance < 5000 ? "warning" : "")">
+                @(Model.MissDistance < 1000
+                    ? $"{Model.MissDistance:N0} m"
+                    : $"{Model.MissDistance / 1000:F2} km")
+            </div>
+        </div>
+        <div class="cj-stat">
+            <div class="cj-stat-label">Collision probability</div>
+            <div class="cj-stat-value @(Model.IsHighRisk() ? "danger" : "")">
+                @((Model.CollisionProbability * 100).ToString("F4", inv))%
+            </div>
+        </div>
+        @if (hasPrimary)
+        {
+            <div class="cj-stat">
+                <div class="cj-stat-label">@primaryName inclination</div>
+                <div class="cj-stat-value">@primaryOrbit!.Inclination.ToString("F2", inv)°</div>
+            </div>
+        }
+        @if (hasSecondary)
+        {
+            <div class="cj-stat">
+                <div class="cj-stat-label">@secondaryName inclination</div>
+                <div class="cj-stat-value">@secondaryOrbit!.Inclination.ToString("F2", inv)°</div>
+            </div>
+        }
+        @if (hasPrimary && hasSecondary)
+        {
+            <div class="cj-stat">
+                <div class="cj-stat-label">Relative inclination</div>
+                <div class="cj-stat-value">
+                    @(Math.Abs(primaryOrbit!.Inclination - secondaryOrbit!.Inclination).ToString("F2", inv))°
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script src="~/js/orbitalMechanics.js"></script>
+<script>
+(function () {
+    var INV_CULTURE_DOUBLES = true; // values already safe — rendered by Razor with InvariantCulture
+
+    // ── Orbit data ────────────────────────────────────────────────────────
+    var hasPrimary   = @(hasPrimary   ? "true" : "false");
+    var hasSecondary = @(hasSecondary ? "true" : "false");
+    var tcaSec       = @((Model.TimeOfClosestApproach - DateTime.UtcNow).TotalSeconds.ToString(inv));
+    var missDistance = @Model.MissDistance.ToString(inv);
+
+    var primaryParams = hasPrimary ? {
+        semiMajorAxis:     @(hasPrimary ? primaryOrbit!.SemiMajorAxis.ToString(inv)     : "0"),
+        eccentricity:      @(hasPrimary ? primaryOrbit!.Eccentricity.ToString(inv)      : "0"),
+        inclination:       @(hasPrimary ? primaryOrbit!.Inclination.ToString(inv)       : "0"),
+        raan:              @(hasPrimary ? primaryOrbit!.RAAN.ToString(inv)              : "0"),
+        argumentOfPerigee: @(hasPrimary ? primaryOrbit!.ArgumentOfPerigee.ToString(inv) : "0"),
+        meanAnomaly:       @(hasPrimary ? primaryOrbit!.MeanAnomaly.ToString(inv)       : "0")
+    } : null;
+
+    var secondaryParams = hasSecondary ? {
+        semiMajorAxis:     @(hasSecondary ? secondaryOrbit!.SemiMajorAxis.ToString(inv)     : "0"),
+        eccentricity:      @(hasSecondary ? secondaryOrbit!.Eccentricity.ToString(inv)      : "0"),
+        inclination:       @(hasSecondary ? secondaryOrbit!.Inclination.ToString(inv)       : "0"),
+        raan:              @(hasSecondary ? secondaryOrbit!.RAAN.ToString(inv)              : "0"),
+        argumentOfPerigee: @(hasSecondary ? secondaryOrbit!.ArgumentOfPerigee.ToString(inv) : "0"),
+        meanAnomaly:       @(hasSecondary ? secondaryOrbit!.MeanAnomaly.ToString(inv)       : "0")
+    } : null;
+
+    // ── Canvas setup ──────────────────────────────────────────────────────
+    var canvas = document.getElementById('conjunctionCanvas');
+    var ctx    = canvas.getContext('2d');
+
+    function resize() {
+        var rect = canvas.parentElement.getBoundingClientRect();
+        canvas.width  = rect.width  || 600;
+        canvas.height = rect.height || 380;
+    }
+
+    resize();
+    window.addEventListener('resize', resize);
+
+    var W, H, cx, cy, scale;
+
+    function layout() {
+        W  = canvas.width;
+        H  = canvas.height;
+        cx = W / 2;
+        cy = H / 2;
+
+        var allParams = [];
+        if (primaryParams)   allParams.push(primaryParams);
+        if (secondaryParams) allParams.push(secondaryParams);
+        scale = OrbitalMechanics.autoScale(allParams, Math.min(W, H) / 2);
+    }
+
+    // ── Stars ─────────────────────────────────────────────────────────────
+    var STARS = Array.from({ length: 80 }, function(_, i) {
+        return {
+            x: Math.sin(i * 127.1) * 0.5 + 0.5,
+            y: Math.sin(i * 311.7) * 0.5 + 0.5,
+            r: 0.4 + (Math.sin(i * 74.3) * 0.5 + 0.5) * 0.9,
+            a: 0.2  + (Math.sin(i * 53.1) * 0.5 + 0.5) * 0.5
+        };
+    });
+
+    function drawStars() {
+        for (var i = 0; i < STARS.length; i++) {
+            var s = STARS[i];
+            ctx.beginPath();
+            ctx.arc(s.x * W, s.y * H, s.r, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(255,255,255,' + s.a + ')';
+            ctx.fill();
+        }
+    }
+
+    function drawEarth() {
+        var r    = Math.min(W, H) * 0.075;
+        var atm  = ctx.createRadialGradient(cx, cy, r * 0.85, cx, cy, r * 1.7);
+        atm.addColorStop(0, 'rgba(74,144,217,0.2)');
+        atm.addColorStop(1, 'rgba(74,144,217,0)');
+        ctx.beginPath(); ctx.arc(cx, cy, r * 1.7, 0, Math.PI * 2);
+        ctx.fillStyle = atm; ctx.fill();
+
+        var body = ctx.createRadialGradient(cx - r*.3, cy - r*.3, r*.1, cx, cy, r);
+        body.addColorStop(0, '#6ab0e8');
+        body.addColorStop(.5,'#4a90d9');
+        body.addColorStop(1, '#1a4d7c');
+        ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.fillStyle = body; ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,0.15)'; ctx.lineWidth = 1; ctx.stroke();
+    }
+
+    var CAM_TILT = 0.52;
+
+    function drawOrbit(params, color) {
+        var pts = OrbitalMechanics.getOrbitPath(params, scale, 180, CAM_TILT);
+        ctx.beginPath();
+        ctx.moveTo(cx + pts[0].sx, cy - pts[0].sy);
+        for (var i = 1; i < pts.length; i++) {
+            ctx.lineTo(cx + pts[i].sx, cy - pts[i].sy);
+        }
+        ctx.closePath();
+        ctx.strokeStyle = color;
+        ctx.lineWidth   = 1.5;
+        ctx.setLineDash([4, 6]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+    }
+
+    function drawSatellite(params, t, color, label) {
+        var pos = OrbitalMechanics.satellitePosition(params, t, scale, CAM_TILT);
+        var sx  = cx + pos.sx;
+        var sy  = cy - pos.sy;
+
+        // Glow
+        var g = ctx.createRadialGradient(sx, sy, 0, sx, sy, 10);
+        g.addColorStop(0, color.replace(')', ',0.5)').replace('rgb', 'rgba'));
+        g.addColorStop(1, color.replace(')', ',0)').replace('rgb', 'rgba'));
+        ctx.beginPath(); ctx.arc(sx, sy, 10, 0, Math.PI * 2);
+        ctx.fillStyle = g; ctx.fill();
+
+        // Dot
+        ctx.beginPath(); ctx.arc(sx, sy, 5, 0, Math.PI * 2);
+        ctx.fillStyle   = color; ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+        ctx.lineWidth   = 1; ctx.stroke();
+
+        // Label
+        ctx.font      = '11px Share Tech Mono, monospace';
+        ctx.fillStyle = 'rgba(220,230,240,0.85)';
+        ctx.fillText(label, sx + 8, sy - 5);
+
+        return { sx, sy };
+    }
+
+    function drawClosestApproach(posA, posB) {
+        if (!posA || !posB) return;
+
+        // Line between the two objects at TCA
+        ctx.beginPath();
+        ctx.moveTo(posA.sx, posA.sy);
+        ctx.lineTo(posB.sx, posB.sy);
+        ctx.strokeStyle = 'rgba(220,53,69,0.6)';
+        ctx.lineWidth   = 1;
+        ctx.setLineDash([3, 4]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Midpoint marker — the closest approach point
+        var mx = (posA.sx + posB.sx) / 2;
+        var my = (posA.sy + posB.sy) / 2;
+
+        // Pulsing ring
+        var pulse = 0.4 + 0.35 * Math.sin(glowPhase);
+        var gr = ctx.createRadialGradient(mx, my, 0, mx, my, 18);
+        gr.addColorStop(0, 'rgba(220,53,69,' + pulse + ')');
+        gr.addColorStop(1, 'rgba(220,53,69,0)');
+        ctx.beginPath(); ctx.arc(mx, my, 18, 0, Math.PI * 2);
+        ctx.fillStyle = gr; ctx.fill();
+
+        ctx.beginPath(); ctx.arc(mx, my, 5, 0, Math.PI * 2);
+        ctx.fillStyle   = '#dc3545'; ctx.fill();
+        ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
+
+        // Miss distance label
+        var label = missDistance < 1000
+            ? Math.round(missDistance) + ' m'
+            : (missDistance / 1000).toFixed(2) + ' km';
+        ctx.font      = 'bold 11px Share Tech Mono, monospace';
+        ctx.fillStyle = '#dc3545';
+        ctx.fillText(label, mx + 10, my - 6);
+    }
+
+    // ── Animation ─────────────────────────────────────────────────────────
+    var simTime   = 0;
+    var lastTs    = null;
+    var glowPhase = 0;
+    var TIME_SCALE = 100; // sim seconds per wall second
+
+    function tick(ts) {
+        if (lastTs !== null) simTime += ((ts - lastTs) / 1000) * TIME_SCALE;
+        lastTs    = ts;
+        glowPhase += 0.05;
+
+        layout();
+        ctx.clearRect(0, 0, W, H);
+
+        drawStars();
+        drawEarth();
+
+        var posA = null, posB = null;
+
+        if (primaryParams) {
+            drawOrbit(primaryParams, 'rgba(79,195,247,0.45)');
+        }
+        if (secondaryParams) {
+            drawOrbit(secondaryParams, 'rgba(255,112,67,0.45)');
+        }
+
+        if (primaryParams) {
+            posA = drawSatellite(primaryParams, simTime, '#4fc3f7', '@primaryName');
+        }
+        if (secondaryParams) {
+            posB = drawSatellite(secondaryParams, simTime, '#ff7043', '@secondaryName');
+        }
+
+        // At TCA — show closest approach marker
+        // We highlight TCA by checking if simTime is near tcaSec (mod period)
+        var GM = 3.986004418e14;
+        var periodA = primaryParams
+            ? 2 * Math.PI * Math.sqrt(Math.pow(primaryParams.semiMajorAxis, 3) / GM)
+            : 0;
+        var tcaMod  = tcaSec % (periodA || tcaSec || 1);
+        var simMod  = simTime % (periodA || 1);
+        var nearTca = Math.abs(simMod - tcaMod) < 30 || Math.abs(simMod - tcaMod - periodA) < 30;
+
+        if (nearTca && posA && posB) {
+            drawClosestApproach(posA, posB);
+        }
+
+        // Always show the TCA marker between the two current positions
+        // so operators can see where the close approach zone is
+        if (posA && posB) {
+            drawClosestApproach(posA, posB);
+        }
+
+        requestAnimationFrame(tick);
+    }
+
+    requestAnimationFrame(tick);
+})();
+</script>

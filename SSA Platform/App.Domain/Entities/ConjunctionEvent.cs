@@ -11,7 +11,7 @@ public class ConjunctionEvent : BaseEntityWithMeta
     public Guid SecondaryObjectId { get; set; }
     public SpaceObject? SecondaryObject { get; set; }
     
-    public double TimeOfClosestApproach { get; set; }
+    public DateTime TimeOfClosestApproach { get; set; }
     public double MissDistance { get; set; }
     public double CollisionProbability { get; set; }
     public EConjunctionEventStatus Status { get; set; }
@@ -28,7 +28,7 @@ public class ConjunctionEvent : BaseEntityWithMeta
     public ConjunctionEvent(
         Guid primaryObjectId,
         Guid secondaryObjectId,
-        double timeOfClosestApproach,
+        DateTime timeOfClosestApproach,
         double missDistance,
         double threshold)
     {
@@ -37,6 +37,7 @@ public class ConjunctionEvent : BaseEntityWithMeta
         TimeOfClosestApproach  = timeOfClosestApproach;
         MissDistance           = missDistance;
         Threshold              = threshold;
+        Status                 = EConjunctionEventStatus.Pending;
         CreatedBy              = "system";
         CreatedAt              = DateTime.UtcNow;
     }
@@ -67,6 +68,20 @@ public class ConjunctionEvent : BaseEntityWithMeta
     }
     
     
+    public void RefreshStatus()
+    {
+        if (Status == EConjunctionEventStatus.Resolved) return;
+
+        var timeUntilTca = TimeOfClosestApproach - DateTime.UtcNow;
+        Status = timeUntilTca.TotalSeconds < 0
+            ? EConjunctionEventStatus.AlreadyOccurred
+            : timeUntilTca.TotalHours < 24
+                ? EConjunctionEventStatus.Imminent
+                : timeUntilTca.TotalHours < 72
+                    ? EConjunctionEventStatus.Potential
+                    : EConjunctionEventStatus.Pending;
+    }
+
     public void MarkAsResolved()
     {
         if (Status == EConjunctionEventStatus.AlreadyOccurred)

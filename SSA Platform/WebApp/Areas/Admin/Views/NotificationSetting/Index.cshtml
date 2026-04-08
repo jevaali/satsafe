@@ -13,7 +13,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.ThresholdDistance)
+                @Html.DisplayNameFor(model => model.ConjunctionThresholdKm)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.EmailEnabled)
@@ -31,7 +31,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.ThresholdDistance)
+                @Html.DisplayFor(modelItem => item.ConjunctionThresholdKm)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.EmailEnabled)
