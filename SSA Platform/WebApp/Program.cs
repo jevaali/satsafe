@@ -33,6 +33,7 @@ builder.Services.AddScoped<GetOperatorDashboardUseCase>();
 builder.Services.AddScoped<GetHomeStatsUseCase>();
 builder.Services.AddScoped<AcknowledgeAlertUseCase>();
 builder.Services.AddScoped<ResolveConjunctionUseCase>();
+builder.Services.AddScoped<AcknowledgeConjunctionSideUseCase>();
 builder.Services.AddScoped<RefreshConjunctionStatusesUseCase>();
 builder.Services.AddScoped<GetMainListUseCase>();
 builder.Services.AddScoped<RunConjunctionScreeningUseCase>();

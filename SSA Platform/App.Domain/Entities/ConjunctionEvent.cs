@@ -18,7 +18,10 @@ public class ConjunctionEvent : BaseEntityWithMeta
 
     public Guid? RiskAssessmentId { get; set; }
     public RiskAssessment? RiskAssessment { get; set; }
-    
+
+    public EOperatorAcknowledgement PrimaryAcknowledgement   { get; private set; } = EOperatorAcknowledgement.None;
+    public EOperatorAcknowledgement SecondaryAcknowledgement { get; private set; } = EOperatorAcknowledgement.None;
+
     public ICollection<Alert> Alerts { get; set; } = [];
     
     public double Threshold { get; private set; }
@@ -80,6 +83,32 @@ public class ConjunctionEvent : BaseEntityWithMeta
                 : timeUntilTca.TotalHours < 72
                     ? EConjunctionEventStatus.Potential
                     : EConjunctionEventStatus.Pending;
+    }
+
+    public void AcknowledgePrimarySide(EOperatorAcknowledgement state)
+    {
+        if (state <= PrimaryAcknowledgement)
+            throw new InvalidOperationException("Cannot move acknowledgement backwards.");
+        PrimaryAcknowledgement = state;
+        AutoResolveIfBothSidesDone();
+    }
+
+    public void AcknowledgeSecondarySide(EOperatorAcknowledgement state)
+    {
+        if (state <= SecondaryAcknowledgement)
+            throw new InvalidOperationException("Cannot move acknowledgement backwards.");
+        SecondaryAcknowledgement = state;
+        AutoResolveIfBothSidesDone();
+    }
+
+    private void AutoResolveIfBothSidesDone()
+    {
+        if (PrimaryAcknowledgement   == EOperatorAcknowledgement.Resolved &&
+            SecondaryAcknowledgement == EOperatorAcknowledgement.Resolved &&
+            Status != EConjunctionEventStatus.AlreadyOccurred)
+        {
+            Status = EConjunctionEventStatus.Resolved;
+        }
     }
 
     public void MarkAsResolved()

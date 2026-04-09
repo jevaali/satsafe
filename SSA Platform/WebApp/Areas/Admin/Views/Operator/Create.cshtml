@@ -2,17 +2,32 @@
 @model App.Domain.Entities.Operator
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Add Operator";
 }
 
-<h1>Create</h1>
+<link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
 
-<h4>Operator</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+<div class="ssa-container">
+
+    <div class="system-bar">
+        <span class="status-dot"></span>
+        ADMIN | OPERATOR REGISTRY | NEW OPERATOR
+    </div>
+
+    <div class="header">
+        <div>
+            <h3>Add Operator</h3>
+            <small>Register a new space operator organisation</small>
+        </div>
+        <div>
+            <a asp-action="Index" class="btn-ssa-ghost"><i class="bi bi-arrow-left"></i> Back</a>
+        </div>
+    </div>
+
+    <div class="card admin-form">
         <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
@@ -28,15 +43,14 @@
                 <select asp-for="OperatorType" class="form-control" asp-items="Html.GetEnumSelectList<EOperatorType>()"></select>
                 <span asp-validation-for="OperatorType" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+
+            <div class="admin-form-actions">
+                <button type="submit" class="btn-ssa-primary"><i class="bi bi-check-lg"></i> Create Operator</button>
+                <a asp-action="Index" class="btn-ssa-ghost">Cancel</a>
             </div>
         </form>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

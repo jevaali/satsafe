@@ -448,3 +448,151 @@ body {
     .sat-meta-grid { grid-template-columns: 1fr; }
     .header        { flex-direction: column; align-items: flex-start; }
 }
+
+/* --- ADMIN FORM VIEWS --- */
+.admin-form { max-width: 620px; }
+.admin-form .form-group { margin-bottom: 1.25rem; }
+
+.admin-form label.control-label {
+    font-size: 0.71rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: #5a6a7a;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    display: block;
+}
+
+.admin-form .form-control,
+.admin-form select.form-control {
+    border: 1px solid #dce4ed;
+    border-radius: 6px;
+    background: #f8fafc;
+    font-size: 0.9rem;
+    color: #2c3e50;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.admin-form .form-control:focus,
+.admin-form select.form-control:focus {
+    border-color: #1565c0;
+    box-shadow: 0 0 0 3px rgba(21,101,192,0.1);
+    background: #fff;
+    outline: none;
+}
+
+.admin-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 1.5rem;
+}
+
+.admin-form-actions {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    margin-top: 1.75rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid #edf1f7;
+}
+
+.btn-ssa-primary {
+    background: #1565c0;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1.4rem;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    transition: background 0.15s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+.btn-ssa-primary:hover { background: #0d47a1; color: #fff; }
+
+.btn-ssa-danger {
+    background: #dc3545;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1.4rem;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+.btn-ssa-danger:hover { background: #b71c1c; color: #fff; }
+
+.btn-ssa-ghost {
+    color: #5a6a7a;
+    font-size: 0.82rem;
+    text-decoration: none;
+    padding: 0.5rem 0.85rem;
+    border-radius: 6px;
+    border: 1px solid #dce4ed;
+    background: transparent;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    transition: background 0.15s;
+}
+.btn-ssa-ghost:hover { background: #f0f4f8; color: #212529; }
+
+/* --- ADMIN DETAIL VIEW --- */
+.admin-detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.4rem 2rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.admin-detail-item dt {
+    font-size: 0.68rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: #8a9bb0;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+}
+
+.admin-detail-item dd {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.9rem;
+    color: #2c3e50;
+    margin: 0;
+    word-break: break-word;
+}
+
+/* --- DELETE WARNING --- */
+.delete-warning {
+    border: 1.5px solid #f5b8b3;
+    background: #fdecea;
+    border-radius: 10px;
+    padding: 1rem 1.3rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+.delete-warning-icon  { color: #e53935; font-size: 1.4rem; flex-shrink: 0; }
+.delete-warning-title { font-size: 0.88rem; font-weight: 700; color: #c62828; margin-bottom: 0.2rem; }
+.delete-warning-text  { font-size: 0.8rem; color: #7a3535; }
+
+/* --- ADMIN INDEX TABLE actions (consistent btn styling) --- */
+.tbl-actions { white-space: nowrap; }
+.tbl-actions .btn-sat { font-size: 0.7rem; }
+
+@media (max-width: 600px) {
+    .admin-detail-grid  { grid-template-columns: 1fr; }
+    .admin-form         { max-width: 100%; }
+    .admin-form-grid    { grid-template-columns: 1fr; }
+}

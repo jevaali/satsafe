@@ -1,6 +1,8 @@
 using System.Security.Claims;
 using App.Application.UseCases;
 using App.Application.Interfaces.IRepositories;
+using App.Domain.Entities;
+using App.Domain.Entities.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,17 +14,20 @@ public class ConjunctionsController : Controller
 {
     private readonly GetOperatorDashboardUseCase _dashboardUseCase;
     private readonly ResolveConjunctionUseCase _resolveUseCase;
+    private readonly AcknowledgeConjunctionSideUseCase _acknowledgeUseCase;
     private readonly RefreshConjunctionStatusesUseCase _refreshUseCase;
     private readonly IUserOperatorRepository _userOperatorRepository;
 
     public ConjunctionsController(
         GetOperatorDashboardUseCase dashboardUseCase,
         ResolveConjunctionUseCase resolveUseCase,
+        AcknowledgeConjunctionSideUseCase acknowledgeUseCase,
         RefreshConjunctionStatusesUseCase refreshUseCase,
         IUserOperatorRepository userOperatorRepository)
     {
         _dashboardUseCase       = dashboardUseCase;
         _resolveUseCase         = resolveUseCase;
+        _acknowledgeUseCase     = acknowledgeUseCase;
         _refreshUseCase         = refreshUseCase;
         _userOperatorRepository = userOperatorRepository;
     }
@@ -48,18 +53,33 @@ public class ConjunctionsController : Controller
         var conjunction = await _dashboardUseCase.GetConjunctionByIdAsync(id, operatorId);
         if (conjunction == null) return NotFound();
 
+        // Tell the view which side this operator owns so it can render the right buttons
+        var satellites = await _dashboardUseCase.GetSatellitesAsync(operatorId);
+        var satelliteIds = satellites.Select(s => s.Id).ToHashSet();
+        ViewBag.OperatorSide = satelliteIds.Contains(conjunction.PrimaryObjectId)   ? "Primary"
+                             : satelliteIds.Contains(conjunction.SecondaryObjectId) ? "Secondary"
+                             : "None";
+
         return View(conjunction);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Resolve(Guid id)
+    public async Task<IActionResult> Acknowledge(Guid id, EOperatorAcknowledgement state)
     {
         var (_, operatorId) = await GetOperatorContextAsync();
         if (operatorId == Guid.Empty) return Forbid();
 
-        await _resolveUseCase.ExecuteAsync(id, operatorId);
-        return RedirectToAction(nameof(Index));
+        try
+        {
+            await _acknowledgeUseCase.ExecuteAsync(id, operatorId, state);
+        }
+        catch (Exception ex)
+        {
+            TempData["ErrorMessage"] = ex.Message;
+        }
+
+        return RedirectToAction(nameof(Details), new { id });
     }
 
     private async Task<(Guid userId, Guid operatorId)> GetOperatorContextAsync()

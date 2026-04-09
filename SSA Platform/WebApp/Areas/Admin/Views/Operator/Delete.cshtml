@@ -1,39 +1,59 @@
 @model App.Domain.Entities.Operator
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Delete Operator";
 }
 
-<h1>Delete</h1>
+<link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Operator</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Country)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Country)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.OperatorType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.OperatorType)
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
+<div class="ssa-container">
+
+    <div class="system-bar">
+        <span class="status-dot"></span>
+        ADMIN | OPERATOR REGISTRY | DELETE
+    </div>
+
+    <div class="header">
+        <div>
+            <h3>Delete Operator</h3>
+            <small>Confirm permanent removal</small>
+        </div>
+        <div>
+            <a asp-action="Index" class="btn-ssa-ghost"><i class="bi bi-arrow-left"></i> Back</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="delete-warning">
+            <i class="bi bi-exclamation-triangle-fill delete-warning-icon"></i>
+            <div>
+                <div class="delete-warning-title">This action cannot be undone</div>
+                <div class="delete-warning-text">Deleting this operator will remove the record permanently.</div>
+            </div>
+        </div>
+
+        <dl class="admin-detail-grid" style="margin-bottom:1.5rem;">
+            <div class="admin-detail-item">
+                <dt>@Html.DisplayNameFor(m => m.Name)</dt>
+                <dd>@Model.Name</dd>
+            </div>
+            <div class="admin-detail-item">
+                <dt>@Html.DisplayNameFor(m => m.Country)</dt>
+                <dd>@Model.Country</dd>
+            </div>
+            <div class="admin-detail-item">
+                <dt>@Html.DisplayNameFor(m => m.OperatorType)</dt>
+                <dd>@(Model.OperatorType?.ToString() ?? "—")</dd>
+            </div>
+        </dl>
+
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="Id" />
+            <div class="admin-form-actions">
+                <button type="submit" class="btn-ssa-danger"><i class="bi bi-trash"></i> Delete Operator</button>
+                <a asp-action="Index" class="btn-ssa-ghost">Cancel</a>
+            </div>
+        </form>
+    </div>
+
 </div>

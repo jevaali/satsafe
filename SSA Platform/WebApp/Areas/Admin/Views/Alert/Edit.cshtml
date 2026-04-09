@@ -1,26 +1,36 @@
 @model App.Domain.Entities.Alert
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Alert";
 }
 
-<h1>Edit</h1>
+<link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
 
-<h4>Alert</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+<div class="ssa-container">
+
+    <div class="system-bar">
+        <span class="status-dot"></span>
+        ADMIN | ALERTS | EDIT
+    </div>
+
+    <div class="header">
+        <div>
+            <h3>Edit Alert</h3>
+            <small>Update alert record</small>
+        </div>
+        <div>
+            <a asp-action="Index" class="btn-ssa-ghost"><i class="bi bi-arrow-left"></i> Back</a>
+        </div>
+    </div>
+
+    <div class="card admin-form">
         <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
             <div class="form-group">
                 <label asp-for="Severity" class="control-label"></label>
                 <input asp-for="Severity" class="form-control" />
                 <span asp-validation-for="Severity" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsAcknowledged" /> @Html.DisplayNameFor(model => model.IsAcknowledged)
-                </label>
             </div>
             <div class="form-group">
                 <label asp-for="UserId" class="control-label"></label>
@@ -32,16 +42,22 @@
                 <select asp-for="ConjunctionEventId" class="form-control" asp-items="ViewBag.ConjunctionEventId"></select>
                 <span asp-validation-for="ConjunctionEventId" class="text-danger"></span>
             </div>
-            <input type="hidden" asp-for="Id" />
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <div class="form-check mt-1">
+                    <input class="form-check-input" asp-for="IsAcknowledged" />
+                    <label class="form-check-label" asp-for="IsAcknowledged">@Html.DisplayNameFor(m => m.IsAcknowledged)</label>
+                </div>
+            </div>
+
+            <input type="hidden" asp-for="Id" />
+
+            <div class="admin-form-actions">
+                <button type="submit" class="btn-ssa-primary"><i class="bi bi-check-lg"></i> Save Changes</button>
+                <a asp-action="Index" class="btn-ssa-ghost">Cancel</a>
             </div>
         </form>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

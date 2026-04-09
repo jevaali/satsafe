@@ -1,42 +1,55 @@
 @model App.Domain.Entities.Alert
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Alert Details";
 }
 
-<h1>Details</h1>
+<link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
 
-<div>
-    <h4>Alert</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Severity)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Severity)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsAcknowledged)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsAcknowledged)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.User)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.User.FirstName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ConjunctionEvent)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ConjunctionEvent.Status)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<div class="ssa-container">
+
+    <div class="system-bar">
+        <span class="status-dot"></span>
+        ADMIN | ALERTS | DETAILS
+    </div>
+
+    <div class="header">
+        <div>
+            <h3>Alert Details</h3>
+            <small>@Model.Severity severity alert</small>
+        </div>
+        <div style="display:flex;gap:0.5rem;">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn-sat btn-sat-edit"><i class="bi bi-pencil"></i> Edit</a>
+            <a asp-action="Index" class="btn-ssa-ghost"><i class="bi bi-arrow-left"></i> Back</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <dl class="admin-detail-grid">
+            <div class="admin-detail-item">
+                <dt>@Html.DisplayNameFor(m => m.Severity)</dt>
+                <dd>@Model.Severity</dd>
+            </div>
+            <div class="admin-detail-item">
+                <dt>@Html.DisplayNameFor(m => m.IsAcknowledged)</dt>
+                <dd>@(Model.IsAcknowledged ? "Yes" : "No")</dd>
+            </div>
+            <div class="admin-detail-item">
+                <dt>User</dt>
+                <dd>@(Model.User != null ? $"{Model.User.FirstName} {Model.User.LastName}".Trim() : "—")</dd>
+            </div>
+            <div class="admin-detail-item">
+                <dt>Conjunction Event</dt>
+                <dd>@(Model.ConjunctionEvent?.Status.ToString() ?? "—")</dd>
+            </div>
+            @if (Model.Message != null)
+            {
+                <div class="admin-detail-item" style="grid-column: 1 / -1;">
+                    <dt>Message</dt>
+                    <dd>@Model.Message</dd>
+                </div>
+            }
+        </dl>
+    </div>
+
 </div>

@@ -80,11 +80,17 @@ namespace App.Infrastructure.Migrations
                     b.Property<double>("MissDistance")
                         .HasColumnType("REAL");
 
+                    b.Property<int>("PrimaryAcknowledgement")
+                        .HasColumnType("INTEGER");
+
                     b.Property<Guid>("PrimaryObjectId")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid?>("RiskAssessmentId")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("SecondaryAcknowledgement")
+                        .HasColumnType("INTEGER");
 
                     b.Property<Guid>("SecondaryObjectId")
                         .HasColumnType("TEXT");

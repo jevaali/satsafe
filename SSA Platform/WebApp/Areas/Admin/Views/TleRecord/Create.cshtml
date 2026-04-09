@@ -1,95 +1,113 @@
 @model App.Domain.Entities.TleRecord
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Add TLE Record";
 }
 
-<h1>Create</h1>
+<link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
 
-<h4>TleRecord</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+<div class="ssa-container">
+
+    <div class="system-bar">
+        <span class="status-dot"></span>
+        ADMIN | TLE RECORDS | NEW RECORD
+    </div>
+
+    <div class="header">
+        <div>
+            <h3>Add TLE Record</h3>
+            <small>Enter Two-Line Element data for a space object</small>
+        </div>
+        <div>
+            <a asp-action="Index" class="btn-ssa-ghost"><i class="bi bi-arrow-left"></i> Back</a>
+        </div>
+    </div>
+
+    <div class="card admin-form" style="max-width:820px;">
         <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
             <div class="form-group">
                 <label asp-for="SpaceObjectId" class="control-label"></label>
-                <select asp-for="SpaceObjectId" class ="form-control" asp-items="ViewBag.SpaceObjectId"></select>
+                <select asp-for="SpaceObjectId" class="form-control" asp-items="ViewBag.SpaceObjectId"></select>
             </div>
-            <div class="form-group">
-                <label asp-for="Epoch" class="control-label"></label>
-                <input asp-for="Epoch" class="form-control" />
-                <span asp-validation-for="Epoch" class="text-danger"></span>
+
+            <div class="admin-form-grid">
+                <div class="form-group">
+                    <label asp-for="Epoch" class="control-label"></label>
+                    <input asp-for="Epoch" class="form-control" />
+                    <span asp-validation-for="Epoch" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Inclination" class="control-label"></label>
+                    <input asp-for="Inclination" class="form-control" />
+                    <span asp-validation-for="Inclination" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="RAAN" class="control-label"></label>
+                    <input asp-for="RAAN" class="form-control" />
+                    <span asp-validation-for="RAAN" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Eccentricity" class="control-label"></label>
+                    <input asp-for="Eccentricity" class="form-control" />
+                    <span asp-validation-for="Eccentricity" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ArgumentOfPerigee" class="control-label"></label>
+                    <input asp-for="ArgumentOfPerigee" class="form-control" />
+                    <span asp-validation-for="ArgumentOfPerigee" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="MeanAnomaly" class="control-label"></label>
+                    <input asp-for="MeanAnomaly" class="form-control" />
+                    <span asp-validation-for="MeanAnomaly" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="MeanMotion" class="control-label"></label>
+                    <input asp-for="MeanMotion" class="form-control" />
+                    <span asp-validation-for="MeanMotion" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="RevolutionNumber" class="control-label"></label>
+                    <input asp-for="RevolutionNumber" class="form-control" />
+                    <span asp-validation-for="RevolutionNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="BSTar" class="control-label"></label>
+                    <input asp-for="BSTar" class="form-control" />
+                    <span asp-validation-for="BSTar" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="FirstDerivative" class="control-label"></label>
+                    <input asp-for="FirstDerivative" class="form-control" />
+                    <span asp-validation-for="FirstDerivative" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SecondDerivative" class="control-label"></label>
+                    <input asp-for="SecondDerivative" class="form-control" />
+                    <span asp-validation-for="SecondDerivative" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Inclination" class="control-label"></label>
-                <input asp-for="Inclination" class="form-control" />
-                <span asp-validation-for="Inclination" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RAAN" class="control-label"></label>
-                <input asp-for="RAAN" class="form-control" />
-                <span asp-validation-for="RAAN" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Eccentricity" class="control-label"></label>
-                <input asp-for="Eccentricity" class="form-control" />
-                <span asp-validation-for="Eccentricity" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ArgumentOfPerigee" class="control-label"></label>
-                <input asp-for="ArgumentOfPerigee" class="form-control" />
-                <span asp-validation-for="ArgumentOfPerigee" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MeanAnomaly" class="control-label"></label>
-                <input asp-for="MeanAnomaly" class="form-control" />
-                <span asp-validation-for="MeanAnomaly" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MeanMotion" class="control-label"></label>
-                <input asp-for="MeanMotion" class="form-control" />
-                <span asp-validation-for="MeanMotion" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RevolutionNumber" class="control-label"></label>
-                <input asp-for="RevolutionNumber" class="form-control" />
-                <span asp-validation-for="RevolutionNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="BSTar" class="control-label"></label>
-                <input asp-for="BSTar" class="form-control" />
-                <span asp-validation-for="BSTar" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FirstDerivative" class="control-label"></label>
-                <input asp-for="FirstDerivative" class="form-control" />
-                <span asp-validation-for="FirstDerivative" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SecondDerivative" class="control-label"></label>
-                <input asp-for="SecondDerivative" class="form-control" />
-                <span asp-validation-for="SecondDerivative" class="text-danger"></span>
-            </div>
+
             <div class="form-group">
                 <label asp-for="RawLine1" class="control-label"></label>
-                <input asp-for="RawLine1" class="form-control" />
+                <input asp-for="RawLine1" class="form-control" style="font-family:monospace;" />
                 <span asp-validation-for="RawLine1" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="RawLine2" class="control-label"></label>
-                <input asp-for="RawLine2" class="form-control" />
+                <input asp-for="RawLine2" class="form-control" style="font-family:monospace;" />
                 <span asp-validation-for="RawLine2" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+
+            <div class="admin-form-actions">
+                <button type="submit" class="btn-ssa-primary"><i class="bi bi-check-lg"></i> Create TLE Record</button>
+                <a asp-action="Index" class="btn-ssa-ghost">Cancel</a>
             </div>
         </form>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

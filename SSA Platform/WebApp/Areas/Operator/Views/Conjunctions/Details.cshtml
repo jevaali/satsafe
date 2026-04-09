@@ -2,6 +2,15 @@
 @using App.Domain.Entities
 @using App.Domain.Entities.Enums
 
+@functions {
+    static string AckBadge(EOperatorAcknowledgement a) => a switch {
+        EOperatorAcknowledgement.Noticed   => "bg-info text-dark",
+        EOperatorAcknowledgement.Confirmed => "warning",
+        EOperatorAcknowledgement.Resolved  => "bg-success",
+        _                                  => "bg-secondary"
+    };
+}
+
 @{
     ViewData["Title"] = "Conjunction Details";
     var primaryName = Model.PrimaryObject switch {
@@ -96,6 +105,7 @@
                         {
                             <div><small>NORAD @pd.NoradId | Debris</small></div>
                         }
+                        <span class="badge @AckBadge(Model.PrimaryAcknowledgement) mt-1">@Model.PrimaryAcknowledgement</span>
                     </td>
                 </tr>
                 <tr>
@@ -110,6 +120,7 @@
                         {
                             <div><small>NORAD @sd.NoradId | Debris</small></div>
                         }
+                        <span class="badge @AckBadge(Model.SecondaryAcknowledgement) mt-1">@Model.SecondaryAcknowledgement</span>
                     </td>
                 </tr>
             </table>
@@ -176,29 +187,57 @@
 
     <!-- ACTIONS -->
     @{
-        var canResolve = Model.Status != EConjunctionEventStatus.Resolved &&
-                         Model.Status != EConjunctionEventStatus.AlreadyOccurred;
-        var unackedCount = Model.Alerts.Count(a => !a.IsAcknowledged);
+        var operatorSide = (string?)ViewBag.OperatorSide ?? "None";
+        var myAck = operatorSide == "Primary"   ? Model.PrimaryAcknowledgement
+                  : operatorSide == "Secondary" ? Model.SecondaryAcknowledgement
+                  : EOperatorAcknowledgement.Resolved; // "None" side — no buttons
+        var isFullyResolved = Model.Status == EConjunctionEventStatus.Resolved ||
+                              Model.Status == EConjunctionEventStatus.AlreadyOccurred;
     }
     <div class="card mt-3 p-3">
+        <h6 class="mb-3" style="font-size:0.8rem;letter-spacing:0.06em;text-transform:uppercase;color:#6b7c93;">
+            Your Response @(operatorSide != "None" ? $"({operatorSide} object)" : "")
+        </h6>
         <div class="d-flex gap-2 align-items-center flex-wrap">
-            @if (canResolve)
+            @if (operatorSide != "None" && !isFullyResolved)
             {
-                <form asp-action="Resolve" asp-route-id="@Model.Id" method="post" class="d-inline">
-                    @Html.AntiForgeryToken()
-                    <button type="submit" class="btn btn-success">
-                        @if (unackedCount > 0)
-                        {
-                            <text>Resolve &amp; Acknowledge @unackedCount Alert@(unackedCount != 1 ? "s" : "")</text>
-                        }
-                        else
-                        {
-                            <text>Mark as Resolved</text>
-                        }
-                    </button>
-                </form>
+                @if (myAck < EOperatorAcknowledgement.Noticed)
+                {
+                    <form asp-action="Acknowledge" asp-route-id="@Model.Id" asp-route-state="@EOperatorAcknowledgement.Noticed" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-outline-info btn-sm">Mark as Noticed</button>
+                    </form>
+                }
+                @if (myAck < EOperatorAcknowledgement.Confirmed)
+                {
+                    <form asp-action="Acknowledge" asp-route-id="@Model.Id" asp-route-state="@EOperatorAcknowledgement.Confirmed" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-outline-warning btn-sm">Confirm Risk</button>
+                    </form>
+                }
+                @if (myAck < EOperatorAcknowledgement.Resolved)
+                {
+                    var unackedCount = Model.Alerts.Count(a => !a.IsAcknowledged);
+                    <form asp-action="Acknowledge" asp-route-id="@Model.Id" asp-route-state="@EOperatorAcknowledgement.Resolved" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-success btn-sm">
+                            @if (unackedCount > 0)
+                            {
+                                <text>Resolve &amp; Acknowledge @unackedCount Alert@(unackedCount != 1 ? "s" : "")</text>
+                            }
+                            else
+                            {
+                                <text>Resolve My Side</text>
+                            }
+                        </button>
+                    </form>
+                }
             }
-            <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
+            @if (myAck == EOperatorAcknowledgement.Resolved || isFullyResolved)
+            {
+                <span class="badge bg-success">Your side resolved</span>
+            }
+            <a asp-action="Index" class="btn btn-outline-secondary btn-sm ms-auto">Back to List</a>
         </div>
     </div>
 

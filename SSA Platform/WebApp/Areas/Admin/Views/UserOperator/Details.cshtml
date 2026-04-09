@@ -1,30 +1,48 @@
 @model App.Domain.Entities.UserOperator
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "User–Operator Link Details";
 }
 
-<h1>Details</h1>
+<link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
 
-<div>
-    <h4>UserOperator</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AppUser)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AppUser.FirstName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Operator)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Operator.Country)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<div class="ssa-container">
+
+    <div class="system-bar">
+        <span class="status-dot"></span>
+        ADMIN | USER–OPERATOR LINKS | DETAILS
+    </div>
+
+    <div class="header">
+        <div>
+            <h3>User–Operator Link</h3>
+            <small>Association record</small>
+        </div>
+        <div style="display:flex;gap:0.5rem;">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn-sat btn-sat-edit"><i class="bi bi-pencil"></i> Edit</a>
+            <a asp-action="Index" class="btn-ssa-ghost"><i class="bi bi-arrow-left"></i> Back</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <dl class="admin-detail-grid">
+            <div class="admin-detail-item">
+                <dt>User</dt>
+                <dd>@(Model.AppUser != null ? $"{Model.AppUser.FirstName} {Model.AppUser.LastName}".Trim() : "—")</dd>
+            </div>
+            <div class="admin-detail-item">
+                <dt>Email</dt>
+                <dd>@(Model.AppUser?.Email ?? "—")</dd>
+            </div>
+            <div class="admin-detail-item">
+                <dt>Operator</dt>
+                <dd>@(Model.Operator?.Name.ToString() ?? "—")</dd>
+            </div>
+            <div class="admin-detail-item">
+                <dt>Operator Country</dt>
+                <dd>@(Model.Operator?.Country.ToString() ?? "—")</dd>
+            </div>
+        </dl>
+    </div>
+
 </div>

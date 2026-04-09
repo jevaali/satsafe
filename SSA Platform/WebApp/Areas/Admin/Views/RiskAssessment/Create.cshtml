@@ -1,40 +1,56 @@
 @model App.Domain.Entities.RiskAssessment
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Add Risk Assessment";
 }
 
-<h1>Create</h1>
+<link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
 
-<h4>RiskAssessment</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+<div class="ssa-container">
+
+    <div class="system-bar">
+        <span class="status-dot"></span>
+        ADMIN | RISK ASSESSMENTS | NEW
+    </div>
+
+    <div class="header">
+        <div>
+            <h3>Add Risk Assessment</h3>
+            <small>Create a risk assessment for a conjunction event</small>
+        </div>
+        <div>
+            <a asp-action="Index" class="btn-ssa-ghost"><i class="bi bi-arrow-left"></i> Back</a>
+        </div>
+    </div>
+
+    <div class="card admin-form">
         <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="RiskScore" class="control-label"></label>
-                <input asp-for="RiskScore" class="form-control" />
-                <span asp-validation-for="RiskScore" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModelVersion" class="control-label"></label>
-                <input asp-for="ModelVersion" class="form-control" />
-                <span asp-validation-for="ModelVersion" class="text-danger"></span>
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <div class="admin-form-grid">
+                <div class="form-group">
+                    <label asp-for="RiskScore" class="control-label"></label>
+                    <input asp-for="RiskScore" class="form-control" />
+                    <span asp-validation-for="RiskScore" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ModelVersion" class="control-label"></label>
+                    <input asp-for="ModelVersion" class="form-control" />
+                    <span asp-validation-for="ModelVersion" class="text-danger"></span>
+                </div>
             </div>
             <div class="form-group">
                 <label asp-for="ConjunctionEventId" class="control-label"></label>
-                <select asp-for="ConjunctionEventId" class ="form-control" asp-items="ViewBag.ConjunctionEventId"></select>
+                <select asp-for="ConjunctionEventId" class="form-control" asp-items="ViewBag.ConjunctionEventId"></select>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+
+            <div class="admin-form-actions">
+                <button type="submit" class="btn-ssa-primary"><i class="bi bi-check-lg"></i> Create Assessment</button>
+                <a asp-action="Index" class="btn-ssa-ghost">Cancel</a>
             </div>
         </form>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
