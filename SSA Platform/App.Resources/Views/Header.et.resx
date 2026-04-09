@@ -1,0 +1,53 @@
+<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="MySatellites" xml:space="preserve">
+        <value>Minu sateliitid</value>
+    </data>
+    <data name="AllMySatellites" xml:space="preserve">
+        <value>Kõik minu sateliidit</value>
+    </data>
+    <data name="AllSpaceObjects" xml:space="preserve">
+        <value>Kõik Objectid</value>
+    </data>
+    <data name="ConjunctionEvents" xml:space="preserve">
+        <value>Konjunktsioonisündmused</value>
+    </data>
+    <data name="OperatorSettings" xml:space="preserve">
+        <value>Operaatori seaded</value>
+    </data>
+    <data name="Sandbox" xml:space="preserve">
+        <value>Testi</value>
+    </data>
+    <data name="Alerts" xml:space="preserve">
+        <value>Teavitused</value>
+    </data>
+    <data name="Logout" xml:space="preserve">
+        <value>Logi välja</value>
+    </data>
+    <data name="Register" xml:space="preserve">
+        <value>Registreeri</value>
+    </data>
+    <data name="Login" xml:space="preserve">
+        <value>Logi sisse</value>
+    </data>
+    <data name="DataUpdatedEveryXh" xml:space="preserve">
+        <value>Andmeid uuendatakse iga X tunni järel</value>
+    </data>
+    <data name="Privacy" xml:space="preserve">
+        <value>Privaatsusseaded</value>
+    </data>
+    <data name="SpaceSituationalAwareness" xml:space="preserve">
+        <value>Kosmoseolukorra teadlikkus</value>
+    </data>
+</root>

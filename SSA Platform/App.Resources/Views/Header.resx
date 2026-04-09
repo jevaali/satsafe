@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="MySatellites" xml:space="preserve">
+        <value>My Satellites</value>
+    </data>
+    <data name="AllMySatellites" xml:space="preserve">
+        <value>All My Satellites</value>
+    </data>
+    <data name="AllSpaceObjects" xml:space="preserve">
+        <value>All Space Objects</value>
+    </data>
+    <data name="ConjunctionEvents" xml:space="preserve">
+        <value>Conjunction Events</value>
+    </data>
+    <data name="OperatorSettings" xml:space="preserve">
+        <value>Operator Settings</value>
+    </data>
+    <data name="Sandbox" xml:space="preserve">
+        <value>Sandbox</value>
+    </data>
+    <data name="Alerts" xml:space="preserve">
+        <value>Alerts</value>
+    </data>
+    <data name="Account" xml:space="preserve">
+        <value>Account</value>
+    </data>
+    <data name="Logout" xml:space="preserve">
+        <value>Logout</value>
+    </data>
+    <data name="Register" xml:space="preserve">
+        <value>Register</value>
+    </data>
+    <data name="Login" xml:space="preserve">
+        <value>Login</value>
+    </data>
+    <data name="DataUpdatedEveryXh" xml:space="preserve">
+        <value>Data updated every X h</value>
+    </data>
+    <data name="Privacy" xml:space="preserve">
+        <value>Privacy</value>
+    </data>
+    <data name="SpaceSituationalAwareness" xml:space="preserve">
+        <value>Space Situational Awareness</value>
+    </data>
+</root>

@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -135,6 +136,12 @@ else
 }
 
 app.UseHttpsRedirection();
+
+
+app.UseRequestLocalization(options: app.Services
+    .GetService<IOptions<RequestLocalizationOptions>>()!.Value);
+
+
 app.UseRouting();
 
 app.UseAuthorization();

@@ -1,9 +1,13 @@
 @model OperatorHeaderViewModel
 
 <li class="nav-item dropdown">
-    <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">My Satellites</a>
+    <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        @App.Resources.Views.Header.MySatellites
+    </a>
     <ul class="dropdown-menu">
-        <a class="dropdown-item" asp-area="Operator" asp-controller="Satellite" asp-action="Index">All My Satellites</a>
+        <a class="dropdown-item" asp-area="Operator" asp-controller="Satellite" asp-action="Index">
+            @App.Resources.Views.Header.AllMySatellites
+        </a>
         @foreach (var sat in Model.Satellites)
         {
             <li>
@@ -15,14 +19,18 @@
     </ul>
 </li>
 <li class="nav-item">
-    <a class="nav-link text-dark" asp-area="" asp-controller="MainList" asp-action="Index">All Space Objects</a>
+    <a class="nav-link text-dark" asp-area="" asp-controller="MainList" asp-action="Index">
+        @App.Resources.Views.Header.AllSpaceObjects
+    </a>
 </li>
 <li class="nav-item">
-    <a class="nav-link text-dark" asp-area="Operator" asp-controller="Conjunctions" asp-action="Index">Conjunction Events</a>
+    <a class="nav-link text-dark" asp-area="Operator" asp-controller="Conjunctions" asp-action="Index">
+        @App.Resources.Views.Header.ConjunctionEvents
+    </a>
 </li>
 <li class="nav-item">
     <a class="nav-link text-dark" asp-area="Operator" asp-controller="Alerts" asp-action="Index">
-        Alerts
+        @App.Resources.Views.Header.Alerts
         @if (Model.UnacknowledgedAlertCount > 0)
         {
             <span class="badge bg-danger rounded-pill ms-1">@Model.UnacknowledgedAlertCount</span>
@@ -30,7 +38,11 @@
     </a>
 </li>
 <li class="nav-item">
-    <a class="nav-link text-dark" asp-area="Operator" asp-controller="Settings" asp-action="Index">Operator Settings</a>
+    <a class="nav-link text-dark" asp-area="Operator" asp-controller="Settings" asp-action="Index">
+        @App.Resources.Views.Header.OperatorSettings
+    </a>
 </li><li class="nav-item">
-    <a class="nav-link text-dark" asp-area="Sandbox" asp-controller="Sandbox" asp-action="Index">Sandbox</a>
+    <a class="nav-link text-dark" asp-area="Sandbox" asp-controller="Sandbox" asp-action="Index">
+        @App.Resources.Views.Header.Sandbox
+    </a>
 </li>

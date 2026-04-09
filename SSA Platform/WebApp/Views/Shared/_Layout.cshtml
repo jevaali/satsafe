@@ -26,7 +26,7 @@
                     {
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="MainList" asp-action="Index">
-                                Space Objects
+                                @App.Resources.Views.Header.AllSpaceObjects
                             </a>
                         </li>
                     }
@@ -39,10 +39,14 @@
                     @if (User.IsInRole("User"))
                     {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="MainList" asp-action="Index">All Space Objects</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="MainList" asp-action="Index">
+                                @App.Resources.Views.Header.MySatellites
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Sandbox" asp-controller="Sandbox" asp-action="Index">Sandbox</a>
+                            <a class="nav-link text-dark" asp-area="Sandbox" asp-controller="Sandbox" asp-action="Index">
+                                @App.Resources.Views.Header.Sandbox
+                            </a>
                         </li>
                     }
 
@@ -79,11 +83,17 @@
 <footer class="border-top bg-white text-muted mt-auto py-3">
     <div class="container d-flex justify-content-between align-items-center flex-wrap gap-2">
         <div class="d-flex align-items-center gap-2">
-            <span>&copy; 2026 SatSafe &mdash; Space Situational Awareness</span>
+            <span>
+                &copy; 2026 SatSafe &mdash; @App.Resources.Views.Header.SpaceSituationalAwareness
+            </span>
         </div>
         <div class="d-flex gap-3 small">
-            <a class="text-muted text-decoration-none" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-            <span class="text-muted">Data updated every X h</span>
+            <a class="text-muted text-decoration-none" asp-area="" asp-controller="Home" asp-action="Privacy">
+                @App.Resources.Views.Header.Privacy
+            </a>
+            <span class="text-muted">
+                @App.Resources.Views.Header.DataUpdatedEveryXh
+            </span>
         </div>
     </div>
 </footer>

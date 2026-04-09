@@ -47,6 +47,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\App.Infrastructure\App.Infrastructure.csproj" />
+      <ProjectReference Include="..\App.Resources\App.Resources.csproj" />
       <ProjectReference Include="..\Base.Helpers\Base.Helpers.csproj" />
     </ItemGroup>
 
