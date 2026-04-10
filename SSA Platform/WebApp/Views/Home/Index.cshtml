@@ -4,78 +4,38 @@
 }
 
 <link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
-
-<style>
-    .hero-orbit-wrap {
-        position: relative;
-        height: 340px;
-        border-radius: 16px;
-        overflow: hidden;
-        background: #0d1117;
-        border: 1px solid #21262d;
-    }
-
-    #heroOrbitCanvas {
-        display: block;
-        width: 100%;
-        height: 100%;
-    }
-
-    .hero-orbit-labels {
-        position: absolute;
-        bottom: 14px;
-        left: 16px;
-        display: flex;
-        gap: 14px;
-        flex-wrap: wrap;
-    }
-
-    .hero-orbit-label {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        font-size: 0.7rem;
-        color: rgba(200,210,220,0.75);
-        font-family: 'Share Tech Mono', monospace;
-        letter-spacing: 0.05em;
-    }
-
-    .hero-orbit-dot {
-        width: 7px;
-        height: 7px;
-        border-radius: 50%;
-        flex-shrink: 0;
-    }
-</style>
+<link rel="stylesheet" href="~/css/index.css" asp-append-version="true" />
 
 <div class="ssa-container">
 
     <div class="system-bar">
         <span class="status-dot"></span>
-        SSA PLATFORM | SYSTEM: NOMINAL |
+        @App.Resources.Views.Home.Home.SSAPLATFORM | @App.Resources.Views.Home.Home.SystemBar_Status |
         @DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") UTC |
-        @Model.TotalSpaceObjects.ToString("N0") OBJECTS TRACKED
+        @Model.TotalSpaceObjects.ToString("N0") @App.Resources.Views.Home.Home.SystemBar_ObjectsTracked
     </div>
 
     <!-- Hero -->
     <div class="row align-items-center py-4 mb-2">
         <div class="col-lg-6">
             <p class="mb-2" style="font-family:'Share Tech Mono',monospace;font-size:0.72rem;letter-spacing:0.15em;color:#8a9bb0;text-transform:uppercase;">
-                Space Situational Awareness
+                @App.Resources.Views.Home.Home.PageTitle
             </p>
             <h1 style="font-family:'Share Tech Mono',monospace;font-size:2.2rem;font-weight:700;color:#1a2332;line-height:1.2;margin-bottom:1rem;">
-                Monitor. Track.<br />Stay Safe.
+                @App.Resources.Views.Home.Home.Monitor. 
+                @App.Resources.Views.Home.Home.Track.<br />
+                @App.Resources.Views.Home.Home.StaySafe.
             </h1>
             <p class="mb-4" style="color:#5a6a7a;font-size:1rem;line-height:1.6;max-width:480px;">
-                Access real-time orbital data for satellites and debris objects.
-                Get notified about close approaches and manage your satellite fleet.
+                @App.Resources.Views.Home.Home.Section_PlatformCapabilities
             </p>
             <div class="d-flex gap-3 flex-wrap">
                 <a asp-area="Identity" asp-page="/Account/Register" class="btn-add">
-                    <i class="bi bi-person-plus"></i> Get Started
+                    <i class="bi bi-person-plus"></i>
+                    @App.Resources.Views.Home.Home.Btn_GetStarted
                 </a>
                 <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-secondary">
-                    Sign In
+                    @App.Resources.Views.Home.Home.Btn_SignIn
                 </a>
             </div>
         </div>
@@ -85,13 +45,16 @@
                 <canvas id="heroOrbitCanvas"></canvas>
                 <div class="hero-orbit-labels">
                     <div class="hero-orbit-label">
-                        <div class="hero-orbit-dot" style="background:#4fc3f7;"></div>ISS-TYPE LEO
+                        <div class="hero-orbit-dot" style="background:#4fc3f7;"></div>
+                        @App.Resources.Views.Home.Home.ISSTYPELEO
                     </div>
                     <div class="hero-orbit-label">
-                        <div class="hero-orbit-dot" style="background:#81c784;"></div>SUN-SYNC SSO
+                        <div class="hero-orbit-dot" style="background:#81c784;"></div>
+                        @App.Resources.Views.Home.Home.SUN_SYNCSSO
                     </div>
                     <div class="hero-orbit-label">
-                        <div class="hero-orbit-dot" style="background:#ffb74d;"></div>POLAR ORBIT
+                        <div class="hero-orbit-dot" style="background:#ffb74d;"></div>
+                        @App.Resources.Views.Home.Home.POLARORBIT
                     </div>
                 </div>
             </div>
@@ -101,26 +64,34 @@
     <!-- KPI Strip -->
     <div class="kpi-bar mb-4">
         <div>
-            <div style="font-size:0.68rem;letter-spacing:0.1em;color:#8a9bb0;text-transform:uppercase;margin-bottom:4px;">Total Objects</div>
+            <div style="font-size:0.68rem;letter-spacing:0.1em;color:#8a9bb0;text-transform:uppercase;margin-bottom:4px;">
+                @App.Resources.Views.Home.Home.Kpi_TotalObjects
+            </div>
             <strong style="font-family:'Share Tech Mono',monospace;font-size:1.5rem;color:#1a2332;">@Model.TotalSpaceObjects.ToString("N0")</strong>
         </div>
         <div>
-            <div style="font-size:0.68rem;letter-spacing:0.1em;color:#8a9bb0;text-transform:uppercase;margin-bottom:4px;">Active Satellites</div>
+            <div style="font-size:0.68rem;letter-spacing:0.1em;color:#8a9bb0;text-transform:uppercase;margin-bottom:4px;">
+                @App.Resources.Views.Home.Home.Kpi_ActiveSatellites
+            </div>
             <strong style="font-family:'Share Tech Mono',monospace;font-size:1.5rem;" class="green">@Model.ActiveSatellites.ToString("N0")</strong>
         </div>
         <div>
-            <div style="font-size:0.68rem;letter-spacing:0.1em;color:#8a9bb0;text-transform:uppercase;margin-bottom:4px;">Debris Objects</div>
+            <div style="font-size:0.68rem;letter-spacing:0.1em;color:#8a9bb0;text-transform:uppercase;margin-bottom:4px;">
+                @App.Resources.Views.Home.Home.Kpi_DebrisObjects
+            </div>
             <strong style="font-family:'Share Tech Mono',monospace;font-size:1.5rem;" class="yellow">@Model.DebrisObjects.ToString("N0")</strong>
         </div>
     </div>
 
     <!-- Top Satellites -->
-    @if (Model.Satellites != null && Model.Satellites.Any())
+    @if (Model.Satellites.Any())
     {
         <div class="header mt-2">
-            <div><h3>Top Satellites</h3></div>
+            <div><h3>
+                @App.Resources.Views.Home.Home.Section_TopSatellites
+            </h3></div>
             <div class="header-right">
-                <a asp-controller="MainList" asp-action="Index" class="btn btn-outline-secondary btn-sm">View Full Catalogue</a>
+                <a asp-controller="MainList" asp-action="Index" class="btn btn-outline-secondary btn-sm">@App.Resources.Views.Home.Home.Btn_ViewFullCatalogue</a>
             </div>
         </div>
         <div class="sat-grid mb-4">
@@ -131,7 +102,6 @@
                         <div class="sat-name" style="font-size:0.85rem;">@sat.Name</div>
                         <div class="sat-norad">@sat.Operator</div>
                     </div>
-                    <span class="badge-status active" style="align-self:flex-start;margin-top:0.5rem;">Active</span>
                 </div>
             }
         </div>
@@ -139,25 +109,36 @@
 
     <!-- Features -->
     <div class="header mt-2">
-        <div><h3>Platform Capabilities</h3></div>
+        <div><h3>
+            @App.Resources.Views.Home.Home.PlatformCapabilities
+        </h3></div>
     </div>
     <div class="row g-3 mb-4">
         <div class="col-md-4">
             <div class="card h-100">
-                <h5><i class="bi bi-broadcast me-2 text-primary"></i>Real-Time Tracking</h5>
-                <p class="text-muted small mb-0">Access up-to-date orbital data for all catalogued satellites and debris objects.</p>
+                <h5><i class="bi bi-broadcast me-2 text-primary"></i>
+                    @App.Resources.Views.Home.Home.RealTimeTracking</h5>
+                <p class="text-muted small mb-0">
+                    @App.Resources.Views.Home.Home.RealTimeTrackingText
+                </p>
             </div>
         </div>
         <div class="col-md-4">
             <div class="card h-100">
-                <h5><i class="bi bi-exclamation-triangle me-2 text-warning"></i>Conjunction Alerts</h5>
-                <p class="text-muted small mb-0">Automated screening detects potential close approaches and notifies registered operators.</p>
+                <h5><i class="bi bi-exclamation-triangle me-2 text-warning"></i>
+                    @App.Resources.Views.Home.Home.ConjunctionAlerts</h5>
+                <p class="text-muted small mb-0">
+                    @App.Resources.Views.Home.Home.ConjunctionAlertsText
+                </p>
             </div>
         </div>
         <div class="col-md-4">
             <div class="card h-100">
-                <h5><i class="bi bi-building me-2 text-success"></i>Operator Management</h5>
-                <p class="text-muted small mb-0">Register your organisation to manage your satellite fleet and receive risk assessments.</p>
+                <h5><i class="bi bi-building me-2 text-success"></i>
+                    @App.Resources.Views.Home.Home.OperatorManagement</h5>
+                <p class="text-muted small mb-0">
+                    @App.Resources.Views.Home.Home.OperatorManagementText
+                </p>
             </div>
         </div>
     </div>
@@ -169,28 +150,36 @@
     <div class="row g-3 mb-4">
         <div class="col-md-6">
             <div class="card h-100">
-                <h5>Regular User</h5>
+                <h5>@App.Resources.Views.Home.Home.RegularUser</h5>
                 <ul class="list-unstyled small mt-2 mb-3">
-                    <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>View orbital data and statistics</li>
-                    <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>Receive conjunction alerts</li>
-                    <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>Customise notification settings</li>
+                    <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>
+                        @App.Resources.Views.Home.Home.ReguralUser1</li>
+                    <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>
+                        @App.Resources.Views.Home.Home.ReguralUser2</li>
+                    <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>
+                        @App.Resources.Views.Home.Home.ReguralUser3</li>
                 </ul>
                 <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-outline-primary w-100">
-                    Register as User
+                    @App.Resources.Views.Home.Home.RegisterUser
                 </a>
             </div>
         </div>
         <div class="col-md-6">
             <div class="card h-100">
-                <h5>Space Operator</h5>
+                <h5>@App.Resources.Views.Home.Home.SpaceOperator</h5>
                 <ul class="list-unstyled small mt-2 mb-3">
-                    <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>All user features</li>
-                    <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>Register and manage satellites</li>
-                    <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>Upload TLE data</li>
-                    <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>Operator-specific analytics</li>
+                    <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>
+                        @App.Resources.Views.Home.Home.SpaceOperator1</li>
+                    <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>
+                        @App.Resources.Views.Home.Home.SpaceOperator2</li>
+                    <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>
+                        @App.Resources.Views.Home.Home.SpaceOperator3</li>
+                    <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>
+                        @App.Resources.Views.Home.Home.SpaceOperator4</li>
                 </ul>
                 <a asp-area="Identity" asp-page="/Account/Register" class="btn-add w-100 justify-content-center">
-                    <i class="bi bi-building"></i> Register as Operator
+                    <i class="bi bi-building"></i> 
+                    @App.Resources.Views.Home.Home.RegisterOperator
                 </a>
             </div>
         </div>
@@ -201,50 +190,5 @@
 @section Scripts {
     <script src="~/js/orbitalMechanics.js"></script>
     <script src="~/js/orbitRenderer.js"></script>
-    <script>
-        // Three representative orbits — purely decorative, no real satellite data needed
-        OrbitRenderer.init({
-            canvasId: 'heroOrbitCanvas',
-            satellites: [
-                {
-                    id: 'demo-iss',
-                    name: 'ISS-TYPE',
-                    orbit: {
-                        semiMajorAxis:     6778000,   // ~400 km altitude
-                        eccentricity:      0.0001,
-                        inclination:       51.6,
-                        raan:              0,
-                        argumentOfPerigee: 0,
-                        meanAnomaly:       0
-                    }
-                },
-                {
-                    id: 'demo-sso',
-                    name: 'SUN-SYNC',
-                    orbit: {
-                        semiMajorAxis:     6928000,   // ~550 km altitude
-                        eccentricity:      0.001,
-                        inclination:       98.1,
-                        raan:              60,
-                        argumentOfPerigee: 90,
-                        meanAnomaly:       120
-                    }
-                },
-                {
-                    id: 'demo-polar',
-                    name: 'POLAR',
-                    orbit: {
-                        semiMajorAxis:     7071000,   // ~700 km altitude
-                        eccentricity:      0.002,
-                        inclination:       90.0,
-                        raan:              150,
-                        argumentOfPerigee: 45,
-                        meanAnomaly:       240
-                    }
-                }
-            ],
-            timeScale:  400,
-            showLabels: false,
-        });
-    </script>
+    <script src="~/js/orbits.js"></script>
 }

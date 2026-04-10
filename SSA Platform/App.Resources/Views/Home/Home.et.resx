@@ -1,0 +1,122 @@
+<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="PageTitle" xml:space="preserve">
+        <value>Kosmoseolude teadlikkus</value>
+    </data>
+    <data name="SystemBar_Status" xml:space="preserve">
+        <value>SÜSTEEM: NORMAALNE</value>
+    </data>
+    <data name="SystemBar_ObjectsTracked" xml:space="preserve">
+        <value>JÄLGITAVAD OBJEKTID</value>
+    </data>
+    <data name="Btn_GetStarted" xml:space="preserve">
+        <value>Alusta</value>
+    </data>
+    <data name="Btn_SignIn" xml:space="preserve">
+        <value>Logi sisse</value>
+    </data>
+    <data name="Kpi_TotalObjects" xml:space="preserve">
+        <value>Kõik objektid</value>
+    </data>
+    <data name="Kpi_ActiveSatellites" xml:space="preserve">
+        <value>Aktiivsed satelliidid</value>
+    </data>
+    <data name="Kpi_DebrisObjects" xml:space="preserve">
+        <value>Prügiobjektid</value>
+    </data>
+    <data name="Section_TopSatellites" xml:space="preserve">
+        <value>Tähtsaimad satelliidid</value>
+    </data>
+    <data name="Btn_ViewFullCatalogue" xml:space="preserve">
+        <value>Vaata täielikku kataloogi</value>
+    </data>
+    <data name="Section_PlatformCapabilities" xml:space="preserve">
+        <value>Juurde pääs satelliitide ja prügiobjektide reaalajas orbiidiandmetele. Saa teavitusi lähenemiste kohta ja halda oma satelliidiparki.</value>
+    </data>
+    <data name="Monitor" xml:space="preserve">
+        <value>Jälgi</value>
+    </data>
+    <data name="Track" xml:space="preserve">
+        <value>Tuvasta</value>
+    </data>
+    <data name="StaySafe" xml:space="preserve">
+        <value>Püsi turvaliselt</value>
+    </data>
+    <data name="SSAPLATFORM" xml:space="preserve">
+        <value>KST PLATVORM</value>
+    </data>
+    <data name="ISSTYPELEO" xml:space="preserve">
+        <value>ISS-TÜÜPI LEO</value>
+    </data>
+    <data name="SUN-SYNCSSO" xml:space="preserve">
+        <value>PÄIKESE-SÜNKROONNE SSO</value>
+    </data>
+    <data name="POLARORBIT" xml:space="preserve">
+        <value>POLAARORBIIT</value>
+    </data>
+    <data name="PlatformCapabilities" xml:space="preserve">
+        <value>Platvormi võimekused</value>
+    </data>
+    <data name="RealTimeTracking" xml:space="preserve">
+        <value>Reaalajas jälgimine</value>
+    </data>
+    <data name="RealTimeTrackingText" xml:space="preserve">
+        <value>Juurdepääs ajakohastele orbiidiandmetele kõigi katalogiseeritud satelliitide ja prügiobjektide kohta.</value>
+    </data>
+    <data name="ConjunctionAlerts" xml:space="preserve">
+        <value>Konjunktsiooni hoiatused</value>
+    </data>
+    <data name="ConjunctionAlertsText" xml:space="preserve">
+        <value>Automaatne sõelumine tuvastab potentsiaalseid lähenemisi ja teavitab registreeritud operaatoreid.</value>
+    </data>
+    <data name="OperatorManagement" xml:space="preserve">
+        <value>Operaatori haldamine</value>
+    </data>
+    <data name="OperatorManagementText" xml:space="preserve">
+        <value>Registreerige oma organisatsioon satelliidipargi haldamiseks ja riskihinnangute saamiseks.</value>
+    </data>
+    <data name="RegisterUser" xml:space="preserve">
+        <value>Registreeru kasutajana</value>
+    </data>
+    <data name="RegisterOperator" xml:space="preserve">
+        <value>Registreeru operaatorina</value>
+    </data>
+    <data name="SpaceOperator" xml:space="preserve">
+        <value>Kosmoseoperaator</value>
+    </data>
+    <data name="RegularUser" xml:space="preserve">
+        <value>Tavakasutaja</value>
+    </data>
+    <data name="ReguralUser1" xml:space="preserve">
+        <value>Tekst</value>
+    </data>
+    <data name="ReguralUser2" xml:space="preserve">
+        <value>Tekst</value>
+    </data>
+    <data name="ReguralUser3" xml:space="preserve">
+        <value>Tekst</value>
+    </data>
+    <data name="SpaceOperator1" xml:space="preserve">
+        <value>Kõik kasutajafunktsioonid</value>
+    </data>
+    <data name="SpaceOperator2" xml:space="preserve">
+        <value>Satelliitide registreerimine ja haldamine</value>
+    </data>
+    <data name="SpaceOperator3" xml:space="preserve">
+        <value>TLE-andmete üleslaadimine</value>
+    </data>
+    <data name="SpaceOperator4" xml:space="preserve">
+        <value>Operaatoripõhine analüütika</value>
+    </data>
+</root>
