@@ -3,7 +3,7 @@
 @model App.Application.DTO.OperatorDashboardDto
 
 @{
-    ViewData["Title"] = "Operator Dashboard";
+    ViewData["Title"] = App.Resources.Views.Operator.Index.PageTitle;
 }
 
 <link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
@@ -17,7 +17,7 @@
     <div class="system-bar">
         <span class="status-dot"></span>
         SYSTEM: NOMINAL |
-        LAST UPDATE: @DateTime.UtcNow.ToString("HH:mm:ss") UTC |
+        @App.Resources.Views.Operator.Index.LASTUPDATE: @DateTime.UtcNow.ToString("HH:mm:ss") UTC |
         OPERATOR: @Model.OperatorName
     </div>
 
@@ -25,12 +25,12 @@
     <div class="header">
         <div>
             <h3>@Model.OperatorName</h3>
-            <small>Space Situational Awareness</small>
+            <small>@App.Resources.Views.Operator.Index.Header_Subtitle</small>
         </div>
 
         <div class="header-right">
-            <span class="badge danger">@Model.HighRiskConjunctions HIGH RISK</span>
-            <span class="badge warning">@Model.UnacknowledgedAlerts ALERTS</span>
+            <span class="badge danger">@Model.HighRiskConjunctions @App.Resources.Views.Operator.Index.Badge_HighRisk</span>
+            <span class="badge warning">@Model.UnacknowledgedAlerts @App.Resources.Views.Operator.Index.Badge_Alerts</span>
         </div>
     </div>
     
@@ -39,7 +39,7 @@
 
         <!-- ORBIT VISUALIZATION -->
         <div class="card orbit-card">
-            <h5>Orbital View</h5>
+            <h5>@App.Resources.Views.Operator.Index.Section_OrbitalView</h5>
             <div class="orbit-visualization">
                 <canvas id="orbitCanvas"></canvas>
                 <script>
@@ -66,7 +66,7 @@
 
         <!-- ALERT FEED -->
         <div class="card alert-card">
-            <h5>Live Alerts</h5>
+            <h5>@App.Resources.Views.Operator.Index.Section_LiveAlerts</h5>
 
             <div class="alert-feed">
                 @foreach (var alert in Model.Alerts
@@ -89,10 +89,10 @@
         <!-- SATELLITES -->
         <div class="card satellites-card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Satellites</h5>
+                <h5 class="mb-0">@App.Resources.Views.Operator.Index.Section_Satellites</h5>
                 <form asp-controller="Satellite" asp-action="Index" method="get" class="m-0">
                     <button type="submit" class="btn btn-primary btn-sm view-all-btn">
-                        View All
+                        @App.Resources.Views.Operator.Index.Btn_ViewAll
                     </button>
                 </form>
             </div>
@@ -103,7 +103,7 @@
                     <a class="sat-tile" asp-action="Details" asp-controller="Satellite" asp-route-id="@sat.Id">
                         <div class="tile-header">
                             <h6 class="sat-name">@sat.Name</h6>
-                            <small class="norad-id">NORAD @sat.NoradId</small>
+                            <small class="norad-id">@App.Resources.Views.Operator.Index.Label_Norad @sat.NoradId</small>
                         </div>
 
                         <span class="status @(sat.Status == ESatelliteStatus.Active ? "active" : "inactive")">
@@ -117,10 +117,10 @@
         <!-- CONJUNCTION TIMELINE -->
         <div class="card">
             <div class="card-header">
-                <h5>Conjunction Timeline</h5>
+                <h5>@App.Resources.Views.Operator.Index.Section_ConjunctionTimeline</h5>
                 <form asp-controller="Conjunctions" asp-action="Index" method="get" class="m-0">
                     <button type="submit" class="btn btn-primary btn-sm view-all-btn">
-                        View All
+                        @App.Resources.Views.Operator.Index.Btn_ViewAll
                     </button>
                 </form>
             </div>
@@ -150,7 +150,7 @@
                                 _ => conj.SecondaryObjectId.ToString()
                             })
                             <div class="meta">
-                                Miss: @conj.MissDistance.ToString("N0") m |
+                                @App.Resources.Views.Operator.Index.Label_Miss: @conj.MissDistance.ToString("N0") m |
                                 @((conj.CollisionProbability * 100).ToString("F3"))%
                             </div>
                         </div>
@@ -164,23 +164,23 @@
     <!-- KPI STRIP -->
     <div class="kpi-bar">
         <div>
-            <span>Total</span>
+            <span>@App.Resources.Views.Operator.Index.Kpi_Total</span>
             <strong>@Model.TotalSatellites</strong>
         </div>
         <div>
-            <span>Active</span>
+            <span>@App.Resources.Views.Operator.Index.Kpi_Active</span>
             <strong class="green">@Model.ActiveSatellites</strong>
         </div>
         <div>
-            <span>Conjunctions</span>
+            <span>@App.Resources.Views.Operator.Index.Kpi_Conjunctions</span>
             <strong class="yellow">@Model.PendingConjunctions</strong>
         </div>
         <div>
-            <span>High Risk</span>
+            <span>@App.Resources.Views.Operator.Index.Kpi_HighRisk</span>
             <strong class="red">@Model.HighRiskConjunctions</strong>
         </div>
         <div>
-            <span>Alerts</span>
+            <span>@App.Resources.Views.Operator.Index.Kpi_Alerts</span>
             <strong class="red">@Model.UnacknowledgedAlerts</strong>
         </div>
     </div>
