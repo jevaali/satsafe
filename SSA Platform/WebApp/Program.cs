@@ -43,6 +43,7 @@ builder.Services.AddScoped<UpdateOperatorSettingsUseCase>();
 builder.Services.AddScoped<AddHelperUseCase>();
 builder.Services.AddScoped<RemoveHelperUseCase>();
 builder.Services.AddScoped<SaveNotificationsUseCase>();
+builder.Services.AddScoped<UpdateAlertMessageUseCase>();
 
 builder.Services.AddScoped<ConjunctionAnalysisService>();
 

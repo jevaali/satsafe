@@ -6,4 +6,5 @@ namespace App.Application.Interfaces.IRepositories;
 public interface IAlertRepository : IRepository<Alert>
 {
     Task<IEnumerable<Alert>> GetByConjunctionIdsAsync(List<Guid> conjunctionIds);
+    Task UpdateMessageAsync(Alert entity);
 }

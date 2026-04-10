@@ -86,7 +86,7 @@
                 </tr>
             </table>
 
-            <div class="mt-3 d-flex gap-2">
+            <div class="mt-3 d-flex gap-2 flex-wrap">
                 @if (!Model.IsAcknowledged)
                 {
                     <form asp-action="Acknowledge" asp-route-id="@Model.Id" method="post">
@@ -96,6 +96,9 @@
                         </button>
                     </form>
                 }
+                <a asp-action="EditMessage" asp-route-id="@Model.Id" class="btn btn-outline-primary">
+                    <i class="bi bi-pencil"></i> Edit Message
+                </a>
                 <a asp-action="Index" class="btn btn-outline-secondary">Back to Alerts</a>
             </div>
         </div>

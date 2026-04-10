@@ -53,4 +53,10 @@ public class AlertRepository : IAlertRepository
             .Where(a => conjunctionIds.Contains(a.ConjunctionEventId))
             .ToListAsync();
     }
+
+    public Task UpdateMessageAsync(Alert entity)
+    {
+        _context.Entry(entity).Property(e => e.Message).IsModified = true;
+        return Task.CompletedTask;
+    }
 }
