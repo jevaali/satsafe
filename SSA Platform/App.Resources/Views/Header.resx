@@ -60,4 +60,7 @@
     <data name="SpaceSituationalAwareness" xml:space="preserve">
         <value>Space Situational Awareness</value>
     </data>
+    <data name="SystemOperational" xml:space="preserve">
+        <value>System operational</value>
+    </data>
 </root>

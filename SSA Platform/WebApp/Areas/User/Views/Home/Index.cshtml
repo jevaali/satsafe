@@ -1,6 +1,6 @@
 @model List<App.Application.DTO.DraftSatelliteDto>
 @{
-    ViewData["Title"] = "My Drafts";
+    ViewData["Title"] = App.Resources.Views.User.Index.TITLE;
 }
 
 <link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
@@ -9,7 +9,7 @@
 
     <div class="system-bar">
         <span class="status-dot"></span>
-        MY DRAFT SATELLITES — @Model.Count SAVED
+        @App.Resources.Views.User.Index.MYDRAFTSATELLITES — @Model.Count  @App.Resources.Views.User.Index.SAVED
     </div>
 
     @if (TempData["SuccessMessage"] != null)
@@ -30,12 +30,12 @@
     <!-- Header row -->
     <div class="header">
         <div>
-            <h3><i class="bi bi-collection-fill me-2"></i>My Draft Satellites</h3>
-            <small>Design orbits in the sandbox and save them here</small>
+            <h3><i class="bi bi-collection-fill me-2"></i>@App.Resources.Views.User.Index.HEADER</h3>
+            <small>@App.Resources.Views.User.Index.SUBTITLE</small>
         </div>
         <div class="header-right">
             <a asp-area="" asp-controller="Sandbox" asp-action="Index" class="btn-ssa-primary">
-                <i class="bi bi-diagram-3 me-1"></i> Open Orbital Designer
+                <i class="bi bi-diagram-3 me-1"></i> @App.Resources.Views.User.Index.BTN_OPENORBITALDESIGNER
             </a>
         </div>
     </div>
@@ -46,13 +46,13 @@
             <div style="padding: 3rem; text-align: center; color: #5a7a9a;">
                 <i class="bi bi-stars" style="font-size: 2.5rem; display: block; margin-bottom: 1rem; color: #2a4a6a;"></i>
                 <div style="font-family: 'Share Tech Mono', monospace; font-size: 0.85rem; margin-bottom: 0.5rem; color: #8a9bb0;">
-                    No drafts yet
+                    @App.Resources.Views.User.Index.NO_DRAFTS
                 </div>
                 <div style="font-size: 0.8rem; margin-bottom: 1.5rem;">
-                    Head to the Orbital Designer to design your first satellite orbit and save it as a draft.
+                    @App.Resources.Views.User.Index.NO_DRAFTS_DESC
                 </div>
                 <a asp-area="" asp-controller="Sandbox" asp-action="Index" class="btn-ssa-primary">
-                    <i class="bi bi-diagram-3 me-1"></i> Open Orbital Designer
+                    <i class="bi bi-diagram-3 me-1"></i> @App.Resources.Views.User.Index.BTN_OPENORBITALDESIGNER
                 </a>
             </div>
         </div>
@@ -63,13 +63,13 @@
             <table class="op-table">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Orbit Type</th>
-                        <th>Altitude</th>
-                        <th>Semi-Major Axis</th>
-                        <th>Eccentricity</th>
-                        <th>Inclination</th>
-                        <th>Saved</th>
+                        <th>@App.Resources.Views.User.Index.COL_NAME</th>
+                        <th>@App.Resources.Views.User.Index.COL_ORBIT_TYPE</th>
+                        <th>@App.Resources.Views.User.Index.COL_ALTITUDE</th>
+                        <th>@App.Resources.Views.User.Index.COL_SEMI_MAJOR_AXIS</th>
+                        <th>@App.Resources.Views.User.Index.COL_ECCENTRICITY</th>
+                        <th>@App.Resources.Views.User.Index.COL_INCLINATION</th>
+                        <th>@App.Resources.Views.User.Index.SAVED</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -103,10 +103,10 @@
                             <td class="text-end" style="white-space: nowrap;">
                                 <a asp-area="" asp-controller="Sandbox" asp-action="Index" asp-route-draftId="@d.Id"
                                    class="btn-sat btn-sat-view">
-                                    <i class="bi bi-pencil"></i> Edit
+                                    <i class="bi bi-pencil"></i> @App.Resources.Views.User.Index.BTN_EDIT
                                 </a>
                                 <form asp-area="User" asp-controller="Home" asp-action="Delete" method="post"
-                                      style="display:inline;" onsubmit="return confirm('Delete this draft?')">
+                                      style="display:inline;" onsubmit="return confirm('@App.Resources.Views.User.Index.CONFIRM_DELETE')">
                                     @Html.AntiForgeryToken()
                                     <input type="hidden" name="id" value="@d.Id" />
                                     <button type="submit" class="btn-sat btn-sat-delete">
@@ -123,7 +123,7 @@
         @if (Model.Any(d => d.Notes != null))
         {
             <div style="margin-top: 0.5rem; font-size: 0.72rem; color: #3a5570; font-family: 'Share Tech Mono', monospace;">
-                * Click <strong>Edit</strong> to open a draft in the Orbital Designer
+                @App.Resources.Views.User.Index.HINT_EDIT
             </div>
         }
     }

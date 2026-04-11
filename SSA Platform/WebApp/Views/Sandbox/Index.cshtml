@@ -1,6 +1,6 @@
 @using App.Application.DTO
 @{
-    ViewData["Title"] = "Orbital Sandbox";
+    ViewData["Title"] = App.Resources.Views.Sandbox.Index.TITLE;
     var drafts = (List<DraftSatelliteDto>)ViewBag.Drafts;
     var isAuthenticated = (bool)ViewBag.IsAuthenticated;
     var initDraft = ViewBag.InitDraft as DraftSatelliteDto;
@@ -12,7 +12,7 @@
 <div class="ssa-container" style="padding-bottom: 0;">
     <div class="system-bar">
         <span class="status-dot"></span>
-        SANDBOX | ORBITAL DESIGNER — @(isAuthenticated ? "SIGNED IN · DRAFTS ENABLED" : "GUEST MODE · SIGN IN TO SAVE")
+        @App.Resources.Views.Sandbox.Index.SANDBOX | @App.Resources.Views.Sandbox.Index.ORBITAL_DESIGNER — @(isAuthenticated ? App.Resources.Views.Sandbox.Index.STATUS_SIGNED_IN : App.Resources.Views.Sandbox.Index.STATUS_GUEST)
     </div>
 
     @if (TempData["SuccessMessage"] != null)
@@ -51,44 +51,44 @@
         <!-- RIGHT: Parameters panel -->
         <div class="sandbox-panel" style="grid-column: 2; grid-row: 1 / 3; display: flex; flex-direction: column;">
             <div class="panel-title">
-                <i class="bi bi-sliders"></i> Orbital Parameters
+                <i class="bi bi-sliders"></i> @App.Resources.Views.Sandbox.Index.PANEL_ORBITAL_PARAMS
             </div>
 
             @if (isAuthenticated)
             {
                 <div class="param-row">
-                    <div class="param-label">Satellite Name</div>
+                    <div class="param-label">@App.Resources.Views.Sandbox.Index.LABEL_SAT_NAME</div>
                     <input type="text" id="draftName" class="param-name-input" placeholder="e.g. MyFirstSat" maxlength="120" value="MySandboxSat" />
                 </div>
                 <div class="param-row">
-                    <div class="param-label">Notes <span>(optional)</span></div>
+                    <div class="param-label">@App.Resources.Views.Sandbox.Index.LABEL_NOTES <span>@App.Resources.Views.Sandbox.Index.LABEL_OPTIONAL</span></div>
                     <textarea id="draftNotes" class="notes-input" rows="2" placeholder="Any notes…" maxlength="500"></textarea>
                 </div>
                 <hr class="divider" />
             }
 
             <div class="param-row">
-                <div class="param-label">Semi-Major Axis <span id="lblSma">km</span></div>
+                <div class="param-label">@App.Resources.Views.Sandbox.Index.LABEL_SMA <span id="lblSma">km</span></div>
                 <input type="number" id="pSma" class="param-input" value="6871" min="6372" max="500000" step="10" />
             </div>
             <div class="param-row">
-                <div class="param-label">Eccentricity <span>0 – 0.999</span></div>
+                <div class="param-label">@App.Resources.Views.Sandbox.Index.LABEL_ECCENTRICITY <span>0 – 0.999</span></div>
                 <input type="number" id="pEcc" class="param-input" value="0.001" min="0" max="0.999" step="0.001" />
             </div>
             <div class="param-row">
-                <div class="param-label">Inclination <span>degrees</span></div>
+                <div class="param-label">@App.Resources.Views.Sandbox.Index.LABEL_INCLINATION <span>@App.Resources.Views.Sandbox.Index.LABEL_DEGREES</span></div>
                 <input type="number" id="pInc" class="param-input" value="51.6" min="0" max="180" step="0.1" />
             </div>
             <div class="param-row">
-                <div class="param-label">RAAN <span>degrees</span></div>
+                <div class="param-label">@App.Resources.Views.Sandbox.Index.LABEL_RAAN <span>@App.Resources.Views.Sandbox.Index.LABEL_DEGREES</span></div>
                 <input type="number" id="pRaan" class="param-input" value="0" min="0" max="360" step="1" />
             </div>
             <div class="param-row">
-                <div class="param-label">Arg. of Perigee <span>degrees</span></div>
+                <div class="param-label">@App.Resources.Views.Sandbox.Index.LABEL_ARGP <span>@App.Resources.Views.Sandbox.Index.LABEL_DEGREES</span></div>
                 <input type="number" id="pArgp" class="param-input" value="0" min="0" max="360" step="1" />
             </div>
             <div class="param-row">
-                <div class="param-label">Mean Anomaly <span>degrees</span></div>
+                <div class="param-label">@App.Resources.Views.Sandbox.Index.LABEL_MA <span>@App.Resources.Views.Sandbox.Index.LABEL_DEGREES</span></div>
                 <input type="number" id="pMa" class="param-input" value="0" min="0" max="360" step="1" />
             </div>
 
@@ -96,7 +96,7 @@
 
             <!-- Presets -->
             <div class="panel-title" style="margin-bottom: 0.5rem;">
-                <i class="bi bi-bookmarks"></i> Presets
+                <i class="bi bi-bookmarks"></i> @App.Resources.Views.Sandbox.Index.PANEL_PRESETS
             </div>
             <div class="d-flex flex-wrap gap-1 mb-3">
                 <button class="btn-ssa-ghost" style="font-size:0.7rem;padding:3px 9px;" onclick="loadPreset('iss')">ISS</button>
@@ -121,7 +121,7 @@
                         <input type="hidden" name="ArgumentOfPerigee" id="hidArgp" />
                         <input type="hidden" name="MeanAnomaly" id="hidMa" />
                         <button type="button" class="btn-ssa-primary w-100" onclick="submitSave()">
-                            <i class="bi bi-floppy"></i> Save Draft
+                            <i class="bi bi-floppy"></i> @App.Resources.Views.Sandbox.Index.BTN_SAVE_DRAFT
                         </button>
                     </form>
                 }
@@ -130,10 +130,10 @@
                     <div class="auth-prompt">
                         <i class="bi bi-lock" style="font-size:1.1rem;color:#8a9bb0;flex-shrink:0;"></i>
                         <span>
-                            <a asp-controller="Login" asp-action="Index">Sign in</a>
+                            <a asp-controller="Login" asp-action="Index">@App.Resources.Views.Sandbox.Index.AUTH_SIGN_IN</a>
                             or
-                            <a asp-controller="Register" asp-action="User">register</a>
-                            to save your orbital designs.
+                            <a asp-controller="Register" asp-action="User">@App.Resources.Views.Sandbox.Index.AUTH_REGISTER</a>
+                            @App.Resources.Views.Sandbox.Index.AUTH_PROMPT
                         </span>
                     </div>
                 }
@@ -145,14 +145,14 @@
         {
             <div class="sandbox-panel drafts-panel">
                 <div class="panel-title">
-                    <i class="bi bi-collection"></i> My Saved Drafts
-                    <span style="margin-left:auto;font-size:0.75rem;color:#8a9bb0;font-weight:400;">click to load</span>
+                    <i class="bi bi-collection"></i> @App.Resources.Views.Sandbox.Index.PANEL_MY_DRAFTS
+                    <span style="margin-left:auto;font-size:0.75rem;color:#8a9bb0;font-weight:400;">@App.Resources.Views.Sandbox.Index.HINT_CLICK_TO_LOAD</span>
                 </div>
 
                 @if (drafts.Count == 0)
                 {
                     <div style="font-size:0.8rem;color:#8a9bb0;padding:0.25rem 0;">
-                        No drafts yet — design an orbit and hit <strong>Save Draft</strong>.
+                        @App.Resources.Views.Sandbox.Index.NO_DRAFTS
                     </div>
                 }
                 else
@@ -175,7 +175,7 @@
                                         @d.OrbitType · @d.AltitudeKm.ToString("N0") km · @d.CreatedAt.ToString("MMM d")
                                     </div>
                                 </div>
-                                <form asp-controller="Sandbox" asp-action="Delete" method="post" style="display:inline;" onsubmit="return confirm('Delete this draft?')">
+                                <form asp-controller="Sandbox" asp-action="Delete" method="post" style="display:inline;" onsubmit="return confirm('@App.Resources.Views.Sandbox.Index.CONFIRM_DELETE')">
                                     @Html.AntiForgeryToken()
                                     <input type="hidden" name="id" value="@d.Id" />
                                     <button type="submit" class="draft-card-del" title="Delete">
@@ -196,6 +196,7 @@
 // ─── Orbital math helpers ───────────────────────────────────────────────
 const MU = 3.986004418e14; // Earth GM (m^3/s^2)
 const EARTH_R = 6371;      // km
+const ALERT_SAT_NAME = '@Html.Raw(App.Resources.Views.Sandbox.Index.ALERT_SAT_NAME)';
 
 function solveKepler(M, e) {
     let E = M;
@@ -478,7 +479,7 @@ function loadDraft(sma, ecc, inc, raan, argp, ma, name, notes, draftId) {
 // ─── Save form sync ────────────────────────────────────────────────────
 function submitSave() {
     const name = document.getElementById('draftName')?.value?.trim();
-    if (!name) { alert('Please enter a satellite name.'); return; }
+    if (!name) { alert(ALERT_SAT_NAME); return; }
     // hidId is already set by loadDraft / cleared by loadPreset
     document.getElementById('hidName').value  = name;
     document.getElementById('hidNotes').value = document.getElementById('draftNotes')?.value ?? '';

@@ -2,7 +2,6 @@
 
 @{
     ViewData["Title"] = "Space Object Catalogue";
-    var allObjects = Model.Satellites.Cast<object>().Concat(Model.Debris.Cast<object>()).ToList();
 }
 
 <link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />

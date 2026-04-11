@@ -1,0 +1,92 @@
+<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="SANDBOX" xml:space="preserve">
+        <value>LIIVAKAST</value>
+    </data>
+    <data name="TITLE" xml:space="preserve">
+        <value>Orbitaalne liivakast</value>
+    </data>
+    <data name="ORBITAL_DESIGNER" xml:space="preserve">
+        <value>ORBITAALDISAINER</value>
+    </data>
+    <data name="STATUS_SIGNED_IN" xml:space="preserve">
+        <value>SISSE LOGITUD · MUSTANDID LUBATUD</value>
+    </data>
+    <data name="STATUS_GUEST" xml:space="preserve">
+        <value>KÜLALISE REŽIIM · LOGIGE SISSE SALVESTAMISEKS</value>
+    </data>
+    <data name="PANEL_ORBITAL_PARAMS" xml:space="preserve">
+        <value>Orbiidi parameetrid</value>
+    </data>
+    <data name="LABEL_SAT_NAME" xml:space="preserve">
+        <value>Satelliidi nimi</value>
+    </data>
+    <data name="LABEL_NOTES" xml:space="preserve">
+        <value>Märkmed</value>
+    </data>
+    <data name="LABEL_OPTIONAL" xml:space="preserve">
+        <value>(vabatahtlik)</value>
+    </data>
+    <data name="LABEL_SMA" xml:space="preserve">
+        <value>Poolsuurtelg</value>
+    </data>
+    <data name="LABEL_ECCENTRICITY" xml:space="preserve">
+        <value>Ekstsentrilisus</value>
+    </data>
+    <data name="LABEL_INCLINATION" xml:space="preserve">
+        <value>Kalle</value>
+    </data>
+    <data name="LABEL_DEGREES" xml:space="preserve">
+        <value>kraadid</value>
+    </data>
+    <data name="LABEL_RAAN" xml:space="preserve">
+        <value>RAAN</value>
+    </data>
+    <data name="LABEL_ARGP" xml:space="preserve">
+        <value>Perigee argument</value>
+    </data>
+    <data name="LABEL_MA" xml:space="preserve">
+        <value>Keskmine anomaalia</value>
+    </data>
+    <data name="PANEL_PRESETS" xml:space="preserve">
+        <value>Eelseaded</value>
+    </data>
+    <data name="BTN_SAVE_DRAFT" xml:space="preserve">
+        <value>Salvesta mustand</value>
+    </data>
+    <data name="AUTH_SIGN_IN" xml:space="preserve">
+        <value>Logi sisse</value>
+    </data>
+    <data name="AUTH_REGISTER" xml:space="preserve">
+        <value>registreeru</value>
+    </data>
+    <data name="AUTH_PROMPT" xml:space="preserve">
+        <value>oma orbiidikujunduste salvestamiseks.</value>
+    </data>
+    <data name="PANEL_MY_DRAFTS" xml:space="preserve">
+        <value>Minu salvestatud mustandid</value>
+    </data>
+    <data name="HINT_CLICK_TO_LOAD" xml:space="preserve">
+        <value>klõpsa laadimiseks</value>
+    </data>
+    <data name="NO_DRAFTS" xml:space="preserve">
+        <value>Mustandeid pole veel — kavanda orbiit ja vajuta Salvesta mustand.</value>
+    </data>
+    <data name="CONFIRM_DELETE" xml:space="preserve">
+        <value>Kustuta see mustand?</value>
+    </data>
+    <data name="ALERT_SAT_NAME" xml:space="preserve">
+        <value>Palun sisestage satelliidi nimi.</value>
+    </data>
+</root>

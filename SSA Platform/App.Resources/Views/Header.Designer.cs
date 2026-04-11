@@ -128,5 +128,11 @@ namespace App.Resources.Views {
                 return ResourceManager.GetString("SpaceSituationalAwareness", resourceCulture);
             }
         }
+        
+        public static string SystemOperational {
+            get {
+                return ResourceManager.GetString("SystemOperational", resourceCulture);
+            }
+        }
     }
 }

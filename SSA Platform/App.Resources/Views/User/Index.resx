@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="MYDRAFTSATELLITES" xml:space="preserve">
+        <value>MY DRAFT SATELLITES</value>
+    </data>
+    <data name="SAVED" xml:space="preserve">
+        <value>SAVED</value>
+    </data>
+    <data name="TITLE" xml:space="preserve">
+        <value>My Drafts</value>
+    </data>
+    <data name="SUBTITLE" xml:space="preserve">
+        <value>Design orbits in the sandbox and save them here</value>
+    </data>
+    <data name="HEADER" xml:space="preserve">
+        <value>My Draft Satellites</value>
+    </data>
+    <data name="BTN_OPENORBITALDESIGNER" xml:space="preserve">
+        <value>Open Orbital Designer</value>
+    </data>
+    <data name="NO_DRAFTS" xml:space="preserve">
+        <value>No drafts yet</value>
+    </data>
+    <data name="NO_DRAFTS_DESC" xml:space="preserve">
+        <value>Head to the Orbital Designer to design your first satellite orbit and save it as a draft.</value>
+    </data>
+    <data name="COL_NAME" xml:space="preserve">
+        <value>Name</value>
+    </data>
+    <data name="COL_ORBIT_TYPE" xml:space="preserve">
+        <value>Orbit Type</value>
+    </data>
+    <data name="COL_ALTITUDE" xml:space="preserve">
+        <value>Altitude</value>
+    </data>
+    <data name="COL_SEMI_MAJOR_AXIS" xml:space="preserve">
+        <value>Semi-Major Axis</value>
+    </data>
+    <data name="COL_ECCENTRICITY" xml:space="preserve">
+        <value>Eccentricity</value>
+    </data>
+    <data name="COL_INCLINATION" xml:space="preserve">
+        <value>Inclination</value>
+    </data>
+    <data name="BTN_EDIT" xml:space="preserve">
+        <value>Edit</value>
+    </data>
+    <data name="CONFIRM_DELETE" xml:space="preserve">
+        <value>Delete this draft?</value>
+    </data>
+    <data name="HINT_EDIT" xml:space="preserve">
+        <value>* Click Edit to open a draft in the Orbital Designer</value>
+    </data>
+</root>
