@@ -11,7 +11,7 @@ public class Operator : BaseEntityWithMeta
     public LangStr Name { get; set; } = string.Empty;
     
     [MaxLength(124)]
-    public LangStr Country { get; set; } = string.Empty;
+    public string CountryCode { get; set; } = string.Empty;
     
     [MaxLength(124)]
     public LangStr? OperatorTypeString { get; set; } = string.Empty;

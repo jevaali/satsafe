@@ -62,17 +62,16 @@
                         </div>
                         <div class="mb-3">
                             <label asp-for="Input.OperatorCountry" class="form-label"></label>
-                            <input asp-for="Input.OperatorCountry" class="form-control" />
+                            <select asp-for="Input.OperatorCountry" id="country-select"
+                                    class="form-select" asp-items="Model.Countries">
+                            </select>
                             <span asp-validation-for="Input.OperatorCountry" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
                             <label asp-for="Input.OperatorType" class="form-label"></label>
-                            <select asp-for="Input.OperatorType" class="form-select">
-                                <option value="">-- Select Type --</option>
-                                <option value="0">Government</option>
-                                <option value="1">Commercial</option>
-                                <option value="2">Amateur</option>
-                                <option value="3">Not One of the Above</option>
+                            <select asp-for="Input.OperatorType" class="form-select"
+                                    asp-items="Html.GetEnumSelectList<App.Domain.Entities.Enums.EOperatorType>()">
+                                <option value="">— Select type —</option>
                             </select>
                             <span asp-validation-for="Input.OperatorType" class="text-danger"></span>
                         </div>
@@ -91,9 +90,23 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
-        document.getElementById('registerAsOperator').addEventListener('change', function() {
-            var operatorFields = document.getElementById('operatorFields');
+        document.getElementById('registerAsOperator').addEventListener('change', function () {
+            const operatorFields = document.getElementById('operatorFields');
             operatorFields.style.display = this.checked ? 'block' : 'none';
         });
+
+        (function () {
+            const search = document.getElementById('country-search');
+            const select = document.getElementById('country-select');
+            const allOptions = Array.from(select.options);
+
+            search.addEventListener('input', function () {
+                const q = this.value.toLowerCase();
+                select.innerHTML = '';
+                allOptions
+                    .filter(o => o.text.toLowerCase().includes(q))
+                    .forEach(o => select.appendChild(o));
+            });
+        })();
     </script>
 }

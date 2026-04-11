@@ -1,0 +1,493 @@
+@using App.Application.DTO
+@{
+    ViewData["Title"] = "Orbital Sandbox";
+    var drafts = (List<DraftSatelliteDto>)ViewBag.Drafts;
+    var isAuthenticated = (bool)ViewBag.IsAuthenticated;
+}
+
+<link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/sandbox-ssa.css" asp-append-version="true" />
+
+<div class="ssa-container" style="padding-bottom: 0;">
+    <div class="system-bar">
+        <span class="status-dot"></span>
+        SANDBOX | ORBITAL DESIGNER — @(isAuthenticated ? "SIGNED IN · DRAFTS ENABLED" : "GUEST MODE · SIGN IN TO SAVE")
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-toast alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-1"></i>@TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-toast alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-circle me-1"></i>@TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+</div>
+
+<div class="ssa-container" style="padding-top: 0; height: calc(100vh - 130px);">
+    <div class="sandbox-layout">
+
+        <!-- LEFT: Canvas visualizer -->
+        <div class="sandbox-panel" style="grid-column: 1; grid-row: 1 / 3; padding: 0; overflow: hidden; position: relative;">
+            <div class="canvas-wrap">
+                <canvas id="orbitCanvas"></canvas>
+                <div class="orbit-badge" id="orbitTypeBadge">LEO</div>
+                <div class="orbit-stats">
+                    <div class="orbit-stat-item"><strong id="statPeriod">—</strong> period</div>
+                    <div class="orbit-stat-item"><strong id="statAlt">—</strong> altitude</div>
+                    <div class="orbit-stat-item"><strong id="statVel">—</strong> velocity</div>
+                    <div class="orbit-stat-item"><strong id="statInc">—</strong> inc</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT: Parameters panel -->
+        <div class="sandbox-panel" style="grid-column: 2; grid-row: 1 / 3; display: flex; flex-direction: column;">
+            <div class="panel-title">
+                <i class="bi bi-sliders"></i> Orbital Parameters
+            </div>
+
+            @if (isAuthenticated)
+            {
+                <div class="param-row">
+                    <div class="param-label">Satellite Name</div>
+                    <input type="text" id="draftName" class="param-name-input" placeholder="e.g. MyFirstSat" maxlength="120" value="MySandboxSat" />
+                </div>
+                <div class="param-row">
+                    <div class="param-label">Notes <span>(optional)</span></div>
+                    <textarea id="draftNotes" class="notes-input" rows="2" placeholder="Any notes…" maxlength="500"></textarea>
+                </div>
+                <hr class="divider" />
+            }
+
+            <div class="param-row">
+                <div class="param-label">Semi-Major Axis <span id="lblSma">km</span></div>
+                <input type="number" id="pSma" class="param-input" value="6871" min="6372" max="500000" step="10" />
+            </div>
+            <div class="param-row">
+                <div class="param-label">Eccentricity <span>0 – 0.999</span></div>
+                <input type="number" id="pEcc" class="param-input" value="0.001" min="0" max="0.999" step="0.001" />
+            </div>
+            <div class="param-row">
+                <div class="param-label">Inclination <span>degrees</span></div>
+                <input type="number" id="pInc" class="param-input" value="51.6" min="0" max="180" step="0.1" />
+            </div>
+            <div class="param-row">
+                <div class="param-label">RAAN <span>degrees</span></div>
+                <input type="number" id="pRaan" class="param-input" value="0" min="0" max="360" step="1" />
+            </div>
+            <div class="param-row">
+                <div class="param-label">Arg. of Perigee <span>degrees</span></div>
+                <input type="number" id="pArgp" class="param-input" value="0" min="0" max="360" step="1" />
+            </div>
+            <div class="param-row">
+                <div class="param-label">Mean Anomaly <span>degrees</span></div>
+                <input type="number" id="pMa" class="param-input" value="0" min="0" max="360" step="1" />
+            </div>
+
+            <hr class="divider" />
+
+            <!-- Presets -->
+            <div class="panel-title" style="margin-bottom: 0.5rem;">
+                <i class="bi bi-bookmarks"></i> Presets
+            </div>
+            <div class="d-flex flex-wrap gap-1 mb-3">
+                <button class="btn-ssa-ghost" style="font-size:0.7rem;padding:3px 9px;" onclick="loadPreset('iss')">ISS</button>
+                <button class="btn-ssa-ghost" style="font-size:0.7rem;padding:3px 9px;" onclick="loadPreset('geo')">GEO</button>
+                <button class="btn-ssa-ghost" style="font-size:0.7rem;padding:3px 9px;" onclick="loadPreset('gps')">GPS</button>
+                <button class="btn-ssa-ghost" style="font-size:0.7rem;padding:3px 9px;" onclick="loadPreset('polar')">Polar</button>
+                <button class="btn-ssa-ghost" style="font-size:0.7rem;padding:3px 9px;" onclick="loadPreset('molniya')">Molniya</button>
+            </div>
+
+            <div class="mt-auto save-section">
+                @if (isAuthenticated)
+                {
+                    <form id="saveForm" asp-controller="Sandbox" asp-action="Save" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="Name" id="hidName" />
+                        <input type="hidden" name="Notes" id="hidNotes" />
+                        <input type="hidden" name="SemiMajorAxis" id="hidSma" />
+                        <input type="hidden" name="Eccentricity" id="hidEcc" />
+                        <input type="hidden" name="Inclination" id="hidInc" />
+                        <input type="hidden" name="RAAN" id="hidRaan" />
+                        <input type="hidden" name="ArgumentOfPerigee" id="hidArgp" />
+                        <input type="hidden" name="MeanAnomaly" id="hidMa" />
+                        <button type="button" class="btn-ssa-primary w-100" onclick="submitSave()">
+                            <i class="bi bi-floppy"></i> Save Draft
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <div class="auth-prompt">
+                        <i class="bi bi-lock" style="font-size:1.1rem;color:#8a9bb0;"></i>
+                        <span><a asp-area="Identity" asp-page="/Account/Login">Sign in</a> or <a asp-area="Identity" asp-page="/Account/Register">register</a> to save your orbital designs.</span>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- BOTTOM: Drafts panel (auth only) -->
+        @if (isAuthenticated)
+        {
+            <div class="sandbox-panel drafts-panel">
+                <div class="panel-title">
+                    <i class="bi bi-collection"></i> My Saved Drafts
+                    <span style="margin-left:auto;font-size:0.75rem;color:#8a9bb0;font-weight:400;">click to load</span>
+                </div>
+
+                @if (drafts.Count == 0)
+                {
+                    <div style="font-size:0.8rem;color:#8a9bb0;padding:0.25rem 0;">
+                        No drafts yet — design an orbit and hit <strong>Save Draft</strong>.
+                    </div>
+                }
+                else
+                {
+                    <div class="draft-grid">
+                        @foreach (var d in drafts)
+                        {
+                            var sma  = d.SemiMajorAxis.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                            var ecc  = d.Eccentricity.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                            var inc  = d.Inclination.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                            var raan = d.RAAN.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                            var argp = d.ArgumentOfPerigee.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                            var ma   = d.MeanAnomaly.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                            <div class="draft-card"
+                                 onclick="loadDraft(@sma, @ecc, @inc, @raan, @argp, @ma, '@d.Name.Replace("'", "\\'")','@(d.Notes?.Replace("'", "\\'") ?? "")')">
+                                <div class="draft-card-icon"><i class="bi bi-stars"></i></div>
+                                <div class="draft-card-body">
+                                    <div class="draft-card-name">@d.Name</div>
+                                    <div class="draft-card-meta">
+                                        @d.OrbitType · @d.AltitudeKm.ToString("N0") km · @d.CreatedAt.ToString("MMM d")
+                                    </div>
+                                </div>
+                                <form asp-controller="Sandbox" asp-action="Delete" method="post" style="display:inline;" onsubmit="return confirm('Delete this draft?')">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@d.Id" />
+                                    <button type="submit" class="draft-card-del" title="Delete">
+                                        <i class="bi bi-trash3"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+<script>
+// ─── Orbital math helpers ───────────────────────────────────────────────
+const MU = 3.986004418e14; // Earth GM (m^3/s^2)
+const EARTH_R = 6371;      // km
+
+function solveKepler(M, e) {
+    let E = M;
+    for (let i = 0; i < 60; i++) {
+        const dE = (M - E + e * Math.sin(E)) / (1 - e * Math.cos(E));
+        E += dE;
+        if (Math.abs(dE) < 1e-10) break;
+    }
+    return E;
+}
+
+function trueAnomaly(E, e) {
+    return 2 * Math.atan2(Math.sqrt(1 + e) * Math.sin(E / 2), Math.sqrt(1 - e) * Math.cos(E / 2));
+}
+
+// Perifocal → ECI (Earth-Centred Inertial)
+function perifocalToECI(xP, yP, inc, raan, argp) {
+    const cO = Math.cos(raan), sO = Math.sin(raan);
+    const cI = Math.cos(inc),  sI = Math.sin(inc);
+    const cw = Math.cos(argp), sw = Math.sin(argp);
+    const X = (cO*cw - sO*sw*cI)*xP + (-cO*sw - sO*cw*cI)*yP;
+    const Y = (sO*cw + cO*sw*cI)*xP + (-sO*sw + cO*cw*cI)*yP;
+    const Z = (sw*sI)*xP         + (cw*sI)*yP;
+    return {X, Y, Z};
+}
+
+// Simple orthographic projection (camera from slightly above + side)
+const CAM_ELEV = 0.42;  // radians above equatorial plane
+const CAM_AZ   = 0.25;  // azimuth
+
+function project(X, Y, Z) {
+    const cosA = Math.cos(CAM_AZ), sinA = Math.sin(CAM_AZ);
+    const cosE = Math.cos(CAM_ELEV), sinE = Math.sin(CAM_ELEV);
+    const x1 = X*cosA - Y*sinA;
+    const y1 = X*sinA + Y*cosA;
+    const z1 = Z;
+    const sx = x1;
+    const sy = -(y1*cosE - z1*sinE);
+    return {sx, sy};
+}
+
+// ─── Canvas drawing ────────────────────────────────────────────────────
+const canvas = document.getElementById('orbitCanvas');
+const ctx    = canvas.getContext('2d');
+let animId   = null;
+let satAngle = 0; // animated mean anomaly offset
+
+function getParams() {
+    return {
+        a:    parseFloat(document.getElementById('pSma').value)  || 6871,
+        e:    parseFloat(document.getElementById('pEcc').value)  || 0,
+        inc:  (parseFloat(document.getElementById('pInc').value)  || 0)  * Math.PI/180,
+        raan: (parseFloat(document.getElementById('pRaan').value) || 0)  * Math.PI/180,
+        argp: (parseFloat(document.getElementById('pArgp').value) || 0)  * Math.PI/180,
+        ma0:  (parseFloat(document.getElementById('pMa').value)  || 0)   * Math.PI/180,
+    };
+}
+
+function drawFrame(ts) {
+    const p = getParams();
+
+    // Animate satellite: period-proportional angular speed
+    const periodS = 2 * Math.PI * Math.sqrt(Math.pow(p.a * 1000, 3) / MU);
+    const angSpeed = (2 * Math.PI) / periodS;
+    satAngle += angSpeed * 0.016 * 60; // ~16ms frame, 60× speed-up
+
+    const W = canvas.width, H = canvas.height;
+    const cx = W / 2, cy = H / 2;
+
+    // Scale to fit orbit in canvas
+    const apoapsis = p.a * (1 + p.e);
+    const rawScale = Math.min(W, H) * 0.41 / apoapsis;
+    const scale    = rawScale;
+    const earthPx  = Math.max(EARTH_R * scale, 10);
+
+    ctx.clearRect(0, 0, W, H);
+
+    // Background stars
+    drawStars(W, H);
+
+    // Earth glow
+    const ePrj = project(0, 0, 0);
+    const ex = cx + ePrj.sx * scale, ey = cy + ePrj.sy * scale;
+    const glow = ctx.createRadialGradient(ex, ey, earthPx * 0.5, ex, ey, earthPx * 3.5);
+    glow.addColorStop(0, 'rgba(74,144,217,0.25)');
+    glow.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = glow;
+    ctx.beginPath();
+    ctx.arc(ex, ey, earthPx * 3.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Orbit path
+    const steps = 240;
+    const orbitPts = [];
+    for (let i = 0; i <= steps; i++) {
+        const nu = (2 * Math.PI * i) / steps;
+        const r  = p.a * (1 - p.e*p.e) / (1 + p.e * Math.cos(nu));
+        const xP = r * Math.cos(nu), yP = r * Math.sin(nu);
+        const eci = perifocalToECI(xP, yP, p.inc, p.raan, p.argp);
+        const prj = project(eci.X, eci.Y, eci.Z);
+        orbitPts.push({ x: cx + prj.sx * scale, y: cy + prj.sy * scale });
+    }
+
+    // Draw orbit with gradient fade (simulate behind-Earth)
+    ctx.beginPath();
+    ctx.moveTo(orbitPts[0].x, orbitPts[0].y);
+    for (let i = 1; i < orbitPts.length; i++) ctx.lineTo(orbitPts[i].x, orbitPts[i].y);
+    ctx.closePath();
+    ctx.strokeStyle = 'rgba(100,160,255,0.55)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([]);
+    ctx.stroke();
+
+    // Earth sphere
+    const eg = ctx.createRadialGradient(ex - earthPx*0.28, ey - earthPx*0.28, earthPx*0.05, ex, ey, earthPx);
+    eg.addColorStop(0,   '#6bb8f0');
+    eg.addColorStop(0.4, '#2e6fa3');
+    eg.addColorStop(1,   '#0d2a4a');
+    ctx.beginPath();
+    ctx.arc(ex, ey, earthPx, 0, Math.PI * 2);
+    ctx.fillStyle = eg;
+    ctx.fill();
+
+    // Earth continent-ish highlight
+    ctx.beginPath();
+    ctx.arc(ex + earthPx*0.15, ey - earthPx*0.2, earthPx*0.28, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(60,140,60,0.25)';
+    ctx.fill();
+
+    // Equator ring (subtle)
+    const eqPts = [];
+    for (let i = 0; i <= 120; i++) {
+        const a = (2 * Math.PI * i) / 120;
+        const prj = project(EARTH_R * Math.cos(a) * 0.95, EARTH_R * Math.sin(a) * 0.95, 0);
+        eqPts.push({ x: cx + prj.sx * scale, y: cy + prj.sy * scale });
+    }
+    ctx.beginPath();
+    ctx.moveTo(eqPts[0].x, eqPts[0].y);
+    for (let i = 1; i < eqPts.length; i++) ctx.lineTo(eqPts[i].x, eqPts[i].y);
+    ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([3, 5]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Satellite position
+    const maNow = p.ma0 + satAngle;
+    const E_now = solveKepler(maNow, p.e);
+    const nu_now = trueAnomaly(E_now, p.e);
+    const r_now  = p.a * (1 - p.e * Math.cos(E_now));
+    const xPsat  = r_now * Math.cos(nu_now), yPsat = r_now * Math.sin(nu_now);
+    const eciSat = perifocalToECI(xPsat, yPsat, p.inc, p.raan, p.argp);
+    const prjSat = project(eciSat.X, eciSat.Y, eciSat.Z);
+    const sx = cx + prjSat.sx * scale, sy = cy + prjSat.sy * scale;
+
+    // Satellite glow
+    const sg = ctx.createRadialGradient(sx, sy, 0, sx, sy, 14);
+    sg.addColorStop(0, 'rgba(255,220,80,0.9)');
+    sg.addColorStop(1, 'rgba(255,180,0,0)');
+    ctx.fillStyle = sg;
+    ctx.beginPath();
+    ctx.arc(sx, sy, 14, 0, Math.PI*2);
+    ctx.fill();
+
+    // Satellite dot
+    ctx.beginPath();
+    ctx.arc(sx, sy, 4.5, 0, Math.PI*2);
+    ctx.fillStyle = '#ffd740';
+    ctx.fill();
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    updateStats(p);
+    animId = requestAnimationFrame(drawFrame);
+}
+
+// Static star field (drawn once into offscreen buffer)
+let starBuf = null;
+function drawStars(W, H) {
+    if (!starBuf || starBuf.width !== W || starBuf.height !== H) {
+        starBuf = new OffscreenCanvas(W, H);
+        const sc = starBuf.getContext('2d');
+        const rng = mulberry32(42);
+        sc.fillStyle = '#060d1a';
+        sc.fillRect(0, 0, W, H);
+        for (let i = 0; i < 180; i++) {
+            const x = rng() * W, y = rng() * H;
+            const r = rng() * 1.2 + 0.2;
+            const op = rng() * 0.7 + 0.3;
+            sc.beginPath();
+            sc.arc(x, y, r, 0, Math.PI*2);
+            sc.fillStyle = `rgba(255,255,255,${op})`;
+            sc.fill();
+        }
+    }
+    ctx.drawImage(starBuf, 0, 0);
+}
+
+function mulberry32(a) {
+    return function() {
+        a |= 0; a = a + 0x6D2B79F5 | 0;
+        let t = Math.imul(a ^ a >>> 15, 1 | a);
+        t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+        return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+}
+
+function updateStats(p) {
+    const altKm = p.a - EARTH_R;
+    const periodS = 2 * Math.PI * Math.sqrt(Math.pow(p.a * 1000, 3) / MU);
+    const periodMin = periodS / 60;
+    const velKms = Math.sqrt(MU / (p.a * 1000)) / 1000;
+
+    let periodStr = periodMin < 120 ? `${periodMin.toFixed(0)} min` : `${(periodMin/60).toFixed(1)} h`;
+    let altStr    = altKm > 999 ? `${(altKm/1000).toFixed(2)} Mm` : `${altKm.toFixed(0)} km`;
+    let velStr    = `${velKms.toFixed(2)} km/s`;
+    let incStr    = `${(p.inc * 180/Math.PI).toFixed(1)}°`;
+
+    document.getElementById('statPeriod').textContent = periodStr;
+    document.getElementById('statAlt').textContent    = altStr;
+    document.getElementById('statVel').textContent    = velStr;
+    document.getElementById('statInc').textContent    = incStr;
+
+    const altKmRaw = p.a - EARTH_R;
+    let type = altKmRaw < 2000 ? 'LEO' : altKmRaw < 35786 ? 'MEO' : altKmRaw < 35887 ? 'GEO' : 'HEO';
+    document.getElementById('orbitTypeBadge').textContent = type;
+
+    // Update SMA label
+    document.getElementById('lblSma').textContent = `${p.a.toFixed(0)} km  (alt: ${altKm.toFixed(0)} km)`;
+}
+
+// ─── Canvas resize ─────────────────────────────────────────────────────
+function resizeCanvas() {
+    const wrap = canvas.parentElement;
+    canvas.width  = wrap.clientWidth;
+    canvas.height = wrap.clientHeight;
+}
+
+// ─── Presets ───────────────────────────────────────────────────────────
+const PRESETS = {
+    iss:     { sma: 6781,   ecc: 0.0009, inc: 51.6, raan: 0,   argp: 0,  ma: 0 },
+    geo:     { sma: 42164,  ecc: 0.0001, inc: 0.05, raan: 0,   argp: 0,  ma: 0 },
+    gps:     { sma: 26560,  ecc: 0.01,   inc: 55.0, raan: 0,   argp: 0,  ma: 0 },
+    polar:   { sma: 7071,   ecc: 0.001,  inc: 98.6, raan: 0,   argp: 0,  ma: 0 },
+    molniya: { sma: 26560,  ecc: 0.72,   inc: 63.4, raan: 0,   argp: 270, ma: 0 },
+};
+
+function loadPreset(key) {
+    const q = PRESETS[key];
+    document.getElementById('pSma').value  = q.sma;
+    document.getElementById('pEcc').value  = q.ecc;
+    document.getElementById('pInc').value  = q.inc;
+    document.getElementById('pRaan').value = q.raan;
+    document.getElementById('pArgp').value = q.argp;
+    document.getElementById('pMa').value   = q.ma;
+    satAngle = 0;
+    if (document.getElementById('draftName'))
+        document.getElementById('draftName').value = key.charAt(0).toUpperCase() + key.slice(1) + '-1';
+}
+
+function loadDraft(sma, ecc, inc, raan, argp, ma, name, notes) {
+    document.getElementById('pSma').value  = sma;
+    document.getElementById('pEcc').value  = ecc;
+    document.getElementById('pInc').value  = inc;
+    document.getElementById('pRaan').value = raan;
+    document.getElementById('pArgp').value = argp;
+    document.getElementById('pMa').value   = ma;
+    satAngle = 0;
+    if (document.getElementById('draftName')) {
+        document.getElementById('draftName').value = name;
+        document.getElementById('draftNotes').value = notes;
+    }
+}
+
+// ─── Save form sync ────────────────────────────────────────────────────
+function submitSave() {
+    const name = document.getElementById('draftName')?.value?.trim();
+    if (!name) { alert('Please enter a satellite name.'); return; }
+    document.getElementById('hidName').value = name;
+    document.getElementById('hidNotes').value = document.getElementById('draftNotes')?.value ?? '';
+    document.getElementById('hidSma').value  = document.getElementById('pSma').value;
+    document.getElementById('hidEcc').value  = document.getElementById('pEcc').value;
+    document.getElementById('hidInc').value  = document.getElementById('pInc').value;
+    document.getElementById('hidRaan').value = document.getElementById('pRaan').value;
+    document.getElementById('hidArgp').value = document.getElementById('pArgp').value;
+    document.getElementById('hidMa').value   = document.getElementById('pMa').value;
+    document.getElementById('saveForm').submit();
+}
+
+// ─── Boot ──────────────────────────────────────────────────────────────
+window.addEventListener('load', () => {
+    resizeCanvas();
+    animId = requestAnimationFrame(drawFrame);
+});
+
+window.addEventListener('resize', () => {
+    resizeCanvas();
+    if (starBuf) starBuf = null; // regenerate stars
+});
+</script>
+}

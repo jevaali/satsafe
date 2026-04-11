@@ -19,7 +19,7 @@ public class AddOperatorUseCase
         {
             Id = Guid.NewGuid(),
             Name = request.Name,
-            Country = request.Country,
+            CountryCode = request.Country,
             OperatorType = request.OperatorType,
             CreatedBy = "system",
             CreatedAt = DateTime.UtcNow

@@ -119,6 +119,42 @@ namespace App.Infrastructure.Migrations
                     b.ToTable("ConjunctionEvents");
                 });
 
+            modelBuilder.Entity("App.Domain.Entities.DraftSatellite", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("DraftSatellites");
+                });
+
             modelBuilder.Entity("App.Domain.Entities.Identity.AppRefreshToken", b =>
                 {
                     b.Property<Guid>("Id")
@@ -303,10 +339,10 @@ namespace App.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Country")
+                    b.Property<string>("CountryCode")
                         .IsRequired()
                         .HasMaxLength(124)
-                        .HasColumnType("jsonb");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
@@ -749,6 +785,57 @@ namespace App.Infrastructure.Migrations
                     b.Navigation("PrimaryObject");
 
                     b.Navigation("SecondaryObject");
+                });
+
+            modelBuilder.Entity("App.Domain.Entities.DraftSatellite", b =>
+                {
+                    b.HasOne("App.Domain.Entities.Identity.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("App.Domain.ValueObjects.OrbitParameters", "Parameters", b1 =>
+                        {
+                            b1.Property<Guid>("DraftSatelliteId")
+                                .HasColumnType("TEXT");
+
+                            b1.Property<double>("ArgumentOfPerigee")
+                                .HasColumnType("REAL")
+                                .HasColumnName("ArgumentOfPerigee");
+
+                            b1.Property<double>("Eccentricity")
+                                .HasColumnType("REAL")
+                                .HasColumnName("Eccentricity");
+
+                            b1.Property<double>("Inclination")
+                                .HasColumnType("REAL")
+                                .HasColumnName("Inclination");
+
+                            b1.Property<double>("MeanAnomaly")
+                                .HasColumnType("REAL")
+                                .HasColumnName("MeanAnomaly");
+
+                            b1.Property<double>("RAAN")
+                                .HasColumnType("REAL")
+                                .HasColumnName("RAAN");
+
+                            b1.Property<double>("SemiMajorAxis")
+                                .HasColumnType("REAL")
+                                .HasColumnName("SemiMajorAxis");
+
+                            b1.HasKey("DraftSatelliteId");
+
+                            b1.ToTable("DraftSatellites");
+
+                            b1.WithOwner()
+                                .HasForeignKey("DraftSatelliteId");
+                        });
+
+                    b.Navigation("Parameters")
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("App.Domain.Entities.Identity.AppRefreshToken", b =>

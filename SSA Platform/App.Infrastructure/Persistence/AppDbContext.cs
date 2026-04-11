@@ -23,6 +23,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
     public DbSet<UserOperator> UserOperators { get; set; } = null!;
     
     public DbSet<AppRefreshToken> RefreshTokens { get; set; } = null!;
+    public DbSet<DraftSatellite> DraftSatellites { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -89,14 +90,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
             .HasColumnType("jsonb");
         
         
-        modelBuilder.Entity<Operator>().Property(e => e.Country)
-            .HasConversion(
-                v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
-                v => JsonSerializer.Deserialize<LangStr>(v, (JsonSerializerOptions?)null)!
-            )
-            .HasColumnType("jsonb");
-        
-        
         modelBuilder.Entity<Operator>().Property(e => e.OperatorTypeString)
             .HasConversion(
                 v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
@@ -110,6 +103,19 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
                 v => JsonSerializer.Deserialize<LangStr>(v, (JsonSerializerOptions?)null)!
             )
             .HasColumnType("jsonb");
-        
+
+        modelBuilder.Entity<DraftSatellite>(entity =>
+        {
+            entity.HasKey(d => d.Id);
+            entity.OwnsOne(d => d.Parameters, p =>
+            {
+                p.Property(pp => pp.SemiMajorAxis).HasColumnName("SemiMajorAxis");
+                p.Property(pp => pp.Eccentricity).HasColumnName("Eccentricity");
+                p.Property(pp => pp.Inclination).HasColumnName("Inclination");
+                p.Property(pp => pp.RAAN).HasColumnName("RAAN");
+                p.Property(pp => pp.ArgumentOfPerigee).HasColumnName("ArgumentOfPerigee");
+                p.Property(pp => pp.MeanAnomaly).HasColumnName("MeanAnomaly");
+            });
+        });
     }
 }

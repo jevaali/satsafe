@@ -85,7 +85,7 @@ public static class AppDataInit
         {
             Id           = Guid.NewGuid(),
             Name         = "SSA-TEST-OPS",
-            Country      = "Estonia",
+            CountryCode      = "EE",
             OperatorType = EOperatorType.Commercial,
             CreatedAt    = DateTime.UtcNow,
             CreatedBy    = "seed"

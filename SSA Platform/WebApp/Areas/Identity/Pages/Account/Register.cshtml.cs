@@ -1,9 +1,11 @@
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using App.Application.DTO;
 using App.Application.UseCases;
 using App.Domain.Entities.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace WebApp.Areas.Identity.Pages.Account;
 
@@ -24,10 +26,12 @@ public class RegisterModel : PageModel
     public InputModel Input { get; set; } = new();
 
     public string? ReturnUrl { get; set; }
+    public List<SelectListItem> Countries { get; set; } = [];
 
     public void OnGet(string? returnUrl = null)
     {
         ReturnUrl = returnUrl;
+        Countries = BuildCountryList();
     }
 
     public async Task<IActionResult> OnPostAsync(string? returnUrl = null)
@@ -56,6 +60,7 @@ public class RegisterModel : PageModel
         if (!success)
         {
             ModelState.AddModelError(string.Empty, error ?? "Registration failed");
+            Countries = BuildCountryList(Input.OperatorCountry);
             return Page();
         }
 
@@ -63,6 +68,31 @@ public class RegisterModel : PageModel
         
         // For now, redirect to login with success message
         return RedirectToPage("./Login", new { returnUrl });
+    }
+
+    private static List<SelectListItem> BuildCountryList(string? selectedCode = null)
+    {
+        var seen = new HashSet<string>();
+        var items = CultureInfo
+            .GetCultures(CultureTypes.SpecificCultures)
+            .Select(c =>
+            {
+                try { return new RegionInfo(c.Name); }
+                catch { return null; }
+            })
+            .Where(r => r != null && seen.Add(r.TwoLetterISORegionName))
+            .OrderBy(r => r!.DisplayName)
+            .Select(r => new SelectListItem
+            {
+                Value    = r!.TwoLetterISORegionName,
+                Text     = r.DisplayName,
+                Selected = string.Equals(r.TwoLetterISORegionName, selectedCode,
+                                         StringComparison.OrdinalIgnoreCase)
+            })
+            .ToList();
+
+        items.Insert(0, new SelectListItem { Value = "", Text = "— Select country —" });
+        return items;
     }
 
     public class InputModel

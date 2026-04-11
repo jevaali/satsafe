@@ -12,65 +12,70 @@
 </head>
 <body class="d-flex flex-column min-vh-100">
 <header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-        <div class="container">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SatSafe</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
-                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+<div class="container">
+<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SatSafe</a>
+<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+</button>
 
-            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    @if (User.Identity is { IsAuthenticated: false })
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="MainList" asp-action="Index">
-                                @App.Resources.Views.Header.AllSpaceObjects
-                            </a>
-                        </li>
-                    }
+<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+    <ul class="navbar-nav flex-grow-1">
+        @if (User.Identity is { IsAuthenticated: false })
+        {
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="MainList" asp-action="Index">
+                    @App.Resources.Views.Header.AllSpaceObjects
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Sandbox" asp-action="Index">
+                    @App.Resources.Views.Header.Sandbox
+                </a>
+            </li>
+        }
                     
-                    @if (User.IsInRole("Operator") || User.IsInRole("OperatorHelper"))
-                    {
-                        @await Component.InvokeAsync("OperatorHeader")
-                    }
+        @if (User.IsInRole("Operator") || User.IsInRole("OperatorHelper"))
+        {
+            @await Component.InvokeAsync("OperatorHeader")
+        }
                     
-                    @if (User.IsInRole("User"))
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="MainList" asp-action="Index">
-                                @App.Resources.Views.Header.MySatellites
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Sandbox" asp-controller="Sandbox" asp-action="Index">
-                                @App.Resources.Views.Header.Sandbox
-                            </a>
-                        </li>
-                    }
+        @if (User.IsInRole("User"))
+        {
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="MainList" asp-action="Index">
+                    @App.Resources.Views.Header.MySatellites
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Sandbox" asp-action="Index">
+                    @App.Resources.Views.Header.Sandbox
+                </a>
+            </li>
+            }
 
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                               aria-expanded="false">Admin</a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="Operator" asp-action="Index">Operators</a></li>
-                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="Satellite" asp-action="Index">Satellites</a></li>
-                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="ConjunctionEvent" asp-action="Index">Conjunction Events</a></li>
-                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="Alert" asp-action="Index">Alerts</a></li>
-                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="RiskAssessment" asp-action="Index">Risk Assessments</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="TleRecord" asp-action="Index">TLE Records</a></li>
-                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="UserOperator" asp-action="Index">User–Operator Links</a></li>
-                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="NotificationSetting" asp-action="Index">Notification Settings</a></li>
-                            </ul>
-                        </li>
-                    }
-                </ul>
-                <partial name="_LoginPartial"/>
-            </div>
+            @if (User.IsInRole("Admin"))
+            {
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                       aria-expanded="false">Admin</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="Operator" asp-action="Index">Operators</a></li>
+                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="Satellite" asp-action="Index">Satellites</a></li>
+                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="ConjunctionEvent" asp-action="Index">Conjunction Events</a></li>
+                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="Alert" asp-action="Index">Alerts</a></li>
+                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="RiskAssessment" asp-action="Index">Risk Assessments</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="TleRecord" asp-action="Index">TLE Records</a></li>
+                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="UserOperator" asp-action="Index">User–Operator Links</a></li>
+                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="NotificationSetting" asp-action="Index">Notification Settings</a></li>
+                    </ul>
+                </li>
+            }
+    </ul>
+    <partial name="_LoginPartial"/>
+</div>
         </div>
     </nav>
 </header>

@@ -1,3 +1,4 @@
+@using App.Domain.Entities.Enums
 @model App.Domain.Entities.Operator
 
 @{
@@ -33,13 +34,20 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Country" class="control-label"></label>
-                <input asp-for="Country" class="form-control" />
-                <span asp-validation-for="Country" class="text-danger"></span>
+                <label asp-for="CountryCode" class="control-label"></label>
+                <input id="country-search" type="text" class="form-control mb-1"
+                       placeholder="Search country…" autocomplete="off" />
+                <select asp-for="CountryCode" id="country-select"
+                        class="form-select" asp-items="ViewBag.Countries">
+                </select>
+                <span asp-validation-for="CountryCode" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="OperatorType" class="control-label"></label>
-                <input asp-for="OperatorType" class="form-control" />
+                <select asp-for="OperatorType" class="form-select"
+                        asp-items="Html.GetEnumSelectList<EOperatorType>()">
+                    <option value="">— Select type —</option>
+                </select>
                 <span asp-validation-for="OperatorType" class="text-danger"></span>
             </div>
 
@@ -56,4 +64,21 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        (function () {
+            const search = document.getElementById('country-search');
+            const select = document.getElementById('country-select');
+            const allOptions = Array.from(select.options);
+
+            search.addEventListener('input', function () {
+                const q = this.value.toLowerCase();
+                select.innerHTML = '';
+                allOptions
+                    .filter(o => o.text.toLowerCase().includes(q))
+                    .forEach(o => select.appendChild(o));
+                if (select.options.length > 0 && !select.value)
+                    select.selectedIndex = 0;
+            });
+        })();
+    </script>
 }

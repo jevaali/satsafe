@@ -71,7 +71,7 @@ public class RegisterOperatorUseCase
                 {
                     Id = Guid.NewGuid(),
                     Name = request.OperatorName!,
-                    Country = request.OperatorCountry!,
+                    CountryCode = request.OperatorCountry!,
                     OperatorType = request.OperatorType!.Value,
                     CreatedBy = appUser.Id.ToString(),
                     CreatedAt = DateTime.UtcNow

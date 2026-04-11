@@ -18,7 +18,7 @@ public class UpdateOperatorSettingsUseCase
             ?? throw new Exception("Operator not found");
 
         op.Name = request.Name;
-        op.Country = request.Country;
+        op.CountryCode = request.Country;
         op.OperatorType = request.OperatorType;
 
         await _uow.Operators.UpdateAsync(op);

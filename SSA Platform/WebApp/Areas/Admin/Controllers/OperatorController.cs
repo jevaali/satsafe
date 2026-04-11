@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -51,23 +52,25 @@ namespace WebApp.Areas.Admin.Controllers
         // GET: Admin/Operator/Create
         public IActionResult Create()
         {
+            ViewBag.Countries = GetCountrySelectList();
             return View();
         }
 
         // POST: Admin/Operator/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Country,Type,Id")] App.Domain.Entities.Operator @operator)
+        public async Task<IActionResult> Create([Bind("Name,CountryCode,OperatorType,Id")] App.Domain.Entities.Operator @operator)
         {
             if (ModelState.IsValid)
             {
                 @operator.Id = Guid.NewGuid();
+                @operator.CreatedBy = User.Identity?.Name ?? "admin";
+                @operator.CreatedAt = DateTime.UtcNow;
                 _context.Add(@operator);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.Countries = GetCountrySelectList(@operator.CountryCode);
             return View(@operator);
         }
 
@@ -84,15 +87,14 @@ namespace WebApp.Areas.Admin.Controllers
             {
                 return NotFound();
             }
+            ViewBag.Countries = GetCountrySelectList(@operator.CountryCode);
             return View(@operator);
         }
 
         // POST: Admin/Operator/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Name,Country,Type,Id")] App.Domain.Entities.Operator @operator)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Name,CountryCode,OperatorType,Id")] App.Domain.Entities.Operator @operator)
         {
             if (id != @operator.Id)
             {
@@ -119,6 +121,7 @@ namespace WebApp.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.Countries = GetCountrySelectList(@operator.CountryCode);
             return View(@operator);
         }
 
@@ -158,6 +161,31 @@ namespace WebApp.Areas.Admin.Controllers
         private bool OperatorExists(Guid id)
         {
             return _context.Operators.Any(e => e.Id == id);
+        }
+
+        private static List<SelectListItem> GetCountrySelectList(string? selectedCode = null)
+        {
+            var seen = new HashSet<string>();
+            var items = CultureInfo
+                .GetCultures(CultureTypes.SpecificCultures)
+                .Select(c =>
+                {
+                    try { return new RegionInfo(c.Name); }
+                    catch { return null; }
+                })
+                .Where(r => r != null && seen.Add(r.TwoLetterISORegionName))
+                .OrderBy(r => r!.DisplayName)
+                .Select(r => new SelectListItem
+                {
+                    Value = r!.TwoLetterISORegionName,
+                    Text  = r.DisplayName,
+                    Selected = string.Equals(r.TwoLetterISORegionName, selectedCode,
+                                             StringComparison.OrdinalIgnoreCase)
+                })
+                .ToList();
+
+            items.Insert(0, new SelectListItem { Value = "", Text = "— Select country —" });
+            return items;
         }
     }
 }

@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using WebApp.Infrastructure;
 using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -44,6 +45,9 @@ builder.Services.AddScoped<AddHelperUseCase>();
 builder.Services.AddScoped<RemoveHelperUseCase>();
 builder.Services.AddScoped<SaveNotificationsUseCase>();
 builder.Services.AddScoped<UpdateAlertMessageUseCase>();
+builder.Services.AddScoped<SaveDraftSatelliteUseCase>();
+builder.Services.AddScoped<GetUserDraftsUseCase>();
+builder.Services.AddScoped<DeleteDraftSatelliteUseCase>();
 
 builder.Services.AddScoped<ConjunctionAnalysisService>();
 
@@ -55,6 +59,7 @@ builder.Services.AddScoped<IConjunctionEventRepository, ConjunctionEventReposito
 builder.Services.AddScoped<IAlertRepository, AlertRepository>();
 builder.Services.AddScoped<ISpaceObjectsRepository, SpaceObjectsRepository>();
 builder.Services.AddScoped<INotificationSettingRepository, NotificationSettingRepository>();
+builder.Services.AddScoped<IDraftSatelliteRepository, DraftSatelliteRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services
@@ -63,7 +68,10 @@ builder.Services
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{
+    options.ModelBinderProviders.Insert(0, new InvariantDoubleModelBinderProvider());
+});
 
 var supportedCultures = builder.Configuration
     .GetSection("SupportedCultures")

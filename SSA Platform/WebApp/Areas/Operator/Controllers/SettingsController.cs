@@ -188,7 +188,7 @@ public class SettingsController : Controller
         OperatorForm = new UpdateOperatorForm
         {
             Name = settings.Operator.Name,
-            Country = settings.Operator.Country,
+            Country = settings.Operator.CountryCode,
             OperatorType = settings.Operator.OperatorType
         },
         NotificationForm = settings.NotificationSetting == null ? new NotificationForm() : new NotificationForm
