@@ -14,7 +14,7 @@ namespace App.Resources.Enums {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Enums {
+    public class Enums {
         
         private static System.Resources.ResourceManager resourceMan;
         
@@ -25,7 +25,7 @@ namespace App.Resources.Enums {
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static System.Resources.ResourceManager ResourceManager {
+        public static System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.Equals(null, resourceMan)) {
                     System.Resources.ResourceManager temp = new System.Resources.ResourceManager("App.Resources.Enums.Enums", typeof(Enums).Assembly);
@@ -36,7 +36,7 @@ namespace App.Resources.Enums {
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static System.Globalization.CultureInfo Culture {
+        public static System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -45,25 +45,25 @@ namespace App.Resources.Enums {
             }
         }
         
-        internal static string EAlertSeverity_Low {
+        public static string EAlertSeverity_Low {
             get {
                 return ResourceManager.GetString("EAlertSeverity_Low", resourceCulture);
             }
         }
         
-        internal static string EAlertSeverity_Medium {
+        public static string EAlertSeverity_Medium {
             get {
                 return ResourceManager.GetString("EAlertSeverity_Medium", resourceCulture);
             }
         }
         
-        internal static string EAlertSeverity_High {
+        public static string EAlertSeverity_High {
             get {
                 return ResourceManager.GetString("EAlertSeverity_High", resourceCulture);
             }
         }
         
-        internal static string EAlertSeverity_Critical {
+        public static string EAlertSeverity_Critical {
             get {
                 return ResourceManager.GetString("EAlertSeverity_Critical", resourceCulture);
             }

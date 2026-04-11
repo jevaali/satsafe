@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebApp.Areas.Operator.Controllers;
 
 [Area("Operator")]
-[Authorize]
+[Authorize (Roles = "Operator")]
 public class HomeController : Controller
 {
     private readonly GetOperatorDashboardUseCase _getDashboardUseCase;

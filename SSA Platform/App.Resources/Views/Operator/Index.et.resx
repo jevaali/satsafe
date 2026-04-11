@@ -67,4 +67,13 @@
     <data name="Label_Miss" xml:space="preserve">
         <value>Möödumiskaugus</value>
     </data>
+    <data name="SYSTEM" xml:space="preserve">
+        <value>SÜSTEEM</value>
+    </data>
+    <data name="NOMINAL" xml:space="preserve">
+        <value>NORMAALNE</value>
+    </data>
+    <data name="OPERATOR" xml:space="preserve">
+        <value>OPERAATOR</value>
+    </data>
 </root>

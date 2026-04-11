@@ -146,5 +146,23 @@ namespace App.Resources.Views.Operator {
                 return ResourceManager.GetString("Label_Miss", resourceCulture);
             }
         }
+        
+        public static string SYSTEM {
+            get {
+                return ResourceManager.GetString("SYSTEM", resourceCulture);
+            }
+        }
+        
+        public static string NOMINAL {
+            get {
+                return ResourceManager.GetString("NOMINAL", resourceCulture);
+            }
+        }
+        
+        public static string OPERATOR {
+            get {
+                return ResourceManager.GetString("OPERATOR", resourceCulture);
+            }
+        }
     }
 }
