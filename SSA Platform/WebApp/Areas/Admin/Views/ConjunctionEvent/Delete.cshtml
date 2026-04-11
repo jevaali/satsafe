@@ -1,67 +1,38 @@
-@model App.Domain.Entities.ConjunctionEvent
+@model ConjunctionEventDeleteViewModel
 
 @{
     ViewData["Title"] = "Delete Conjunction Event";
 }
 
-<link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
-
-<div class="ssa-container">
-
-    <div class="system-bar">
-        <span class="status-dot"></span>
-        ADMIN | CONJUNCTION EVENTS | DELETE
+<div class="admin-page-header">
+    <div>
+        <div class="admin-page-title">Delete Conjunction Event</div>
+        <div class="admin-page-subtitle">Confirm permanent removal</div>
     </div>
+    <a asp-action="Index" class="btn-ssa-ghost"><i class="bi bi-arrow-left"></i> Back</a>
+</div>
 
-    <div class="header">
+<div class="card admin-form">
+    <div class="delete-warning">
+        <i class="bi bi-exclamation-triangle-fill delete-warning-icon"></i>
         <div>
-            <h3>Delete Conjunction Event</h3>
-            <small>Confirm permanent removal</small>
-        </div>
-        <div>
-            <a asp-action="Index" class="btn-ssa-ghost"><i class="bi bi-arrow-left"></i> Back</a>
+            <div class="delete-warning-title">This action cannot be undone</div>
+            <div class="delete-warning-text">Deleting this conjunction event will also remove associated alerts and risk assessments.</div>
         </div>
     </div>
 
-    <div class="card">
-        <div class="delete-warning">
-            <i class="bi bi-exclamation-triangle-fill delete-warning-icon"></i>
-            <div>
-                <div class="delete-warning-title">This action cannot be undone</div>
-                <div class="delete-warning-text">Deleting this conjunction event will also remove associated alerts and risk assessments.</div>
-            </div>
+    <dl class="admin-detail-grid mb-4">
+        <div class="admin-detail-item"><dt>Primary Object</dt><dd>@Model.PrimaryObjectName</dd></div>
+        <div class="admin-detail-item"><dt>Secondary Object</dt><dd>@Model.SecondaryObjectName</dd></div>
+        <div class="admin-detail-item"><dt>TCA (UTC)</dt><dd>@Model.Tca.ToString("yyyy-MM-dd HH:mm")</dd></div>
+        <div class="admin-detail-item"><dt>Status</dt><dd>@Model.Status</dd></div>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <div class="admin-form-actions">
+            <button type="submit" class="btn-ssa-danger"><i class="bi bi-trash"></i> Delete Event</button>
+            <a asp-action="Index" class="btn-ssa-ghost">Cancel</a>
         </div>
-
-        <dl class="admin-detail-grid" style="margin-bottom:1.5rem;">
-            <div class="admin-detail-item">
-                <dt>Primary Object</dt>
-                <dd>@(Model.PrimaryObject?.NoradId.ToString() ?? Model.PrimaryObjectId.ToString()[..8])</dd>
-            </div>
-            <div class="admin-detail-item">
-                <dt>Secondary Object</dt>
-                <dd>@(Model.SecondaryObject?.NoradId.ToString() ?? Model.SecondaryObjectId.ToString()[..8])</dd>
-            </div>
-            <div class="admin-detail-item">
-                <dt>@Html.DisplayNameFor(m => m.TimeOfClosestApproach)</dt>
-                <dd>@Model.TimeOfClosestApproach.ToString("yyyy-MM-dd HH:mm")</dd>
-            </div>
-            <div class="admin-detail-item">
-                <dt>@Html.DisplayNameFor(m => m.MissDistance)</dt>
-                <dd>@(Model.MissDistance < 1000 ? $"{Model.MissDistance:N0} m" : $"{Model.MissDistance / 1000:F2} km")</dd>
-            </div>
-            <div class="admin-detail-item">
-                <dt>@Html.DisplayNameFor(m => m.Status)</dt>
-                <dd>@Model.Status</dd>
-            </div>
-        </dl>
-
-        <form asp-action="Delete">
-            <input type="hidden" asp-for="Id" />
-            <div class="admin-form-actions">
-                <button type="submit" class="btn-ssa-danger"><i class="bi bi-trash"></i> Delete Event</button>
-                <a asp-action="Index" class="btn-ssa-ghost">Cancel</a>
-            </div>
-        </form>
-    </div>
-
+    </form>
 </div>

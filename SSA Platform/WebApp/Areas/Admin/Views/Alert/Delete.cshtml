@@ -1,63 +1,38 @@
-@model App.Domain.Entities.Alert
+@model AlertDeleteViewModel
 
 @{
     ViewData["Title"] = "Delete Alert";
 }
 
-<link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
-
-<div class="ssa-container">
-
-    <div class="system-bar">
-        <span class="status-dot"></span>
-        ADMIN | ALERTS | DELETE
+<div class="admin-page-header">
+    <div>
+        <div class="admin-page-title">Delete Alert</div>
+        <div class="admin-page-subtitle">Confirm permanent removal</div>
     </div>
+    <a asp-action="Index" class="btn-ssa-ghost"><i class="bi bi-arrow-left"></i> Back</a>
+</div>
 
-    <div class="header">
+<div class="card admin-form">
+    <div class="delete-warning">
+        <i class="bi bi-exclamation-triangle-fill delete-warning-icon"></i>
         <div>
-            <h3>Delete Alert</h3>
-            <small>Confirm permanent removal</small>
-        </div>
-        <div>
-            <a asp-action="Index" class="btn-ssa-ghost"><i class="bi bi-arrow-left"></i> Back</a>
+            <div class="delete-warning-title">This action cannot be undone</div>
+            <div class="delete-warning-text">Deleting this alert will remove the record permanently.</div>
         </div>
     </div>
 
-    <div class="card">
-        <div class="delete-warning">
-            <i class="bi bi-exclamation-triangle-fill delete-warning-icon"></i>
-            <div>
-                <div class="delete-warning-title">This action cannot be undone</div>
-                <div class="delete-warning-text">Deleting this alert will remove the record permanently.</div>
-            </div>
+    <dl class="admin-detail-grid mb-4">
+        <div class="admin-detail-item"><dt>Severity</dt><dd>@Model.Severity</dd></div>
+        <div class="admin-detail-item"><dt>Acknowledged</dt><dd>@(Model.IsAcknowledged ? "Yes" : "No")</dd></div>
+        <div class="admin-detail-item"><dt>User</dt><dd>@Model.UserName</dd></div>
+        <div class="admin-detail-item" style="grid-column:1/-1;"><dt>Message</dt><dd>@(Model.Message.Length > 0 ? Model.Message : "—")</dd></div>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <div class="admin-form-actions">
+            <button type="submit" class="btn-ssa-danger"><i class="bi bi-trash"></i> Delete Alert</button>
+            <a asp-action="Index" class="btn-ssa-ghost">Cancel</a>
         </div>
-
-        <dl class="admin-detail-grid" style="margin-bottom:1.5rem;">
-            <div class="admin-detail-item">
-                <dt>@Html.DisplayNameFor(m => m.Severity)</dt>
-                <dd>@Model.Severity</dd>
-            </div>
-            <div class="admin-detail-item">
-                <dt>@Html.DisplayNameFor(m => m.IsAcknowledged)</dt>
-                <dd>@(Model.IsAcknowledged ? "Yes" : "No")</dd>
-            </div>
-            <div class="admin-detail-item">
-                <dt>User</dt>
-                <dd>@(Model.User != null ? $"{Model.User.FirstName} {Model.User.LastName}".Trim() : "—")</dd>
-            </div>
-            <div class="admin-detail-item">
-                <dt>Conjunction Event</dt>
-                <dd>@(Model.ConjunctionEvent?.Status.ToString() ?? "—")</dd>
-            </div>
-        </dl>
-
-        <form asp-action="Delete">
-            <input type="hidden" asp-for="Id" />
-            <div class="admin-form-actions">
-                <button type="submit" class="btn-ssa-danger"><i class="bi bi-trash"></i> Delete Alert</button>
-                <a asp-action="Index" class="btn-ssa-ghost">Cancel</a>
-            </div>
-        </form>
-    </div>
-
+    </form>
 </div>

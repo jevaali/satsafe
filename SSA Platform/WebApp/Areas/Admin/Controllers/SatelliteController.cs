@@ -1,173 +1,252 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using App.Domain.Entities;
+using App.Domain.Entities.Enums;
+using App.Infrastructure.Persistence;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using App.Domain;
-using App.Domain.Entities;
-using App.Infrastructure.Persistence;
+using WebApp.Areas.Admin.ViewModels;
 
-namespace WebApp.Areas.Admin.Controllers
+namespace WebApp.Areas.Admin.Controllers;
+
+[Area("Admin")]
+[Authorize(Roles = "Admin")]
+public class SatelliteController : Controller
 {
-    [Area("Admin")]
-    public class SatelliteController : Controller
+    private readonly AppDbContext _context;
+
+    public SatelliteController(AppDbContext context)
     {
-        private readonly AppDbContext _context;
+        _context = context;
+    }
 
-        public SatelliteController(AppDbContext context)
-        {
-            _context = context;
-        }
+    // GET: Admin/Satellite
+    public async Task<IActionResult> Index()
+    {
+        var satellites = await _context.Satellites
+            .Include(s => s.Orbit)
+            .Include(s => s.Operator)
+            .ToListAsync();
+        satellites = satellites.OrderBy(s => s.Name.ToString()).ToList();
 
-        // GET: Admin/Satellite
-        public async Task<IActionResult> Index()
+        var vm = new SatelliteIndexViewModel
         {
-            var appDbContext = _context.Satellites.Include(s => s.Orbit).Include(s => s.Operator);
-            return View(await appDbContext.ToListAsync());
-        }
-
-        // GET: Admin/Satellite/Details/5
-        public async Task<IActionResult> Details(Guid? id)
-        {
-            if (id == null)
+            TotalCount   = satellites.Count,
+            ActiveCount  = satellites.Count(s => s.Status == ESatelliteStatus.Active),
+            DeletedCount = satellites.Count(s => s.Status == ESatelliteStatus.Deleted),
+            Satellites   = satellites.Select(s => new SatelliteListItemViewModel
             {
-                return NotFound();
+                Id               = s.Id,
+                Name             = s.Name.ToString(),
+                NoradId          = s.NoradId,
+                LaunchDate       = s.LaunchDate,
+                Status           = s.Status,
+                OperatorName     = s.Operator?.Name.ToString() ?? s.OperatorName ?? "—",
+                SemiMajorAxis    = s.Orbit?.Parameters.SemiMajorAxis,
+                Inclination      = s.Orbit?.Parameters.Inclination,
+                RAAN             = s.Orbit?.Parameters.RAAN,
+                ArgumentOfPerigee= s.Orbit?.Parameters.ArgumentOfPerigee,
+                MeanAnomaly      = s.Orbit?.Parameters.MeanAnomaly
+            })
+        };
+        return View(vm);
+    }
+
+    // GET: Admin/Satellite/Details/5
+    public async Task<IActionResult> Details(Guid? id)
+    {
+        if (id == null) return NotFound();
+
+        var s = await _context.Satellites
+            .Include(s => s.Orbit)
+            .Include(s => s.Operator)
+            .FirstOrDefaultAsync(s => s.Id == id);
+
+        if (s == null) return NotFound();
+
+        var vm = new SatelliteDetailViewModel
+        {
+            Id               = s.Id,
+            Name             = s.Name.ToString(),
+            NoradId          = s.NoradId,
+            LaunchDate       = s.LaunchDate,
+            Status           = s.Status,
+            OperatorName     = s.Operator?.Name.ToString() ?? s.OperatorName ?? "—",
+            OperatorId       = s.OperatorId,
+            SemiMajorAxis    = s.Orbit?.Parameters.SemiMajorAxis,
+            Eccentricity     = s.Orbit?.Parameters.Eccentricity,
+            Inclination      = s.Orbit?.Parameters.Inclination,
+            RAAN             = s.Orbit?.Parameters.RAAN,
+            ArgumentOfPerigee= s.Orbit?.Parameters.ArgumentOfPerigee,
+            MeanAnomaly      = s.Orbit?.Parameters.MeanAnomaly,
+            CreatedBy        = s.CreatedBy,
+            CreatedAt        = s.CreatedAt,
+            UpdatedBy        = s.UpdatedBy,
+            UpdatedAt        = s.UpdatedAt
+        };
+        return View(vm);
+    }
+
+    // GET: Admin/Satellite/Create
+    public async Task<IActionResult> Create()
+    {
+        var vm = new SatelliteFormViewModel
+        {
+            LaunchDate       = DateTime.UtcNow,
+            OperatorOptions  = await BuildOperatorSelectListAsync()
+        };
+        return View(vm);
+    }
+
+    // POST: Admin/Satellite/Create
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(SatelliteFormViewModel vm)
+    {
+        if (ModelState.IsValid)
+        {
+            Satellite sat;
+            if (vm.OperatorId.HasValue)
+            {
+                var op = await _context.Operators.FindAsync(vm.OperatorId.Value);
+                if (op != null)
+                {
+                    sat = Satellite.Create(vm.Name, vm.LaunchDate, op);
+                }
+                else
+                {
+                    sat = Satellite.CreateFromExternalData(vm.Name, vm.LaunchDate, null, null);
+                }
+            }
+            else
+            {
+                sat = Satellite.CreateFromExternalData(vm.Name, vm.LaunchDate, null, null);
             }
 
-            var satellite = await _context.Satellites
-                .Include(s => s.Orbit)
-                .Include(s => s.Operator)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (satellite == null)
+            sat.NoradId = vm.NoradId;
+
+            // Apply requested status if different from default Active
+            if (vm.Status != ESatelliteStatus.Active)
             {
-                return NotFound();
-            }
-
-            return View(satellite);
-        }
-
-        // GET: Admin/Satellite/Create
-        public IActionResult Create()
-        {
-            ViewData["OrbitId"] = new SelectList(_context.Orbits, "Id", "Id");
-            ViewData["OperatorId"] = new SelectList(_context.Operators, "Id", "Country");
-            return View();
-        }
-
-        // POST: Admin/Satellite/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,LaunchDate,Status,OperatorId,NoradId,OrbitId,Id")] Satellite satellite)
-        {
-            if (ModelState.IsValid)
-            {
-                satellite.Id = Guid.NewGuid();
-                _context.Add(satellite);
+                _context.Add(sat);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                // Use EF entry to set private Status
+                _context.Entry(sat).CurrentValues.SetValues(new { Status = vm.Status });
+                await _context.SaveChangesAsync();
             }
-            ViewData["OrbitId"] = new SelectList(_context.Orbits, "Id", "Id", satellite.OrbitId);
-            ViewData["OperatorId"] = new SelectList(_context.Operators, "Id", "Country", satellite.OperatorId);
-            return View(satellite);
+            else
+            {
+                _context.Add(sat);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Index));
         }
+        vm.OperatorOptions = await BuildOperatorSelectListAsync(vm.OperatorId);
+        return View(vm);
+    }
 
-        // GET: Admin/Satellite/Edit/5
-        public async Task<IActionResult> Edit(Guid? id)
+    // GET: Admin/Satellite/Edit/5
+    public async Task<IActionResult> Edit(Guid? id)
+    {
+        if (id == null) return NotFound();
+
+        var s = await _context.Satellites
+            .Include(s => s.Operator)
+            .FirstOrDefaultAsync(s => s.Id == id);
+        if (s == null) return NotFound();
+
+        var vm = new SatelliteFormViewModel
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            Id              = s.Id,
+            Name            = s.Name.ToString(),
+            NoradId         = s.NoradId,
+            LaunchDate      = s.LaunchDate,
+            Status          = s.Status,
+            OperatorId      = s.OperatorId,
+            OperatorOptions = await BuildOperatorSelectListAsync(s.OperatorId)
+        };
+        return View(vm);
+    }
 
-            var satellite = await _context.Satellites.FindAsync(id);
-            if (satellite == null)
-            {
-                return NotFound();
-            }
-            ViewData["OrbitId"] = new SelectList(_context.Orbits, "Id", "Id", satellite.OrbitId);
-            ViewData["OperatorId"] = new SelectList(_context.Operators, "Id", "Country", satellite.OperatorId);
-            return View(satellite);
-        }
+    // POST: Admin/Satellite/Edit/5
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(Guid id, SatelliteFormViewModel vm)
+    {
+        if (id != vm.Id) return NotFound();
 
-        // POST: Admin/Satellite/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Name,LaunchDate,Status,OperatorId,NoradId,OrbitId,Id")] Satellite satellite)
+        if (ModelState.IsValid)
         {
-            if (id != satellite.Id)
-            {
-                return NotFound();
-            }
+            var sat = await _context.Satellites.FindAsync(id);
+            if (sat == null) return NotFound();
 
-            if (ModelState.IsValid)
+            // Update properties through EF change tracking (handles private setters)
+            _context.Entry(sat).CurrentValues.SetValues(new
             {
-                try
-                {
-                    _context.Update(satellite);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!SatelliteExists(satellite.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["OrbitId"] = new SelectList(_context.Orbits, "Id", "Id", satellite.OrbitId);
-            ViewData["OperatorId"] = new SelectList(_context.Operators, "Id", "Country", satellite.OperatorId);
-            return View(satellite);
-        }
+                NoradId    = vm.NoradId,
+                LaunchDate = vm.LaunchDate,
+                Status     = vm.Status,
+                OperatorId = vm.OperatorId
+            });
 
-        // GET: Admin/Satellite/Delete/5
-        public async Task<IActionResult> Delete(Guid? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var satellite = await _context.Satellites
-                .Include(s => s.Orbit)
-                .Include(s => s.Operator)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (satellite == null)
-            {
-                return NotFound();
-            }
-
-            return View(satellite);
-        }
-
-        // POST: Admin/Satellite/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
-        {
-            var satellite = await _context.Satellites.FindAsync(id);
-            if (satellite != null)
-            {
-                _context.Satellites.Remove(satellite);
-            }
+            // Name and OperatorId need LangStr conversion
+            var nameValue = (Base.Domain.LangStr)vm.Name;
+            _context.Entry(sat).Property("Name").CurrentValue = nameValue;
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        vm.OperatorOptions = await BuildOperatorSelectListAsync(vm.OperatorId);
+        return View(vm);
+    }
 
-        private bool SatelliteExists(Guid id)
+    // GET: Admin/Satellite/Delete/5
+    public async Task<IActionResult> Delete(Guid? id)
+    {
+        if (id == null) return NotFound();
+
+        var s = await _context.Satellites
+            .Include(s => s.Operator)
+            .FirstOrDefaultAsync(s => s.Id == id);
+        if (s == null) return NotFound();
+
+        var vm = new SatelliteDeleteViewModel
         {
-            return _context.Satellites.Any(e => e.Id == id);
+            Id           = s.Id,
+            Name         = s.Name.ToString(),
+            NoradId      = s.NoradId,
+            LaunchDate   = s.LaunchDate,
+            Status       = s.Status.ToString(),
+            OperatorName = s.Operator?.Name.ToString() ?? s.OperatorName ?? "—"
+        };
+        return View(vm);
+    }
+
+    // POST: Admin/Satellite/Delete/5
+    [HttpPost, ActionName("Delete")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteConfirmed(Guid id)
+    {
+        var sat = await _context.Satellites.FindAsync(id);
+        if (sat != null)
+        {
+            sat.SoftDelete(User.Identity?.Name ?? "admin");
+            await _context.SaveChangesAsync();
         }
+        return RedirectToAction(nameof(Index));
+    }
+
+    private async Task<List<SelectListItem>> BuildOperatorSelectListAsync(Guid? selected = null)
+    {
+        var ops = await _context.Operators.ToListAsync();
+        var items = ops.OrderBy(o => o.Name.ToString()).Select(o => new SelectListItem
+        {
+            Value    = o.Id.ToString(),
+            Text     = o.Name.ToString(),
+            Selected = o.Id == selected
+        }).ToList();
+        items.Insert(0, new SelectListItem { Value = "", Text = "— No operator —" });
+        return items;
     }
 }

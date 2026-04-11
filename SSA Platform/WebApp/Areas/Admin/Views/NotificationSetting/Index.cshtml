@@ -1,82 +1,66 @@
-@model IEnumerable<App.Domain.Entities.NotificationSetting>
+@model NotificationSettingIndexViewModel
 
 @{
     ViewData["Title"] = "Notification Settings";
 }
 
-<link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
-
-<div class="ssa-container">
-
-    <div class="system-bar">
-        <span class="status-dot"></span>
-        ADMIN | NOTIFICATION SETTINGS |
-        @DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") UTC |
-        @Model.Count() SETTINGS
+<div class="admin-page-header">
+    <div>
+        <div class="admin-page-title">Notification Settings</div>
+        <div class="admin-page-subtitle">Per-user notification preferences and thresholds</div>
     </div>
+    <a asp-action="Create" class="btn-add"><i class="bi bi-plus-lg"></i> Add Setting</a>
+</div>
 
-    <div class="header">
-        <div>
-            <h3>Notification Settings</h3>
-            <small>Per-user notification preferences and thresholds</small>
-        </div>
-        <div class="header-right">
-            <a asp-action="Create" class="btn-add"><i class="bi bi-plus-lg"></i> Add Setting</a>
-        </div>
+<div class="admin-stat-row mb-4" style="grid-template-columns:repeat(1,minmax(140px,200px));">
+    <div class="admin-stat-card">
+        <div class="admin-stat-icon blue"><i class="bi bi-bell"></i></div>
+        <div><div class="admin-stat-value">@Model.TotalCount</div><div class="admin-stat-label">Total Settings</div></div>
     </div>
+</div>
 
-    <div class="card">
-        <table class="table table-hover mb-0">
-            <thead>
+<div class="card">
+    <table class="table table-hover mb-0">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Conj. Threshold</th>
+                <th>Alert Threshold</th>
+                <th>Email</th>
+                <th>SMS</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Settings)
+            {
                 <tr>
-                    <th>User</th>
-                    <th>Threshold (km)</th>
-                    <th>Email</th>
-                    <th>SMS</th>
-                    <th></th>
+                    <td><strong>@item.UserName</strong></td>
+                    <td>@item.ConjunctionThresholdKm km</td>
+                    <td>@item.AlertThresholdKm km</td>
+                    <td>
+                        @if (item.EmailEnabled)
+                        { <span class="badge bg-success">On</span> }
+                        else
+                        { <span class="badge bg-secondary">Off</span> }
+                    </td>
+                    <td>
+                        @if (item.SmsEnabled)
+                        { <span class="badge bg-success">On</span> }
+                        else
+                        { <span class="badge bg-secondary">Off</span> }
+                    </td>
+                    <td class="tbl-actions">
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn-sat btn-sat-view"><i class="bi bi-eye"></i></a>
+                        <a asp-action="Edit"    asp-route-id="@item.Id" class="btn-sat btn-sat-edit"><i class="bi bi-pencil"></i></a>
+                        <a asp-action="Delete"  asp-route-id="@item.Id" class="btn-sat btn-sat-delete"><i class="bi bi-trash"></i></a>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td>
-                            @if (item.AppUser != null)
-                            {
-                                <span>@($"{item.AppUser.FirstName} {item.AppUser.LastName}".Trim())</span>
-                            }
-                            else { <span class="text-muted">—</span> }
-                        </td>
-                        <td>@item.ConjunctionThresholdKm km</td>
-                        <td>
-                            @if (item.EmailEnabled)
-                            { <span class="badge bg-success">On</span> }
-                            else
-                            { <span class="badge bg-secondary">Off</span> }
-                        </td>
-                        <td>
-                            @if (item.SmsEnabled)
-                            { <span class="badge bg-success">On</span> }
-                            else
-                            { <span class="badge bg-secondary">Off</span> }
-                        </td>
-                        <td class="tbl-actions">
-                            <a asp-action="Details" asp-route-id="@item.Id" class="btn-sat btn-sat-view"><i class="bi bi-eye"></i> View</a>
-                            <a asp-action="Edit"    asp-route-id="@item.Id" class="btn-sat btn-sat-edit"><i class="bi bi-pencil"></i> Edit</a>
-                            <a asp-action="Delete"  asp-route-id="@item.Id" class="btn-sat btn-sat-delete"><i class="bi bi-trash"></i> Delete</a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-
-        @if (!Model.Any())
-        {
-            <div class="empty-state">
-                <p>No notification settings found.</p>
-                <a asp-action="Create" class="btn-add"><i class="bi bi-plus-lg"></i> Add Setting</a>
-            </div>
-        }
-    </div>
-
+            }
+        </tbody>
+    </table>
+    @if (!Model.Settings.Any())
+    {
+        <div class="empty-state"><p>No notification settings found.</p></div>
+    }
 </div>

@@ -1,55 +1,36 @@
-@model App.Domain.Entities.UserOperator
+@model UserOperatorDeleteViewModel
 
 @{
     ViewData["Title"] = "Delete User–Operator Link";
 }
 
-<link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
-
-<div class="ssa-container">
-
-    <div class="system-bar">
-        <span class="status-dot"></span>
-        ADMIN | USER–OPERATOR LINKS | DELETE
+<div class="admin-page-header">
+    <div>
+        <div class="admin-page-title">Delete User–Operator Link</div>
+        <div class="admin-page-subtitle">Confirm permanent removal</div>
     </div>
+    <a asp-action="Index" class="btn-ssa-ghost"><i class="bi bi-arrow-left"></i> Back</a>
+</div>
 
-    <div class="header">
+<div class="card admin-form">
+    <div class="delete-warning">
+        <i class="bi bi-exclamation-triangle-fill delete-warning-icon"></i>
         <div>
-            <h3>Delete User–Operator Link</h3>
-            <small>Confirm permanent removal</small>
-        </div>
-        <div>
-            <a asp-action="Index" class="btn-ssa-ghost"><i class="bi bi-arrow-left"></i> Back</a>
+            <div class="delete-warning-title">This action cannot be undone</div>
+            <div class="delete-warning-text">The user will lose access to this operator's resources.</div>
         </div>
     </div>
 
-    <div class="card">
-        <div class="delete-warning">
-            <i class="bi bi-exclamation-triangle-fill delete-warning-icon"></i>
-            <div>
-                <div class="delete-warning-title">This action cannot be undone</div>
-                <div class="delete-warning-text">The user will lose access to this operator's resources.</div>
-            </div>
+    <dl class="admin-detail-grid mb-4">
+        <div class="admin-detail-item"><dt>User</dt><dd>@Model.UserName</dd></div>
+        <div class="admin-detail-item"><dt>Operator</dt><dd>@Model.OperatorName</dd></div>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <div class="admin-form-actions">
+            <button type="submit" class="btn-ssa-danger"><i class="bi bi-trash"></i> Delete Link</button>
+            <a asp-action="Index" class="btn-ssa-ghost">Cancel</a>
         </div>
-
-        <dl class="admin-detail-grid" style="margin-bottom:1.5rem;">
-            <div class="admin-detail-item">
-                <dt>User</dt>
-                <dd>@(Model.AppUser != null ? $"{Model.AppUser.FirstName} {Model.AppUser.LastName}".Trim() : "—")</dd>
-            </div>
-            <div class="admin-detail-item">
-                <dt>Operator</dt>
-                <dd>@(Model.Operator?.Name.ToString() ?? "—")</dd>
-            </div>
-        </dl>
-
-        <form asp-action="Delete">
-            <input type="hidden" asp-for="Id" />
-            <div class="admin-form-actions">
-                <button type="submit" class="btn-ssa-danger"><i class="bi bi-trash"></i> Delete Link</button>
-                <a asp-action="Index" class="btn-ssa-ghost">Cancel</a>
-            </div>
-        </form>
-    </div>
-
+    </form>
 </div>

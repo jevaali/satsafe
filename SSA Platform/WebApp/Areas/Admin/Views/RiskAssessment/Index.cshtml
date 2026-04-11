@@ -1,77 +1,80 @@
-@model IEnumerable<App.Domain.Entities.RiskAssessment>
+@model RiskAssessmentIndexViewModel
 
 @{
     ViewData["Title"] = "Risk Assessments";
 }
 
-<link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
-
-<div class="ssa-container">
-
-    <div class="system-bar">
-        <span class="status-dot"></span>
-        ADMIN | RISK ASSESSMENTS |
-        @DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") UTC |
-        @Model.Count() RECORDS
+<div class="admin-page-header">
+    <div>
+        <div class="admin-page-title">Risk Assessments</div>
+        <div class="admin-page-subtitle">Risk scores and model outputs for conjunction events</div>
     </div>
+    <a asp-action="Create" class="btn-add"><i class="bi bi-plus-lg"></i> Add Assessment</a>
+</div>
 
-    <div class="header">
-        <div>
-            <h3>Risk Assessments</h3>
-            <small>Risk scores and model outputs for conjunction events</small>
-        </div>
-        <div class="header-right">
-            <a asp-action="Create" class="btn-add"><i class="bi bi-plus-lg"></i> Add Assessment</a>
-        </div>
+<div class="admin-stat-row mb-4" style="grid-template-columns:repeat(2,minmax(140px,200px));">
+    <div class="admin-stat-card">
+        <div class="admin-stat-icon purple"><i class="bi bi-graph-up"></i></div>
+        <div><div class="admin-stat-value">@Model.TotalCount</div><div class="admin-stat-label">Total Assessments</div></div>
     </div>
+    <div class="admin-stat-card">
+        <div class="admin-stat-icon red"><i class="bi bi-exclamation-circle"></i></div>
+        <div><div class="admin-stat-value">@Model.HighRiskCount</div><div class="admin-stat-label">High Risk</div></div>
+    </div>
+</div>
 
-    <div class="card">
-        <table class="table table-hover mb-0">
-            <thead>
+<div class="card">
+    <table class="table table-hover mb-0">
+        <thead>
+            <tr>
+                <th>Risk Score</th>
+                <th>Level</th>
+                <th>Model Version</th>
+                <th>Conjunction Event</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Assessments)
+            {
                 <tr>
-                    <th>Risk Score</th>
-                    <th>Model Version</th>
-                    <th>Conjunction Event</th>
-                    <th></th>
+                    <td>
+                        <span class="@(item.RiskScore > 0.7 ? "text-danger fw-bold" : item.RiskScore > 0.3 ? "text-warning" : "text-success")">
+                            @item.RiskScore.ToString("F4")
+                        </span>
+                    </td>
+                    <td>
+                        @{
+                            var lvlCss = item.RiskLevel switch {
+                                "High"   => "bg-danger",
+                                "Medium" => "bg-warning text-dark",
+                                _        => "bg-success"
+                            };
+                        }
+                        <span class="badge @lvlCss">@item.RiskLevel</span>
+                    </td>
+                    <td><code>@(string.IsNullOrEmpty(item.ModelVersion) ? "—" : item.ModelVersion)</code></td>
+                    <td>
+                        @if (item.ConjunctionEventId.HasValue)
+                        {
+                            <a asp-area="Admin" asp-controller="ConjunctionEvent" asp-action="Details"
+                               asp-route-id="@item.ConjunctionEventId" class="text-decoration-none">
+                                @(item.ConjunctionStatus ?? "View")
+                            </a>
+                        }
+                        else { <span class="text-muted">—</span> }
+                    </td>
+                    <td class="tbl-actions">
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn-sat btn-sat-view"><i class="bi bi-eye"></i></a>
+                        <a asp-action="Edit"    asp-route-id="@item.Id" class="btn-sat btn-sat-edit"><i class="bi bi-pencil"></i></a>
+                        <a asp-action="Delete"  asp-route-id="@item.Id" class="btn-sat btn-sat-delete"><i class="bi bi-trash"></i></a>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.OrderByDescending(r => r.RiskScore))
-                {
-                    <tr>
-                        <td>
-                            <span class="@(item.RiskScore > 0.7 ? "text-danger fw-bold" : item.RiskScore > 0.3 ? "text-warning" : "text-success")">
-                                @item.RiskScore.ToString("F4")
-                            </span>
-                        </td>
-                        <td><code>@(item.ModelVersion ?? "—")</code></td>
-                        <td>
-                            @if (item.ConjunctionEvent != null)
-                            {
-                                <a asp-area="Admin" asp-controller="ConjunctionEvent" asp-action="Details"
-                                   asp-route-id="@item.ConjunctionEventId" class="text-decoration-none">
-                                    @item.ConjunctionEvent.Status
-                                </a>
-                            }
-                            else { <span class="text-muted">—</span> }
-                        </td>
-                        <td class="tbl-actions">
-                            <a asp-action="Details" asp-route-id="@item.Id" class="btn-sat btn-sat-view"><i class="bi bi-eye"></i> View</a>
-                            <a asp-action="Edit"    asp-route-id="@item.Id" class="btn-sat btn-sat-edit"><i class="bi bi-pencil"></i> Edit</a>
-                            <a asp-action="Delete"  asp-route-id="@item.Id" class="btn-sat btn-sat-delete"><i class="bi bi-trash"></i> Delete</a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-
-        @if (!Model.Any())
-        {
-            <div class="empty-state">
-                <p>No risk assessments found.</p>
-                <a asp-action="Create" class="btn-add"><i class="bi bi-plus-lg"></i> Add Assessment</a>
-            </div>
-        }
-    </div>
-
+            }
+        </tbody>
+    </table>
+    @if (!Model.Assessments.Any())
+    {
+        <div class="empty-state"><p>No risk assessments found.</p></div>
+    }
 </div>

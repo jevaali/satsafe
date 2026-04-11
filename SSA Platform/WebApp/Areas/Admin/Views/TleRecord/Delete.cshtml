@@ -1,63 +1,37 @@
-@model App.Domain.Entities.TleRecord
+@model TleRecordDeleteViewModel
 
 @{
     ViewData["Title"] = "Delete TLE Record";
 }
 
-<link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
-
-<div class="ssa-container">
-
-    <div class="system-bar">
-        <span class="status-dot"></span>
-        ADMIN | TLE RECORDS | DELETE
+<div class="admin-page-header">
+    <div>
+        <div class="admin-page-title">Delete TLE Record</div>
+        <div class="admin-page-subtitle">Confirm permanent removal</div>
     </div>
+    <a asp-action="Index" class="btn-ssa-ghost"><i class="bi bi-arrow-left"></i> Back</a>
+</div>
 
-    <div class="header">
+<div class="card admin-form">
+    <div class="delete-warning">
+        <i class="bi bi-exclamation-triangle-fill delete-warning-icon"></i>
         <div>
-            <h3>Delete TLE Record</h3>
-            <small>Confirm permanent removal</small>
-        </div>
-        <div>
-            <a asp-action="Index" class="btn-ssa-ghost"><i class="bi bi-arrow-left"></i> Back</a>
+            <div class="delete-warning-title">This action cannot be undone</div>
+            <div class="delete-warning-text">Deleting this TLE record will remove the orbital data permanently.</div>
         </div>
     </div>
 
-    <div class="card">
-        <div class="delete-warning">
-            <i class="bi bi-exclamation-triangle-fill delete-warning-icon"></i>
-            <div>
-                <div class="delete-warning-title">This action cannot be undone</div>
-                <div class="delete-warning-text">Deleting this TLE record will remove the orbital data permanently.</div>
-            </div>
+    <dl class="admin-detail-grid mb-4">
+        <div class="admin-detail-item"><dt>Space Object (NORAD)</dt><dd>@Model.SpaceObjectNorad</dd></div>
+        <div class="admin-detail-item"><dt>Epoch</dt><dd>@Model.Epoch.ToString("yyyy-MM-dd HH:mm") UTC</dd></div>
+        <div class="admin-detail-item"><dt>Mean Motion</dt><dd>@Model.MeanMotion.ToString("F8")</dd></div>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <div class="admin-form-actions">
+            <button type="submit" class="btn-ssa-danger"><i class="bi bi-trash"></i> Delete TLE Record</button>
+            <a asp-action="Index" class="btn-ssa-ghost">Cancel</a>
         </div>
-
-        <dl class="admin-detail-grid" style="margin-bottom:1.5rem;">
-            <div class="admin-detail-item">
-                <dt>Space Object</dt>
-                <dd>@(Model.SpaceObject?.NoradId.ToString() ?? "—")</dd>
-            </div>
-            <div class="admin-detail-item">
-                <dt>@Html.DisplayNameFor(m => m.Epoch)</dt>
-                <dd>@Model.Epoch.ToString("yyyy-MM-dd HH:mm")</dd>
-            </div>
-            <div class="admin-detail-item">
-                <dt>@Html.DisplayNameFor(m => m.Inclination)</dt>
-                <dd>@Model.Inclination.ToString("F4")°</dd>
-            </div>
-            <div class="admin-detail-item">
-                <dt>@Html.DisplayNameFor(m => m.MeanMotion)</dt>
-                <dd>@Model.MeanMotion.ToString("F8")</dd>
-            </div>
-        </dl>
-
-        <form asp-action="Delete">
-            <input type="hidden" asp-for="Id" />
-            <div class="admin-form-actions">
-                <button type="submit" class="btn-ssa-danger"><i class="bi bi-trash"></i> Delete TLE Record</button>
-                <a asp-action="Index" class="btn-ssa-ghost">Cancel</a>
-            </div>
-        </form>
-    </div>
-
+    </form>
 </div>

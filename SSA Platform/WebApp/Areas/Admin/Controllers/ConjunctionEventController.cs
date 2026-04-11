@@ -1,173 +1,243 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using App.Domain.Entities;
+using App.Domain.Entities.Enums;
+using App.Infrastructure.Persistence;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using App.Domain;
-using App.Domain.Entities;
-using App.Infrastructure.Persistence;
+using WebApp.Areas.Admin.ViewModels;
 
-namespace WebApp.Areas.Admin.Controllers
+namespace WebApp.Areas.Admin.Controllers;
+
+[Area("Admin")]
+[Authorize(Roles = "Admin")]
+public class ConjunctionEventController : Controller
 {
-    [Area("Admin")]
-    public class ConjunctionEventController : Controller
+    private readonly AppDbContext _context;
+
+    public ConjunctionEventController(AppDbContext context)
     {
-        private readonly AppDbContext _context;
+        _context = context;
+    }
 
-        public ConjunctionEventController(AppDbContext context)
+    // GET: Admin/ConjunctionEvent
+    public async Task<IActionResult> Index()
+    {
+        var events = await _context.ConjunctionEvents
+            .Include(c => c.PrimaryObject)
+            .Include(c => c.SecondaryObject)
+            .OrderByDescending(c => c.CollisionProbability > 0.01 || c.MissDistance < 1000)
+            .ThenBy(c => c.TimeOfClosestApproach)
+            .ToListAsync();
+
+        var vm = new ConjunctionEventIndexViewModel
         {
-            _context = context;
+            TotalCount    = events.Count,
+            HighRiskCount = events.Count(c => c.IsHighRisk()),
+            PendingCount  = events.Count(c => c.Status == EConjunctionEventStatus.Pending),
+            Events        = events.Select(c => new ConjunctionEventListItemViewModel
+            {
+                Id                  = c.Id,
+                PrimaryObjectName   = ResolveName(c.PrimaryObject),
+                SecondaryObjectName = ResolveName(c.SecondaryObject),
+                Tca                 = c.TimeOfClosestApproach,
+                MissDistance        = c.MissDistance,
+                CollisionProbability= c.CollisionProbability,
+                Status              = c.Status,
+                IsHighRisk          = c.IsHighRisk()
+            })
+        };
+        return View(vm);
+    }
+
+    // GET: Admin/ConjunctionEvent/Details/5
+    public async Task<IActionResult> Details(Guid? id)
+    {
+        if (id == null) return NotFound();
+
+        var c = await _context.ConjunctionEvents
+            .Include(c => c.PrimaryObject)
+            .Include(c => c.SecondaryObject)
+            .Include(c => c.RiskAssessment)
+            .FirstOrDefaultAsync(c => c.Id == id);
+        if (c == null) return NotFound();
+
+        var vm = new ConjunctionEventDetailViewModel
+        {
+            Id                         = c.Id,
+            PrimaryObjectName          = ResolveName(c.PrimaryObject),
+            SecondaryObjectName        = ResolveName(c.SecondaryObject),
+            PrimaryObjectId            = c.PrimaryObjectId,
+            SecondaryObjectId          = c.SecondaryObjectId,
+            Tca                        = c.TimeOfClosestApproach,
+            MissDistance               = c.MissDistance,
+            CollisionProbability       = c.CollisionProbability,
+            Status                     = c.Status,
+            IsHighRisk                 = c.IsHighRisk(),
+            PrimaryAcknowledgement     = c.PrimaryAcknowledgement.ToString(),
+            SecondaryAcknowledgement   = c.SecondaryAcknowledgement.ToString(),
+            RiskModelVersion           = c.RiskAssessment?.ModelVersion,
+            RiskScore                  = c.RiskAssessment?.RiskScore,
+            CreatedBy                  = c.CreatedBy,
+            CreatedAt                  = c.CreatedAt
+        };
+        return View(vm);
+    }
+
+    // GET: Admin/ConjunctionEvent/Create
+    public async Task<IActionResult> Create()
+    {
+        var vm = new ConjunctionEventFormViewModel
+        {
+            SpaceObjectOptions = await BuildSpaceObjectSelectListAsync()
+        };
+        return View(vm);
+    }
+
+    // POST: Admin/ConjunctionEvent/Create
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(ConjunctionEventFormViewModel vm)
+    {
+        if (ModelState.IsValid)
+        {
+            var ce = new ConjunctionEvent(
+                vm.PrimaryObjectId,
+                vm.SecondaryObjectId,
+                vm.TimeOfClosestApproach,
+                vm.MissDistance,
+                threshold: 5000);
+
+            ce.UpdateCollisionProbability(vm.CollisionProbability);
+            ce.Status = vm.Status;
+
+            _context.Add(ce);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
+        vm.SpaceObjectOptions = await BuildSpaceObjectSelectListAsync();
+        return View(vm);
+    }
 
-        // GET: Admin/ConjunctionEvent
-        public async Task<IActionResult> Index()
+    // GET: Admin/ConjunctionEvent/Edit/5
+    public async Task<IActionResult> Edit(Guid? id)
+    {
+        if (id == null) return NotFound();
+
+        var c = await _context.ConjunctionEvents.FindAsync(id);
+        if (c == null) return NotFound();
+
+        var vm = new ConjunctionEventFormViewModel
         {
-            var appDbContext = _context.ConjunctionEvents.Include(c => c.PrimaryObject).Include(c => c.SecondaryObject);
-            return View(await appDbContext.ToListAsync());
-        }
+            Id                    = c.Id,
+            PrimaryObjectId       = c.PrimaryObjectId,
+            SecondaryObjectId     = c.SecondaryObjectId,
+            TimeOfClosestApproach = c.TimeOfClosestApproach,
+            MissDistance          = c.MissDistance,
+            CollisionProbability  = c.CollisionProbability,
+            Status                = c.Status,
+            SpaceObjectOptions    = await BuildSpaceObjectSelectListAsync()
+        };
+        return View(vm);
+    }
 
-        // GET: Admin/ConjunctionEvent/Details/5
-        public async Task<IActionResult> Details(Guid? id)
+    // POST: Admin/ConjunctionEvent/Edit/5
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(Guid id, ConjunctionEventFormViewModel vm)
+    {
+        if (id != vm.Id) return NotFound();
+
+        if (ModelState.IsValid)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var ce = await _context.ConjunctionEvents.FindAsync(id);
+            if (ce == null) return NotFound();
 
-            var conjunctionEvent = await _context.ConjunctionEvents
-                .Include(c => c.PrimaryObject)
-                .Include(c => c.SecondaryObject)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (conjunctionEvent == null)
-            {
-                return NotFound();
-            }
-
-            return View(conjunctionEvent);
-        }
-
-        // GET: Admin/ConjunctionEvent/Create
-        public IActionResult Create()
-        {
-            ViewData["PrimaryObjectId"] = new SelectList(_context.Set<SpaceObject>(), "Id", "ObjectType");
-            ViewData["SecondaryObjectId"] = new SelectList(_context.Set<SpaceObject>(), "Id", "ObjectType");
-            return View();
-        }
-
-        // POST: Admin/ConjunctionEvent/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PrimaryObjectId,SecondaryObjectId,TimeOfClosestApproach,MissDistance,CollisionProbability,Status,RiskAssessmentId,Id")] ConjunctionEvent conjunctionEvent)
-        {
-            if (ModelState.IsValid)
-            {
-                conjunctionEvent.Id = Guid.NewGuid();
-                _context.Add(conjunctionEvent);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["PrimaryObjectId"] = new SelectList(_context.Set<SpaceObject>(), "Id", "ObjectType", conjunctionEvent.PrimaryObjectId);
-            ViewData["SecondaryObjectId"] = new SelectList(_context.Set<SpaceObject>(), "Id", "ObjectType", conjunctionEvent.SecondaryObjectId);
-            return View(conjunctionEvent);
-        }
-
-        // GET: Admin/ConjunctionEvent/Edit/5
-        public async Task<IActionResult> Edit(Guid? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var conjunctionEvent = await _context.ConjunctionEvents.FindAsync(id);
-            if (conjunctionEvent == null)
-            {
-                return NotFound();
-            }
-            ViewData["PrimaryObjectId"] = new SelectList(_context.Set<SpaceObject>(), "Id", "ObjectType", conjunctionEvent.PrimaryObjectId);
-            ViewData["SecondaryObjectId"] = new SelectList(_context.Set<SpaceObject>(), "Id", "ObjectType", conjunctionEvent.SecondaryObjectId);
-            return View(conjunctionEvent);
-        }
-
-        // POST: Admin/ConjunctionEvent/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("PrimaryObjectId,SecondaryObjectId,TimeOfClosestApproach,MissDistance,CollisionProbability,Status,RiskAssessmentId,Id")] ConjunctionEvent conjunctionEvent)
-        {
-            if (id != conjunctionEvent.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(conjunctionEvent);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ConjunctionEventExists(conjunctionEvent.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["PrimaryObjectId"] = new SelectList(_context.Set<SpaceObject>(), "Id", "ObjectType", conjunctionEvent.PrimaryObjectId);
-            ViewData["SecondaryObjectId"] = new SelectList(_context.Set<SpaceObject>(), "Id", "ObjectType", conjunctionEvent.SecondaryObjectId);
-            return View(conjunctionEvent);
-        }
-
-        // GET: Admin/ConjunctionEvent/Delete/5
-        public async Task<IActionResult> Delete(Guid? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var conjunctionEvent = await _context.ConjunctionEvents
-                .Include(c => c.PrimaryObject)
-                .Include(c => c.SecondaryObject)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (conjunctionEvent == null)
-            {
-                return NotFound();
-            }
-
-            return View(conjunctionEvent);
-        }
-
-        // POST: Admin/ConjunctionEvent/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
-        {
-            var conjunctionEvent = await _context.ConjunctionEvents.FindAsync(id);
-            if (conjunctionEvent != null)
-            {
-                _context.ConjunctionEvents.Remove(conjunctionEvent);
-            }
+            ce.PrimaryObjectId       = vm.PrimaryObjectId;
+            ce.SecondaryObjectId     = vm.SecondaryObjectId;
+            ce.TimeOfClosestApproach = vm.TimeOfClosestApproach;
+            ce.UpdateMissDistance(vm.MissDistance);
+            ce.UpdateCollisionProbability(vm.CollisionProbability);
+            ce.Status = vm.Status;
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        vm.SpaceObjectOptions = await BuildSpaceObjectSelectListAsync();
+        return View(vm);
+    }
 
-        private bool ConjunctionEventExists(Guid id)
+    // GET: Admin/ConjunctionEvent/Delete/5
+    public async Task<IActionResult> Delete(Guid? id)
+    {
+        if (id == null) return NotFound();
+
+        var c = await _context.ConjunctionEvents
+            .Include(c => c.PrimaryObject)
+            .Include(c => c.SecondaryObject)
+            .FirstOrDefaultAsync(c => c.Id == id);
+        if (c == null) return NotFound();
+
+        var vm = new ConjunctionEventDeleteViewModel
         {
-            return _context.ConjunctionEvents.Any(e => e.Id == id);
+            Id                  = c.Id,
+            PrimaryObjectName   = ResolveName(c.PrimaryObject),
+            SecondaryObjectName = ResolveName(c.SecondaryObject),
+            Tca                 = c.TimeOfClosestApproach,
+            Status              = c.Status.ToString()
+        };
+        return View(vm);
+    }
+
+    // POST: Admin/ConjunctionEvent/Delete/5
+    [HttpPost, ActionName("Delete")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteConfirmed(Guid id)
+    {
+        var ce = await _context.ConjunctionEvents.FindAsync(id);
+        if (ce != null) _context.ConjunctionEvents.Remove(ce);
+        await _context.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
+    }
+
+    private static string ResolveName(SpaceObject? obj) =>
+        obj switch
+        {
+            Satellite s    => s.Name.ToString(),
+            DebrisObject d => $"DEBRIS-{d.NoradId}",
+            null           => "—",
+            _              => obj.NoradId.ToString()
+        };
+
+    private async Task<List<SelectListItem>> BuildSpaceObjectSelectListAsync()
+    {
+        var objects = await _context.SpaceObjects
+            .OfType<Satellite>()
+            .ToListAsync();
+        objects = objects.OrderBy(s => s.Name.ToString()).ToList();
+
+        var debris = await _context.SpaceObjects
+            .OfType<DebrisObject>()
+            .OrderBy(d => d.NoradId)
+            .ToListAsync();
+
+        var items = new List<SelectListItem>();
+        items.Add(new SelectListItem { Value = "", Text = "— Select object —" });
+
+        if (objects.Any())
+        {
+            var satGroup = new SelectListGroup { Name = "Satellites" };
+            foreach (var s in objects)
+                items.Add(new SelectListItem { Value = s.Id.ToString(), Text = $"{s.Name} (NORAD {s.NoradId})", Group = satGroup });
         }
+
+        if (debris.Any())
+        {
+            var debGroup = new SelectListGroup { Name = "Debris" };
+            foreach (var d in debris)
+                items.Add(new SelectListItem { Value = d.Id.ToString(), Text = $"DEBRIS-{d.NoradId}", Group = debGroup });
+        }
+
+        return items;
     }
 }

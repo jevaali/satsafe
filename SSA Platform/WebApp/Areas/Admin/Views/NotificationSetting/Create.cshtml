@@ -1,61 +1,66 @@
-@model App.Domain.Entities.NotificationSetting
+@model NotificationSettingFormViewModel
 
 @{
     ViewData["Title"] = "Add Notification Setting";
 }
 
-<link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
-
-<div class="ssa-container">
-
-    <div class="system-bar">
-        <span class="status-dot"></span>
-        ADMIN | NOTIFICATION SETTINGS | NEW
+<div class="admin-page-header">
+    <div>
+        <div class="admin-page-title">Add Notification Setting</div>
+        <div class="admin-page-subtitle">Configure notification preferences for a user</div>
     </div>
+    <a asp-action="Index" class="btn-ssa-ghost"><i class="bi bi-arrow-left"></i> Back</a>
+</div>
 
-    <div class="header">
-        <div>
-            <h3>Add Notification Setting</h3>
-            <small>Configure notification preferences for a user</small>
+<div class="card admin-form">
+    <form asp-action="Create">
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-3"></div>
+
+        <div class="form-group mb-3">
+            <label asp-for="AppUserId" class="form-label"></label>
+            <select asp-for="AppUserId" class="form-select" asp-items="Model.UserOptions">
+                <option value="">— Select user —</option>
+            </select>
+            <span asp-validation-for="AppUserId" class="text-danger small"></span>
         </div>
-        <div>
-            <a asp-action="Index" class="btn-ssa-ghost"><i class="bi bi-arrow-left"></i> Back</a>
+
+        <div class="row g-3 mb-3">
+            <div class="col-md-6">
+                <label asp-for="ConjunctionThresholdKm" class="form-label"></label>
+                <div class="input-group">
+                    <input asp-for="ConjunctionThresholdKm" class="form-control" />
+                    <span class="input-group-text">km</span>
+                </div>
+                <span asp-validation-for="ConjunctionThresholdKm" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="AlertThresholdKm" class="form-label"></label>
+                <div class="input-group">
+                    <input asp-for="AlertThresholdKm" class="form-control" />
+                    <span class="input-group-text">km</span>
+                </div>
+                <span asp-validation-for="AlertThresholdKm" class="text-danger small"></span>
+            </div>
         </div>
-    </div>
 
-    <div class="card admin-form">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+        <div class="mb-3">
+            <div class="form-check form-switch">
+                <input class="form-check-input" asp-for="EmailEnabled" role="switch" />
+                <label class="form-check-label" asp-for="EmailEnabled">Enable email notifications</label>
+            </div>
+        </div>
+        <div class="mb-3">
+            <div class="form-check form-switch">
+                <input class="form-check-input" asp-for="SmsEnabled" role="switch" />
+                <label class="form-check-label" asp-for="SmsEnabled">Enable SMS notifications</label>
+            </div>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="AppUserId" class="control-label"></label>
-                <select asp-for="AppUserId" class="form-control" asp-items="ViewBag.AppUserId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="ConjunctionThresholdKm" class="control-label"></label>
-                <input asp-for="ConjunctionThresholdKm" class="form-control" />
-                <span asp-validation-for="ConjunctionThresholdKm" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <div class="form-check mt-1">
-                    <input class="form-check-input" asp-for="EmailEnabled" />
-                    <label class="form-check-label" asp-for="EmailEnabled">@Html.DisplayNameFor(m => m.EmailEnabled)</label>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="form-check">
-                    <input class="form-check-input" asp-for="SmsEnabled" />
-                    <label class="form-check-label" asp-for="SmsEnabled">@Html.DisplayNameFor(m => m.SmsEnabled)</label>
-                </div>
-            </div>
-
-            <div class="admin-form-actions">
-                <button type="submit" class="btn-ssa-primary"><i class="bi bi-check-lg"></i> Create Setting</button>
-                <a asp-action="Index" class="btn-ssa-ghost">Cancel</a>
-            </div>
-        </form>
-    </div>
-
+        <div class="admin-form-actions">
+            <button type="submit" class="btn-ssa-primary"><i class="bi bi-check-lg"></i> Create Setting</button>
+            <a asp-action="Index" class="btn-ssa-ghost">Cancel</a>
+        </div>
+    </form>
 </div>
 
 @section Scripts {

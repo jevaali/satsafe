@@ -1,70 +1,58 @@
-@model IEnumerable<App.Domain.Entities.TleRecord>
+@model TleRecordIndexViewModel
 
 @{
     ViewData["Title"] = "TLE Records";
 }
 
-<link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
-
-<div class="ssa-container">
-
-    <div class="system-bar">
-        <span class="status-dot"></span>
-        ADMIN | TLE RECORDS |
-        @DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") UTC |
-        @Model.Count() RECORDS
+<div class="admin-page-header">
+    <div>
+        <div class="admin-page-title">TLE Records</div>
+        <div class="admin-page-subtitle">Two-Line Element sets for tracked space objects</div>
     </div>
+    <a asp-action="Create" class="btn-add"><i class="bi bi-plus-lg"></i> Add TLE</a>
+</div>
 
-    <div class="header">
-        <div>
-            <h3>TLE Records</h3>
-            <small>Two-Line Element sets for tracked space objects</small>
-        </div>
-        <div class="header-right">
-            <a asp-action="Create" class="btn-add"><i class="bi bi-plus-lg"></i> Add TLE</a>
-        </div>
+<div class="admin-stat-row mb-4" style="grid-template-columns:repeat(1,minmax(140px,200px));">
+    <div class="admin-stat-card">
+        <div class="admin-stat-icon teal"><i class="bi bi-database"></i></div>
+        <div><div class="admin-stat-value">@Model.TotalCount</div><div class="admin-stat-label">Total Records</div></div>
     </div>
+</div>
 
-    <div class="card">
-        <table class="table table-hover mb-0">
-            <thead>
+<div class="card">
+    <table class="table table-hover mb-0">
+        <thead>
+            <tr>
+                <th>Space Object (NORAD)</th>
+                <th>Epoch (UTC)</th>
+                <th>Inclination (°)</th>
+                <th>RAAN (°)</th>
+                <th>Eccentricity</th>
+                <th>Mean Motion</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Records)
+            {
                 <tr>
-                    <th>Space Object</th>
-                    <th>Epoch</th>
-                    <th>Inclination (°)</th>
-                    <th>RAAN (°)</th>
-                    <th>Eccentricity</th>
-                    <th>Mean Motion</th>
-                    <th></th>
+                    <td><strong>@item.SpaceObjectNorad</strong></td>
+                    <td><small>@item.Epoch.ToString("yyyy-MM-dd HH:mm")</small></td>
+                    <td>@item.Inclination.ToString("F4")</td>
+                    <td>@item.RAAN.ToString("F4")</td>
+                    <td>@item.Eccentricity.ToString("F7")</td>
+                    <td>@item.MeanMotion.ToString("F8")</td>
+                    <td class="tbl-actions">
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn-sat btn-sat-view"><i class="bi bi-eye"></i></a>
+                        <a asp-action="Edit"    asp-route-id="@item.Id" class="btn-sat btn-sat-edit"><i class="bi bi-pencil"></i></a>
+                        <a asp-action="Delete"  asp-route-id="@item.Id" class="btn-sat btn-sat-delete"><i class="bi bi-trash"></i></a>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.OrderByDescending(t => t.Epoch))
-                {
-                    <tr>
-                        <td><strong>@(item.SpaceObject?.NoradId.ToString() ?? "—")</strong></td>
-                        <td><small>@item.Epoch.ToString("yyyy-MM-dd HH:mm")</small></td>
-                        <td>@item.Inclination.ToString("F4")</td>
-                        <td>@item.RAAN.ToString("F4")</td>
-                        <td>@item.Eccentricity.ToString("F7")</td>
-                        <td>@item.MeanMotion.ToString("F8")</td>
-                        <td class="tbl-actions">
-                            <a asp-action="Details" asp-route-id="@item.Id" class="btn-sat btn-sat-view"><i class="bi bi-eye"></i> View</a>
-                            <a asp-action="Edit"    asp-route-id="@item.Id" class="btn-sat btn-sat-edit"><i class="bi bi-pencil"></i> Edit</a>
-                            <a asp-action="Delete"  asp-route-id="@item.Id" class="btn-sat btn-sat-delete"><i class="bi bi-trash"></i> Delete</a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-
-        @if (!Model.Any())
-        {
-            <div class="empty-state">
-                <p>No TLE records found.</p>
-                <a asp-action="Create" class="btn-add"><i class="bi bi-plus-lg"></i> Add TLE</a>
-            </div>
-        }
-    </div>
-
+            }
+        </tbody>
+    </table>
+    @if (!Model.Records.Any())
+    {
+        <div class="empty-state"><p>No TLE records found.</p></div>
+    }
 </div>

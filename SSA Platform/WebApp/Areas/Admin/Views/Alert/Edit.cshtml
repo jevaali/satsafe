@@ -1,63 +1,50 @@
-@model App.Domain.Entities.Alert
+@model AlertFormViewModel
 
 @{
     ViewData["Title"] = "Edit Alert";
 }
 
-<link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
-
-<div class="ssa-container">
-
-    <div class="system-bar">
-        <span class="status-dot"></span>
-        ADMIN | ALERTS | EDIT
+<div class="admin-page-header">
+    <div>
+        <div class="admin-page-title">Edit Alert</div>
+        <div class="admin-page-subtitle">Update alert record</div>
     </div>
+    <a asp-action="Index" class="btn-ssa-ghost"><i class="bi bi-arrow-left"></i> Back</a>
+</div>
 
-    <div class="header">
-        <div>
-            <h3>Edit Alert</h3>
-            <small>Update alert record</small>
+<div class="card admin-form">
+    <form asp-action="Edit">
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-3"></div>
+        <input type="hidden" asp-for="Id" />
+
+        <div class="form-group mb-3">
+            <label asp-for="Severity" class="control-label"></label>
+            <select asp-for="Severity" class="form-select"
+                    asp-items="Html.GetEnumSelectList<EAlertSeverity>()"></select>
+            <span asp-validation-for="Severity" class="text-danger small"></span>
         </div>
-        <div>
-            <a asp-action="Index" class="btn-ssa-ghost"><i class="bi bi-arrow-left"></i> Back</a>
+        <div class="form-group mb-3">
+            <label asp-for="UserId" class="control-label"></label>
+            <select asp-for="UserId" class="form-select" asp-items="Model.UserOptions"></select>
+            <span asp-validation-for="UserId" class="text-danger small"></span>
         </div>
-    </div>
-
-    <div class="card admin-form">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
-            <div class="form-group">
-                <label asp-for="Severity" class="control-label"></label>
-                <input asp-for="Severity" class="form-control" />
-                <span asp-validation-for="Severity" class="text-danger"></span>
+        <div class="form-group mb-3">
+            <label asp-for="ConjunctionEventId" class="control-label"></label>
+            <select asp-for="ConjunctionEventId" class="form-select" asp-items="Model.ConjunctionOptions"></select>
+            <span asp-validation-for="ConjunctionEventId" class="text-danger small"></span>
+        </div>
+        <div class="form-group mb-3">
+            <div class="form-check">
+                <input class="form-check-input" asp-for="IsAcknowledged" />
+                <label class="form-check-label" asp-for="IsAcknowledged">Acknowledged</label>
             </div>
-            <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
-                <span asp-validation-for="UserId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ConjunctionEventId" class="control-label"></label>
-                <select asp-for="ConjunctionEventId" class="form-control" asp-items="ViewBag.ConjunctionEventId"></select>
-                <span asp-validation-for="ConjunctionEventId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <div class="form-check mt-1">
-                    <input class="form-check-input" asp-for="IsAcknowledged" />
-                    <label class="form-check-label" asp-for="IsAcknowledged">@Html.DisplayNameFor(m => m.IsAcknowledged)</label>
-                </div>
-            </div>
+        </div>
 
-            <input type="hidden" asp-for="Id" />
-
-            <div class="admin-form-actions">
-                <button type="submit" class="btn-ssa-primary"><i class="bi bi-check-lg"></i> Save Changes</button>
-                <a asp-action="Index" class="btn-ssa-ghost">Cancel</a>
-            </div>
-        </form>
-    </div>
-
+        <div class="admin-form-actions">
+            <button type="submit" class="btn-ssa-primary"><i class="bi bi-check-lg"></i> Save Changes</button>
+            <a asp-action="Details" asp-route-id="@Model.Id" class="btn-ssa-ghost">Cancel</a>
+        </div>
+    </form>
 </div>
 
 @section Scripts {

@@ -1,67 +1,41 @@
-@model App.Domain.Entities.Satellite
+@model SatelliteDeleteViewModel
 
 @{
     ViewData["Title"] = "Delete Satellite";
 }
 
-<link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
-
-<div class="ssa-container">
-
-    <div class="system-bar">
-        <span class="status-dot"></span>
-        ADMIN | SATELLITE REGISTRY | DELETE
+<div class="admin-page-header">
+    <div>
+        <div class="admin-page-title">Delete Satellite</div>
+        <div class="admin-page-subtitle">Confirm removal of @Model.Name</div>
     </div>
+    <a asp-action="Index" class="btn-ssa-ghost"><i class="bi bi-arrow-left"></i> Back</a>
+</div>
 
-    <div class="header">
+<div class="card admin-form">
+    <div class="delete-warning">
+        <i class="bi bi-exclamation-triangle-fill delete-warning-icon"></i>
         <div>
-            <h3>Delete Satellite</h3>
-            <small>Confirm permanent removal</small>
-        </div>
-        <div>
-            <a asp-action="Index" class="btn-ssa-ghost"><i class="bi bi-arrow-left"></i> Back</a>
+            <div class="delete-warning-title">This action cannot be undone</div>
+            <div class="delete-warning-text">
+                The satellite will be soft-deleted and marked as inactive. Its historical data is preserved.
+            </div>
         </div>
     </div>
 
-    <div class="card">
-        <div class="delete-warning">
-            <i class="bi bi-exclamation-triangle-fill delete-warning-icon"></i>
-            <div>
-                <div class="delete-warning-title">This action cannot be undone</div>
-                <div class="delete-warning-text">Deleting this satellite will remove the record permanently.</div>
-            </div>
+    <dl class="admin-detail-grid mb-4">
+        <div class="admin-detail-item"><dt>Name</dt><dd>@Model.Name</dd></div>
+        <div class="admin-detail-item"><dt>NORAD ID</dt><dd>@Model.NoradId</dd></div>
+        <div class="admin-detail-item"><dt>Launch Date</dt><dd>@Model.LaunchDate.ToString("yyyy-MM-dd")</dd></div>
+        <div class="admin-detail-item"><dt>Status</dt><dd>@Model.Status</dd></div>
+        <div class="admin-detail-item"><dt>Operator</dt><dd>@Model.OperatorName</dd></div>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <div class="admin-form-actions">
+            <button type="submit" class="btn-ssa-danger"><i class="bi bi-trash"></i> Delete Satellite</button>
+            <a asp-action="Index" class="btn-ssa-ghost">Cancel</a>
         </div>
-
-        <dl class="admin-detail-grid" style="margin-bottom:1.5rem;">
-            <div class="admin-detail-item">
-                <dt>@Html.DisplayNameFor(m => m.Name)</dt>
-                <dd>@Model.Name</dd>
-            </div>
-            <div class="admin-detail-item">
-                <dt>@Html.DisplayNameFor(m => m.NoradId)</dt>
-                <dd>@Model.NoradId</dd>
-            </div>
-            <div class="admin-detail-item">
-                <dt>@Html.DisplayNameFor(m => m.LaunchDate)</dt>
-                <dd>@Model.LaunchDate.ToString("yyyy-MM-dd")</dd>
-            </div>
-            <div class="admin-detail-item">
-                <dt>@Html.DisplayNameFor(m => m.Status)</dt>
-                <dd>@Model.Status</dd>
-            </div>
-            <div class="admin-detail-item">
-                <dt>Operator</dt>
-                <dd>@(Model.Operator?.Name.ToString() ?? Model.OperatorName ?? "—")</dd>
-            </div>
-        </dl>
-
-        <form asp-action="Delete">
-            <input type="hidden" asp-for="Id" />
-            <div class="admin-form-actions">
-                <button type="submit" class="btn-ssa-danger"><i class="bi bi-trash"></i> Delete Satellite</button>
-                <a asp-action="Index" class="btn-ssa-ghost">Cancel</a>
-            </div>
-        </form>
-    </div>
-
+    </form>
 </div>

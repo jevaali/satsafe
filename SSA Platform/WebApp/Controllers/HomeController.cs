@@ -24,6 +24,11 @@ public class HomeController : Controller
             return RedirectToAction("Index", "Home", new { area = "Operator" });
         }
         
+        if (User.IsInRole("Admin"))
+        {
+            return RedirectToAction("Index", "Home", new { area = "Admin" });
+        }
+        
         var stats = await _getHomeStatsUseCase.ExecuteAsync();
         return View(stats);
     }

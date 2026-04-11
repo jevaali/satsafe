@@ -1,116 +1,105 @@
-@model App.Domain.Entities.TleRecord
+@model TleRecordFormViewModel
 
 @{
     ViewData["Title"] = "Edit TLE Record";
 }
 
-<link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
-
-<div class="ssa-container">
-
-    <div class="system-bar">
-        <span class="status-dot"></span>
-        ADMIN | TLE RECORDS | EDIT
+<div class="admin-page-header">
+    <div>
+        <div class="admin-page-title">Edit TLE Record</div>
+        <div class="admin-page-subtitle">Update Two-Line Element data</div>
     </div>
+    <a asp-action="Index" class="btn-ssa-ghost"><i class="bi bi-arrow-left"></i> Back</a>
+</div>
 
-    <div class="header">
-        <div>
-            <h3>Edit TLE Record</h3>
-            <small>Update Two-Line Element data</small>
+<div class="card admin-form">
+    <form asp-action="Edit">
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-3"></div>
+        <input type="hidden" asp-for="Id" />
+
+        <div class="form-group mb-3">
+            <label asp-for="SpaceObjectId" class="form-label"></label>
+            <select asp-for="SpaceObjectId" class="form-select" asp-items="Model.SpaceObjectOptions"></select>
+            <span asp-validation-for="SpaceObjectId" class="text-danger small"></span>
         </div>
-        <div>
-            <a asp-action="Index" class="btn-ssa-ghost"><i class="bi bi-arrow-left"></i> Back</a>
+
+        <div class="form-group mb-3">
+            <label asp-for="Epoch" class="form-label"></label>
+            <input asp-for="Epoch" type="datetime-local" class="form-control" />
+            <span asp-validation-for="Epoch" class="text-danger small"></span>
         </div>
-    </div>
 
-    <div class="card admin-form" style="max-width:820px;">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
-            <div class="form-group">
-                <label asp-for="SpaceObjectId" class="control-label"></label>
-                <select asp-for="SpaceObjectId" class="form-control" asp-items="ViewBag.SpaceObjectId"></select>
-                <span asp-validation-for="SpaceObjectId" class="text-danger"></span>
+        <div class="admin-section-heading mb-2 mt-3"><i class="bi bi-globe2"></i> Orbital Elements</div>
+        <div class="row g-3 mb-3">
+            <div class="col-md-6">
+                <label asp-for="Inclination" class="form-label"></label>
+                <input asp-for="Inclination" class="form-control" />
+                <span asp-validation-for="Inclination" class="text-danger small"></span>
             </div>
-
-            <div class="admin-form-grid">
-                <div class="form-group">
-                    <label asp-for="Epoch" class="control-label"></label>
-                    <input asp-for="Epoch" class="form-control" />
-                    <span asp-validation-for="Epoch" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Inclination" class="control-label"></label>
-                    <input asp-for="Inclination" class="form-control" />
-                    <span asp-validation-for="Inclination" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="RAAN" class="control-label"></label>
-                    <input asp-for="RAAN" class="form-control" />
-                    <span asp-validation-for="RAAN" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Eccentricity" class="control-label"></label>
-                    <input asp-for="Eccentricity" class="form-control" />
-                    <span asp-validation-for="Eccentricity" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="ArgumentOfPerigee" class="control-label"></label>
-                    <input asp-for="ArgumentOfPerigee" class="form-control" />
-                    <span asp-validation-for="ArgumentOfPerigee" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="MeanAnomaly" class="control-label"></label>
-                    <input asp-for="MeanAnomaly" class="form-control" />
-                    <span asp-validation-for="MeanAnomaly" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="MeanMotion" class="control-label"></label>
-                    <input asp-for="MeanMotion" class="form-control" />
-                    <span asp-validation-for="MeanMotion" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="RevolutionNumber" class="control-label"></label>
-                    <input asp-for="RevolutionNumber" class="form-control" />
-                    <span asp-validation-for="RevolutionNumber" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="BSTar" class="control-label"></label>
-                    <input asp-for="BSTar" class="form-control" />
-                    <span asp-validation-for="BSTar" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="FirstDerivative" class="control-label"></label>
-                    <input asp-for="FirstDerivative" class="form-control" />
-                    <span asp-validation-for="FirstDerivative" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="SecondDerivative" class="control-label"></label>
-                    <input asp-for="SecondDerivative" class="form-control" />
-                    <span asp-validation-for="SecondDerivative" class="text-danger"></span>
-                </div>
+            <div class="col-md-6">
+                <label asp-for="RAAN" class="form-label"></label>
+                <input asp-for="RAAN" class="form-control" />
+                <span asp-validation-for="RAAN" class="text-danger small"></span>
             </div>
-
-            <div class="form-group">
-                <label asp-for="RawLine1" class="control-label"></label>
-                <input asp-for="RawLine1" class="form-control" style="font-family:monospace;" />
-                <span asp-validation-for="RawLine1" class="text-danger"></span>
+            <div class="col-md-6">
+                <label asp-for="Eccentricity" class="form-label"></label>
+                <input asp-for="Eccentricity" class="form-control" />
+                <span asp-validation-for="Eccentricity" class="text-danger small"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="RawLine2" class="control-label"></label>
-                <input asp-for="RawLine2" class="form-control" style="font-family:monospace;" />
-                <span asp-validation-for="RawLine2" class="text-danger"></span>
+            <div class="col-md-6">
+                <label asp-for="ArgumentOfPerigee" class="form-label"></label>
+                <input asp-for="ArgumentOfPerigee" class="form-control" />
+                <span asp-validation-for="ArgumentOfPerigee" class="text-danger small"></span>
             </div>
-
-            <input type="hidden" asp-for="Id" />
-
-            <div class="admin-form-actions">
-                <button type="submit" class="btn-ssa-primary"><i class="bi bi-check-lg"></i> Save Changes</button>
-                <a asp-action="Index" class="btn-ssa-ghost">Cancel</a>
+            <div class="col-md-6">
+                <label asp-for="MeanAnomaly" class="form-label"></label>
+                <input asp-for="MeanAnomaly" class="form-control" />
+                <span asp-validation-for="MeanAnomaly" class="text-danger small"></span>
             </div>
-        </form>
-    </div>
+            <div class="col-md-6">
+                <label asp-for="MeanMotion" class="form-label"></label>
+                <input asp-for="MeanMotion" class="form-control" />
+                <span asp-validation-for="MeanMotion" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="RevolutionNumber" class="form-label"></label>
+                <input asp-for="RevolutionNumber" class="form-control" />
+                <span asp-validation-for="RevolutionNumber" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="BSTar" class="form-label"></label>
+                <input asp-for="BSTar" class="form-control" />
+                <span asp-validation-for="BSTar" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="FirstDerivative" class="form-label"></label>
+                <input asp-for="FirstDerivative" class="form-control" />
+                <span asp-validation-for="FirstDerivative" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="SecondDerivative" class="form-label"></label>
+                <input asp-for="SecondDerivative" class="form-control" />
+                <span asp-validation-for="SecondDerivative" class="text-danger small"></span>
+            </div>
+        </div>
 
+        <div class="admin-section-heading mb-2 mt-3"><i class="bi bi-code-square"></i> Raw TLE Lines (optional)</div>
+        <div class="form-group mb-3">
+            <label asp-for="RawLine1" class="form-label"></label>
+            <input asp-for="RawLine1" class="form-control" style="font-family:monospace;" />
+            <span asp-validation-for="RawLine1" class="text-danger small"></span>
+        </div>
+        <div class="form-group mb-3">
+            <label asp-for="RawLine2" class="form-label"></label>
+            <input asp-for="RawLine2" class="form-control" style="font-family:monospace;" />
+            <span asp-validation-for="RawLine2" class="text-danger small"></span>
+        </div>
+
+        <div class="admin-form-actions">
+            <button type="submit" class="btn-ssa-primary"><i class="bi bi-check-lg"></i> Save Changes</button>
+            <a asp-action="Details" asp-route-id="@Model.Id" class="btn-ssa-ghost">Cancel</a>
+        </div>
+    </form>
 </div>
 
 @section Scripts {

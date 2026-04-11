@@ -1,63 +1,36 @@
-@model App.Domain.Entities.NotificationSetting
+@model NotificationSettingDeleteViewModel
 
 @{
     ViewData["Title"] = "Delete Notification Setting";
 }
 
-<link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
-
-<div class="ssa-container">
-
-    <div class="system-bar">
-        <span class="status-dot"></span>
-        ADMIN | NOTIFICATION SETTINGS | DELETE
+<div class="admin-page-header">
+    <div>
+        <div class="admin-page-title">Delete Notification Setting</div>
+        <div class="admin-page-subtitle">Confirm permanent removal</div>
     </div>
+    <a asp-action="Index" class="btn-ssa-ghost"><i class="bi bi-arrow-left"></i> Back</a>
+</div>
 
-    <div class="header">
+<div class="card admin-form">
+    <div class="delete-warning">
+        <i class="bi bi-exclamation-triangle-fill delete-warning-icon"></i>
         <div>
-            <h3>Delete Notification Setting</h3>
-            <small>Confirm permanent removal</small>
-        </div>
-        <div>
-            <a asp-action="Index" class="btn-ssa-ghost"><i class="bi bi-arrow-left"></i> Back</a>
+            <div class="delete-warning-title">This action cannot be undone</div>
+            <div class="delete-warning-text">The user's notification preferences will be permanently removed.</div>
         </div>
     </div>
 
-    <div class="card">
-        <div class="delete-warning">
-            <i class="bi bi-exclamation-triangle-fill delete-warning-icon"></i>
-            <div>
-                <div class="delete-warning-title">This action cannot be undone</div>
-                <div class="delete-warning-text">The user's notification preferences will be permanently removed.</div>
-            </div>
+    <dl class="admin-detail-grid mb-4">
+        <div class="admin-detail-item"><dt>User</dt><dd>@Model.UserName</dd></div>
+        <div class="admin-detail-item"><dt>Conjunction Threshold</dt><dd>@Model.ConjunctionThresholdKm km</dd></div>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <div class="admin-form-actions">
+            <button type="submit" class="btn-ssa-danger"><i class="bi bi-trash"></i> Delete Setting</button>
+            <a asp-action="Index" class="btn-ssa-ghost">Cancel</a>
         </div>
-
-        <dl class="admin-detail-grid" style="margin-bottom:1.5rem;">
-            <div class="admin-detail-item">
-                <dt>User</dt>
-                <dd>@(Model.AppUser != null ? $"{Model.AppUser.FirstName} {Model.AppUser.LastName}".Trim() : "—")</dd>
-            </div>
-            <div class="admin-detail-item">
-                <dt>@Html.DisplayNameFor(m => m.ConjunctionThresholdKm)</dt>
-                <dd>@Model.ConjunctionThresholdKm km</dd>
-            </div>
-            <div class="admin-detail-item">
-                <dt>@Html.DisplayNameFor(m => m.EmailEnabled)</dt>
-                <dd>@(Model.EmailEnabled ? "Enabled" : "Disabled")</dd>
-            </div>
-            <div class="admin-detail-item">
-                <dt>@Html.DisplayNameFor(m => m.SmsEnabled)</dt>
-                <dd>@(Model.SmsEnabled ? "Enabled" : "Disabled")</dd>
-            </div>
-        </dl>
-
-        <form asp-action="Delete">
-            <input type="hidden" asp-for="Id" />
-            <div class="admin-form-actions">
-                <button type="submit" class="btn-ssa-danger"><i class="bi bi-trash"></i> Delete Setting</button>
-                <a asp-action="Index" class="btn-ssa-ghost">Cancel</a>
-            </div>
-        </form>
-    </div>
-
+    </form>
 </div>

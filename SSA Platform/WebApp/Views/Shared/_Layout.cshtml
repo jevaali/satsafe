@@ -54,25 +54,6 @@
                 </a>
             </li>
             }
-
-            @if (User.IsInRole("Admin"))
-            {
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                       aria-expanded="false">Admin</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="Operator" asp-action="Index">Operators</a></li>
-                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="Satellite" asp-action="Index">Satellites</a></li>
-                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="ConjunctionEvent" asp-action="Index">Conjunction Events</a></li>
-                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="Alert" asp-action="Index">Alerts</a></li>
-                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="RiskAssessment" asp-action="Index">Risk Assessments</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="TleRecord" asp-action="Index">TLE Records</a></li>
-                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="UserOperator" asp-action="Index">User–Operator Links</a></li>
-                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="NotificationSetting" asp-action="Index">Notification Settings</a></li>
-                    </ul>
-                </li>
-            }
     </ul>
     <partial name="_LoginPartial"/>
 </div>

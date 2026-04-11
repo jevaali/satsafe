@@ -1,70 +1,73 @@
-@model App.Domain.Entities.ConjunctionEvent
+@model ConjunctionEventFormViewModel
 
 @{
     ViewData["Title"] = "Add Conjunction Event";
 }
 
-<link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
-
-<div class="ssa-container">
-
-    <div class="system-bar">
-        <span class="status-dot"></span>
-        ADMIN | CONJUNCTION EVENTS | NEW EVENT
+<div class="admin-page-header">
+    <div>
+        <div class="admin-page-title">Add Conjunction Event</div>
+        <div class="admin-page-subtitle">Record a new conjunction event</div>
     </div>
+    <a asp-action="Index" class="btn-ssa-ghost"><i class="bi bi-arrow-left"></i> Back</a>
+</div>
 
-    <div class="header">
-        <div>
-            <h3>Add Conjunction Event</h3>
-            <small>Record a new conjunction event</small>
+<div class="card admin-form">
+    <form asp-action="Create">
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-3"></div>
+
+        <div class="row g-3 mb-3">
+            <div class="col-md-6">
+                <label asp-for="PrimaryObjectId" class="form-label"></label>
+                <select asp-for="PrimaryObjectId" class="form-select" asp-items="Model.SpaceObjectOptions">
+                    <option value="">— Select primary object —</option>
+                </select>
+                <span asp-validation-for="PrimaryObjectId" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="SecondaryObjectId" class="form-label"></label>
+                <select asp-for="SecondaryObjectId" class="form-select" asp-items="Model.SpaceObjectOptions">
+                    <option value="">— Select secondary object —</option>
+                </select>
+                <span asp-validation-for="SecondaryObjectId" class="text-danger small"></span>
+            </div>
         </div>
-        <div>
-            <a asp-action="Index" class="btn-ssa-ghost"><i class="bi bi-arrow-left"></i> Back</a>
+
+        <div class="row g-3 mb-3">
+            <div class="col-md-6">
+                <label asp-for="TimeOfClosestApproach" class="form-label"></label>
+                <input asp-for="TimeOfClosestApproach" type="datetime-local" class="form-control" />
+                <span asp-validation-for="TimeOfClosestApproach" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Status" class="form-label"></label>
+                <select asp-for="Status" class="form-select"
+                        asp-items="Html.GetEnumSelectList<EConjunctionEventStatus>()"></select>
+                <span asp-validation-for="Status" class="text-danger small"></span>
+            </div>
         </div>
-    </div>
 
-    <div class="card admin-form">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
-            <div class="admin-form-grid">
-                <div class="form-group">
-                    <label asp-for="PrimaryObjectId" class="control-label"></label>
-                    <select asp-for="PrimaryObjectId" class="form-control" asp-items="ViewBag.PrimaryObjectId"></select>
-                </div>
-                <div class="form-group">
-                    <label asp-for="SecondaryObjectId" class="control-label"></label>
-                    <select asp-for="SecondaryObjectId" class="form-control" asp-items="ViewBag.SecondaryObjectId"></select>
-                </div>
-                <div class="form-group">
-                    <label asp-for="TimeOfClosestApproach" class="control-label"></label>
-                    <input asp-for="TimeOfClosestApproach" class="form-control" />
-                    <span asp-validation-for="TimeOfClosestApproach" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="MissDistance" class="control-label"></label>
+        <div class="row g-3 mb-3">
+            <div class="col-md-6">
+                <label asp-for="MissDistance" class="form-label"></label>
+                <div class="input-group">
                     <input asp-for="MissDistance" class="form-control" />
-                    <span asp-validation-for="MissDistance" class="text-danger"></span>
+                    <span class="input-group-text">m</span>
                 </div>
-                <div class="form-group">
-                    <label asp-for="CollisionProbability" class="control-label"></label>
-                    <input asp-for="CollisionProbability" class="form-control" />
-                    <span asp-validation-for="CollisionProbability" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Status" class="control-label"></label>
-                    <input asp-for="Status" class="form-control" />
-                    <span asp-validation-for="Status" class="text-danger"></span>
-                </div>
+                <span asp-validation-for="MissDistance" class="text-danger small"></span>
             </div>
-
-            <div class="admin-form-actions">
-                <button type="submit" class="btn-ssa-primary"><i class="bi bi-check-lg"></i> Create Event</button>
-                <a asp-action="Index" class="btn-ssa-ghost">Cancel</a>
+            <div class="col-md-6">
+                <label asp-for="CollisionProbability" class="form-label"></label>
+                <input asp-for="CollisionProbability" class="form-control" placeholder="0.0 – 1.0" />
+                <span asp-validation-for="CollisionProbability" class="text-danger small"></span>
             </div>
-        </form>
-    </div>
+        </div>
 
+        <div class="admin-form-actions">
+            <button type="submit" class="btn-ssa-primary"><i class="bi bi-check-lg"></i> Create Event</button>
+            <a asp-action="Index" class="btn-ssa-ghost">Cancel</a>
+        </div>
+    </form>
 </div>
 
 @section Scripts {
