@@ -16,9 +16,6 @@ public class ConjunctionEvent : BaseEntityWithMeta
     public double CollisionProbability { get; set; }
     public EConjunctionEventStatus Status { get; set; }
 
-    public Guid? RiskAssessmentId { get; set; }
-    public RiskAssessment? RiskAssessment { get; set; }
-
     public EOperatorAcknowledgement PrimaryAcknowledgement   { get; private set; } = EOperatorAcknowledgement.None;
     public EOperatorAcknowledgement SecondaryAcknowledgement { get; private set; } = EOperatorAcknowledgement.None;
 

@@ -17,6 +17,7 @@ public class UnitOfWork : IUnitOfWork
     public ISpaceObjectsRepository SpaceObjects { get; set; }
     public INotificationSettingRepository NotificationSettings { get; }
     public IDraftSatelliteRepository DraftSatellites { get; }
+    public IRiskAssessmentRepository RiskAssessments { get; }
 
     public UnitOfWork(
         AppDbContext context,
@@ -28,7 +29,8 @@ public class UnitOfWork : IUnitOfWork
         IAlertRepository alerts,
         ISpaceObjectsRepository spaceObjects,
         INotificationSettingRepository notificationSettings,
-        IDraftSatelliteRepository draftSatellites)
+        IDraftSatelliteRepository draftSatellites,
+        IRiskAssessmentRepository riskAssessments)
     {
         _context = context;
         Satellites = satellites;
@@ -40,6 +42,7 @@ public class UnitOfWork : IUnitOfWork
         SpaceObjects = spaceObjects;
         NotificationSettings = notificationSettings;
         DraftSatellites = draftSatellites;
+        RiskAssessments = riskAssessments;
     }
 
     public async Task CommitAsync()

@@ -7,9 +7,8 @@
 <div class="admin-page-header">
     <div>
         <div class="admin-page-title">Risk Assessments</div>
-        <div class="admin-page-subtitle">Risk scores and model outputs for conjunction events</div>
+        <div class="admin-page-subtitle">Orbit-based risk scores per satellite</div>
     </div>
-    <a asp-action="Create" class="btn-add"><i class="bi bi-plus-lg"></i> Add Assessment</a>
 </div>
 
 <div class="admin-stat-row mb-4" style="grid-template-columns:repeat(2,minmax(140px,200px));">
@@ -27,10 +26,11 @@
     <table class="table table-hover mb-0">
         <thead>
             <tr>
+                <th>Satellite</th>
                 <th>Risk Score</th>
                 <th>Level</th>
-                <th>Model Version</th>
-                <th>Conjunction Event</th>
+                <th>Model</th>
+                <th>Calculated At</th>
                 <th></th>
             </tr>
         </thead>
@@ -39,7 +39,11 @@
             {
                 <tr>
                     <td>
-                        <span class="@(item.RiskScore > 0.7 ? "text-danger fw-bold" : item.RiskScore > 0.3 ? "text-warning" : "text-success")">
+                        <a asp-area="Admin" asp-controller="Satellite" asp-action="Details"
+                           asp-route-id="@item.SatelliteId" class="text-decoration-none">@item.SatelliteName</a>
+                    </td>
+                    <td>
+                        <span class="@(item.RiskScore > 0.7 ? "text-danger fw-bold" : item.RiskScore > 0.4 ? "text-warning" : "text-success")">
                             @item.RiskScore.ToString("F4")
                         </span>
                     </td>
@@ -54,19 +58,9 @@
                         <span class="badge @lvlCss">@item.RiskLevel</span>
                     </td>
                     <td><code>@(string.IsNullOrEmpty(item.ModelVersion) ? "—" : item.ModelVersion)</code></td>
-                    <td>
-                        @if (item.ConjunctionEventId.HasValue)
-                        {
-                            <a asp-area="Admin" asp-controller="ConjunctionEvent" asp-action="Details"
-                               asp-route-id="@item.ConjunctionEventId" class="text-decoration-none">
-                                @(item.ConjunctionStatus ?? "View")
-                            </a>
-                        }
-                        else { <span class="text-muted">—</span> }
-                    </td>
+                    <td class="text-muted small">@item.CalculatedAt.ToString("yyyy-MM-dd HH:mm")</td>
                     <td class="tbl-actions">
                         <a asp-action="Details" asp-route-id="@item.Id" class="btn-sat btn-sat-view"><i class="bi bi-eye"></i></a>
-                        <a asp-action="Edit"    asp-route-id="@item.Id" class="btn-sat btn-sat-edit"><i class="bi bi-pencil"></i></a>
                         <a asp-action="Delete"  asp-route-id="@item.Id" class="btn-sat btn-sat-delete"><i class="bi bi-trash"></i></a>
                     </td>
                 </tr>
@@ -75,6 +69,6 @@
     </table>
     @if (!Model.Assessments.Any())
     {
-        <div class="empty-state"><p>No risk assessments found.</p></div>
+        <div class="empty-state"><p>No risk assessments found. Run conjunction screening to generate scores.</p></div>
     }
 </div>

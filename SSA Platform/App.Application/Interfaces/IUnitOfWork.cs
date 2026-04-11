@@ -13,6 +13,7 @@ public interface IUnitOfWork
     ISpaceObjectsRepository SpaceObjects { get; set; }
     INotificationSettingRepository NotificationSettings { get; }
     IDraftSatelliteRepository DraftSatellites { get; }
+    IRiskAssessmentRepository RiskAssessments { get; }
 
     Task CommitAsync();
 }

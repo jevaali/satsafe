@@ -438,22 +438,81 @@ body {
 .sat-tile {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    padding: 0.8rem 1rem;
-    border: 1px solid #e0e0e0;
+    gap: 0.25rem;
+    padding: 0.75rem 0.9rem;
+    border: 1px solid #dde3ec;
     border-radius: 10px;
-    background-color: #fff;
+    background: #fff;
     text-decoration: none;
     color: inherit;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+    min-height: 88px;
 }
 
 .sat-tile:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(21,101,192,0.13);
+    border-color: #1565c0;
+    color: inherit;
 }
 
-.sat-tile .status { margin-top: 0.5rem; }
+.tile-name {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #1a2332;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tile-norad {
+    font-size: 0.72rem;
+    color: #8a9ab0;
+    letter-spacing: 0.02em;
+}
+
+.tile-footer {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-top: auto;
+    padding-top: 0.4rem;
+    flex-wrap: wrap;
+}
+
+.tile-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.tile-status-dot {
+    font-size: 0.4rem;
+}
+
+.tile-status.active  { color: #1e8a44; }
+.tile-status.inactive { color: #8a9ab0; }
+
+.tile-risk {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.1rem 0.45rem;
+    border-radius: 4px;
+}
+
+.tile-risk-high   { background: #fde8e8; color: #c0392b; }
+.tile-risk-med    { background: #fef3cd; color: #856404; }
+.tile-risk-low    { background: #d4edda; color: #155724; }
 
 .view-all-btn {
     font-size: 0.85rem;

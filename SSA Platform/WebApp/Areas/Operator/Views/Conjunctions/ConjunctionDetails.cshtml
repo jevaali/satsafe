@@ -113,29 +113,6 @@
         </div>
     </div>
 
-    @if (Model.RiskAssessment != null)
-    {
-        <div class="row py-3">
-            <div class="col-12">
-                <div class="card border-0 shadow-sm">
-                    <div class="card-header bg-info text-white">
-                        <h5 class="mb-0">Risk Assessment</h5>
-                    </div>
-                    <div class="card-body">
-                        <dl class="row">
-                            <dt class="col-sm-4">
-                                Risk ID
-                            </dt>
-                            <dd class="col-sm-8">
-                                @Model.RiskAssessment.Id
-                            </dd>
-                        </dl>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
-
     @if (Model.Alerts != null && Model.Alerts.Any())
     {
         <div class="row py-3">

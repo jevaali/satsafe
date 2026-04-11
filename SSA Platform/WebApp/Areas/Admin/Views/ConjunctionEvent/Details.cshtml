@@ -70,32 +70,6 @@
             </dl>
         </div>
 
-        @if (Model.RiskScore.HasValue)
-        {
-            <div class="card mt-4">
-                <div class="admin-section-heading mb-3"><i class="bi bi-graph-up"></i> Risk Assessment</div>
-                <dl class="admin-detail-grid">
-                    <div class="admin-detail-item">
-                        <dt>Risk Score</dt>
-                        <dd>
-                            @{
-                                var riskLevel = Model.RiskScore > 0.7 ? "High" : Model.RiskScore > 0.3 ? "Medium" : "Low";
-                                var riskCss   = Model.RiskScore > 0.7 ? "text-danger fw-bold" : Model.RiskScore > 0.3 ? "text-warning" : "text-success";
-                            }
-                            <span class="@riskCss">@Model.RiskScore.Value.ToString("F4")</span>
-                            <small class="text-muted ms-1">(@riskLevel)</small>
-                        </dd>
-                    </div>
-                    @if (!string.IsNullOrWhiteSpace(Model.RiskModelVersion))
-                    {
-                        <div class="admin-detail-item">
-                            <dt>Model Version</dt>
-                            <dd><code>@Model.RiskModelVersion</code></dd>
-                        </div>
-                    }
-                </dl>
-            </div>
-        }
     </div>
 
     <div class="col-lg-4">

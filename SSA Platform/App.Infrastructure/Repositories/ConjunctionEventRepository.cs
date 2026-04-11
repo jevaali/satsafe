@@ -19,7 +19,6 @@ public class ConjunctionEventRepository : IConjunctionEventRepository
         return await _context.ConjunctionEvents
             .Include(c => c.PrimaryObject)
             .Include(c => c.SecondaryObject)
-            .Include(c => c.RiskAssessment)
             .Include(c => c.Alerts)
             .FirstOrDefaultAsync(c => c.Id == id);
     }
@@ -52,7 +51,6 @@ public class ConjunctionEventRepository : IConjunctionEventRepository
         return await _context.ConjunctionEvents
             .Include(c => c.PrimaryObject)
             .Include(c => c.SecondaryObject)
-            .Include(c => c.RiskAssessment)
             .Include(c => c.Alerts)
             .Where(c => satelliteIds.Contains(c.PrimaryObjectId) || satelliteIds.Contains(c.SecondaryObjectId))
             .ToListAsync();

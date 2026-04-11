@@ -61,6 +61,18 @@ ViewData["Title"] = "Satellite Management";
                     <div>
                         <div class="sat-name">@sat.Name</div>
                         <div class="sat-norad">NORAD #@sat.NoradId</div>
+                        @if (sat.RiskAssessment != null)
+                        {
+                            var riskLevel = sat.RiskAssessment.RiskLevel;
+                            var riskCss = riskLevel switch {
+                                "High"   => "bg-danger",
+                                "Medium" => "bg-warning text-dark",
+                                _        => "bg-success"
+                            };
+                            <span class="badge @riskCss mt-1" style="font-size:0.65rem;">
+                                <i class="bi bi-shield-fill me-1"></i>@riskLevel Risk
+                            </span>
+                        }
                     </div>
                 </div>
                 <span class="badge-status @statusStr">@sat.Status</span>

@@ -101,14 +101,24 @@
                 @foreach (var sat in Model.Satellites.Take(6))
                 {
                     <a class="sat-tile" asp-action="Details" asp-controller="Satellite" asp-route-id="@sat.Id">
-                        <div class="tile-header">
-                            <h6 class="sat-name">@sat.Name</h6>
-                            <small class="norad-id">@App.Resources.Views.Operator.Index.Label_Norad @sat.NoradId</small>
+                        <div class="tile-name">@sat.Name</div>
+                        <div class="tile-norad">NORAD #@sat.NoradId</div>
+                        <div class="tile-footer">
+                            <span class="tile-status @(sat.Status == ESatelliteStatus.Active ? "active" : "inactive")">
+                                <i class="bi bi-circle-fill tile-status-dot"></i>@sat.Status
+                            </span>
+                            @if (sat.RiskAssessment != null)
+                            {
+                                var riskCls = sat.RiskAssessment.RiskLevel switch {
+                                    "High"   => "tile-risk-high",
+                                    "Medium" => "tile-risk-med",
+                                    _        => "tile-risk-low"
+                                };
+                                <span class="tile-risk @riskCls">
+                                    <i class="bi bi-shield-fill"></i>@sat.RiskAssessment.RiskLevel
+                                </span>
+                            }
                         </div>
-
-                        <span class="status @(sat.Status == ESatelliteStatus.Active ? "active" : "inactive")">
-                            @sat.Status
-                        </span>
                     </a>
                 }
             </div>

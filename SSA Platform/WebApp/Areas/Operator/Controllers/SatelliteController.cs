@@ -16,19 +16,22 @@ public class SatelliteController : Controller
     private readonly DeleteSatelliteUseCase _deleteSatelliteUseCase;
     private readonly ISatelliteRepository _satelliteRepository;
     private readonly IUserOperatorRepository _userOperatorRepository;
+    private readonly CalculateSatelliteRiskUseCase _calculateRiskUseCase;
 
     public SatelliteController(
         AddSatelliteUseCase addSatelliteUseCase,
         UpdateSatelliteUseCase updateSatelliteUseCase,
         DeleteSatelliteUseCase deleteSatelliteUseCase,
         ISatelliteRepository satelliteRepository,
-        IUserOperatorRepository userOperatorRepository)
+        IUserOperatorRepository userOperatorRepository,
+        CalculateSatelliteRiskUseCase calculateRiskUseCase)
     {
         _addSatelliteUseCase = addSatelliteUseCase;
         _updateSatelliteUseCase = updateSatelliteUseCase;
         _deleteSatelliteUseCase = deleteSatelliteUseCase;
         _satelliteRepository = satelliteRepository;
         _userOperatorRepository = userOperatorRepository;
+        _calculateRiskUseCase = calculateRiskUseCase;
     }
 
     [HttpGet]
@@ -185,6 +188,34 @@ public class SatelliteController : Controller
             return Forbid();
 
         return View(satellite);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> RegenerateRisk(Guid id)
+    {
+        var (userId, operatorId) = await GetOperatorContextAsync();
+        if (userId == Guid.Empty || operatorId == Guid.Empty)
+            return Forbid();
+
+        var satellite = await _satelliteRepository.GetByIdAsync(id);
+        if (satellite == null || satellite.DeletedAt != null)
+            return NotFound();
+
+        if (satellite.OperatorId != operatorId)
+            return Forbid();
+
+        try
+        {
+            await _calculateRiskUseCase.CalculateForSatelliteAsync(id);
+            TempData["SuccessMessage"] = "Risk score recalculated.";
+        }
+        catch (Exception ex)
+        {
+            TempData["ErrorMessage"] = ex.Message;
+        }
+
+        return RedirectToAction(nameof(Details), new { id });
     }
 
     private async Task<(Guid userId, Guid operatorId)> GetOperatorContextAsync()

@@ -58,7 +58,6 @@ public class ConjunctionEventController : Controller
         var c = await _context.ConjunctionEvents
             .Include(c => c.PrimaryObject)
             .Include(c => c.SecondaryObject)
-            .Include(c => c.RiskAssessment)
             .FirstOrDefaultAsync(c => c.Id == id);
         if (c == null) return NotFound();
 
@@ -76,8 +75,6 @@ public class ConjunctionEventController : Controller
             IsHighRisk                 = c.IsHighRisk(),
             PrimaryAcknowledgement     = c.PrimaryAcknowledgement.ToString(),
             SecondaryAcknowledgement   = c.SecondaryAcknowledgement.ToString(),
-            RiskModelVersion           = c.RiskAssessment?.ModelVersion,
-            RiskScore                  = c.RiskAssessment?.RiskScore,
             CreatedBy                  = c.CreatedBy,
             CreatedAt                  = c.CreatedAt
         };

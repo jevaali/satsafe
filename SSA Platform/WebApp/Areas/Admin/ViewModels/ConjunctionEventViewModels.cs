@@ -38,8 +38,6 @@ public class ConjunctionEventDetailViewModel
     public bool   IsHighRisk          { get; set; }
     public string PrimaryAcknowledgement   { get; set; } = string.Empty;
     public string SecondaryAcknowledgement { get; set; } = string.Empty;
-    public string?   RiskModelVersion  { get; set; }
-    public double?   RiskScore         { get; set; }
     public string?   CreatedBy         { get; set; }
     public DateTime? CreatedAt         { get; set; }
 }

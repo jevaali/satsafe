@@ -52,6 +52,8 @@ builder.Services.AddScoped<GetUserDraftsUseCase>();
 builder.Services.AddScoped<DeleteDraftSatelliteUseCase>();
 
 builder.Services.AddScoped<ConjunctionAnalysisService>();
+builder.Services.AddScoped<SatelliteRiskScoringService>();
+builder.Services.AddScoped<CalculateSatelliteRiskUseCase>();
 
 builder.Services.AddScoped<ISatelliteRepository, SatelliteRepository>();
 builder.Services.AddScoped<IDebrisObjectRepository, DebrisObjectRepository>();
@@ -62,6 +64,7 @@ builder.Services.AddScoped<IAlertRepository, AlertRepository>();
 builder.Services.AddScoped<ISpaceObjectsRepository, SpaceObjectsRepository>();
 builder.Services.AddScoped<INotificationSettingRepository, NotificationSettingRepository>();
 builder.Services.AddScoped<IDraftSatelliteRepository, DraftSatelliteRepository>();
+builder.Services.AddScoped<IRiskAssessmentRepository, RiskAssessmentRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services
@@ -132,6 +135,9 @@ using (var scope = app.Services.CreateScope())
     AppDataInit.MigrateDatabase(dbContext);
     AppDataInit.SeedIdentity(userManager, roleManager);
     AppDataInit.SeedAppData(dbContext, userManager);
+
+    var riskUseCase = services.GetRequiredService<CalculateSatelliteRiskUseCase>();
+    await riskUseCase.CalculateForAllNewAsync();
 }
 
 // Configure the HTTP request pipeline.

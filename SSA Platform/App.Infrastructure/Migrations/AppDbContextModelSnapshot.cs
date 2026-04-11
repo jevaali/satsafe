@@ -86,9 +86,6 @@ namespace App.Infrastructure.Migrations
                     b.Property<Guid>("PrimaryObjectId")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("RiskAssessmentId")
-                        .HasColumnType("TEXT");
-
                     b.Property<int>("SecondaryAcknowledgement")
                         .HasColumnType("INTEGER");
 
@@ -410,7 +407,7 @@ namespace App.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("ConjunctionEventId")
+                    b.Property<DateTime>("CalculatedAt")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedAt")
@@ -428,6 +425,9 @@ namespace App.Infrastructure.Migrations
                     b.Property<double>("RiskScore")
                         .HasColumnType("REAL");
 
+                    b.Property<Guid>("SatelliteId")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("TEXT");
 
@@ -436,7 +436,7 @@ namespace App.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ConjunctionEventId")
+                    b.HasIndex("SatelliteId")
                         .IsUnique();
 
                     b.ToTable("RiskAssessments");
@@ -913,13 +913,13 @@ namespace App.Infrastructure.Migrations
 
             modelBuilder.Entity("App.Domain.Entities.RiskAssessment", b =>
                 {
-                    b.HasOne("App.Domain.Entities.ConjunctionEvent", "ConjunctionEvent")
+                    b.HasOne("App.Domain.Entities.Satellite", "Satellite")
                         .WithOne("RiskAssessment")
-                        .HasForeignKey("App.Domain.Entities.RiskAssessment", "ConjunctionEventId")
+                        .HasForeignKey("App.Domain.Entities.RiskAssessment", "SatelliteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ConjunctionEvent");
+                    b.Navigation("Satellite");
                 });
 
             modelBuilder.Entity("App.Domain.Entities.TleRecord", b =>
@@ -1034,8 +1034,6 @@ namespace App.Infrastructure.Migrations
             modelBuilder.Entity("App.Domain.Entities.ConjunctionEvent", b =>
                 {
                     b.Navigation("Alerts");
-
-                    b.Navigation("RiskAssessment");
                 });
 
             modelBuilder.Entity("App.Domain.Entities.Identity.AppUser", b =>
@@ -1067,6 +1065,11 @@ namespace App.Infrastructure.Migrations
                     b.Navigation("SecondaryConjunctionEvents");
 
                     b.Navigation("TleRecords");
+                });
+
+            modelBuilder.Entity("App.Domain.Entities.Satellite", b =>
+                {
+                    b.Navigation("RiskAssessment");
                 });
 #pragma warning restore 612, 618
         }

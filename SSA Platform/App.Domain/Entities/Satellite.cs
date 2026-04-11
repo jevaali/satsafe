@@ -12,6 +12,8 @@ public class Satellite : SpaceObject
 
     public Guid? OperatorId { get; private set; }
     public Operator? Operator { get; set; }
+
+    public RiskAssessment? RiskAssessment { get; set; }
     
     public string? OperatorName { get; private set; } = string.Empty;
 

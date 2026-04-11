@@ -46,11 +46,11 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
             .HasForeignKey(ce => ce.SecondaryObjectId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<ConjunctionEvent>()
-            .HasOne(ce => ce.RiskAssessment)
-            .WithOne(ra => ra.ConjunctionEvent)
-            .HasForeignKey<RiskAssessment>(ra => ra.ConjunctionEventId);
-        
+        modelBuilder.Entity<Satellite>()
+            .HasOne(s => s.RiskAssessment)
+            .WithOne(ra => ra.Satellite)
+            .HasForeignKey<RiskAssessment>(ra => ra.SatelliteId);
+
         modelBuilder.Entity<SpaceObject>()
             .HasOne(s => s.Orbit)
             .WithOne(o => o.SpaceObject)

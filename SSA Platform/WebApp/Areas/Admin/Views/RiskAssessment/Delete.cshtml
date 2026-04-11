@@ -22,9 +22,9 @@
     </div>
 
     <dl class="admin-detail-grid mb-4">
+        <div class="admin-detail-item"><dt>Satellite</dt><dd>@Model.SatelliteName</dd></div>
         <div class="admin-detail-item"><dt>Risk Score</dt><dd>@Model.RiskScore.ToString("F4")</dd></div>
         <div class="admin-detail-item"><dt>Model Version</dt><dd>@(string.IsNullOrEmpty(Model.ModelVersion) ? "—" : Model.ModelVersion)</dd></div>
-        <div class="admin-detail-item"><dt>Conjunction Event</dt><dd>@(Model.ConjunctionStatus ?? "—")</dd></div>
     </dl>
 
     <form asp-action="Delete">

@@ -23,6 +23,7 @@ public class SatelliteRepository : ISatelliteRepository
             .Include(s => s.Operator)
             .Include(s => s.Orbit)
             .Include(s => s.TleRecords)
+            .Include(s => s.RiskAssessment)
             .FirstOrDefaultAsync(s => s.Id == id && s.Status != ESatelliteStatus.Deleted);
     }
 
@@ -59,6 +60,7 @@ public class SatelliteRepository : ISatelliteRepository
             .Include(s => s.Operator)
             .Include(s => s.Orbit)
             .Include(s => s.TleRecords)
+            .Include(s => s.RiskAssessment)
             .Where(s => s.OperatorId == operatorId && s.Status != ESatelliteStatus.Deleted)
             .ToListAsync();
     }
