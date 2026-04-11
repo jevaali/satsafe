@@ -200,29 +200,20 @@
                 @if (helpers.Any())
                 {
                     <div class="px-3">
-                    @foreach (var helper in helpers)
+                    @foreach (var member in helpers)
                     {
-                        var user = helper.AppUser;
-                        var initials = user != null
-                            ? $"{user.FirstName.FirstOrDefault()}{user.LastName.FirstOrDefault()}".ToUpper().Trim()
-                            : "?";
-                        if (string.IsNullOrWhiteSpace(initials))
-                            initials = (user?.Email?.FirstOrDefault() ?? '?').ToString().ToUpper();
-
                         <div class="helper-row">
                             <div class="d-flex align-items-center gap-3">
-                                <div class="helper-avatar">@initials</div>
+                                <div class="helper-avatar">@member.Initials</div>
                                 <div>
                                     <div class="fw-semibold" style="font-size:0.88rem">
-                                        @(user != null && (!string.IsNullOrWhiteSpace(user.FirstName) || !string.IsNullOrWhiteSpace(user.LastName))
-                                            ? $"{user.FirstName} {user.LastName}".Trim()
-                                            : user?.Email ?? "Unknown")
+                                        @(string.IsNullOrWhiteSpace(member.FullName) ? member.Email : member.FullName)
                                     </div>
-                                    <div class="text-muted" style="font-size:0.75rem">@(user?.Email ?? "—")</div>
+                                    <div class="text-muted" style="font-size:0.75rem">@(string.IsNullOrWhiteSpace(member.Email) ? "—" : member.Email)</div>
                                 </div>
                             </div>
                             <form asp-area="Operator" asp-controller="Settings" asp-action="RemoveHelper"
-                                  asp-route-id="@(helper.Id)" method="post" class="d-inline">
+                                  asp-route-id="@member.Id" method="post" class="d-inline">
                                 @Html.AntiForgeryToken()
                                 <button type="submit" class="btn-sat btn-sat-delete"
                                         onclick="return confirm('Remove this team member?')">

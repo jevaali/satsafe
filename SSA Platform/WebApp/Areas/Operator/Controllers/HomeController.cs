@@ -7,26 +7,41 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebApp.Areas.Operator.Controllers;
 
 [Area("Operator")]
-[Authorize (Roles = "Operator")]
+[Authorize(Roles = "Operator,OperatorHelper")]
 public class HomeController : Controller
 {
     private readonly GetOperatorDashboardUseCase _getDashboardUseCase;
+    private readonly GetOperatorSatellitesUseCase _getSatellitesUseCase;
+    private readonly GetSatelliteByIdUseCase _getSatelliteByIdUseCase;
+    private readonly GetOperatorConjunctionsUseCase _getConjunctionsUseCase;
+    private readonly GetConjunctionByIdUseCase _getConjunctionByIdUseCase;
+    private readonly GetOperatorAlertsUseCase _getAlertsUseCase;
     private readonly AcknowledgeAlertUseCase _acknowledgeAlertUseCase;
     private readonly ResolveConjunctionUseCase _resolveConjunctionUseCase;
-    private readonly RunConjunctionScreeningUseCase _screeningUseCase; 
+    private readonly RunConjunctionScreeningUseCase _screeningUseCase;
     private readonly IUserOperatorRepository _userOperatorRepository;
 
     public HomeController(
         GetOperatorDashboardUseCase getDashboardUseCase,
+        GetOperatorSatellitesUseCase getSatellitesUseCase,
+        GetSatelliteByIdUseCase getSatelliteByIdUseCase,
+        GetOperatorConjunctionsUseCase getConjunctionsUseCase,
+        GetConjunctionByIdUseCase getConjunctionByIdUseCase,
+        GetOperatorAlertsUseCase getAlertsUseCase,
         AcknowledgeAlertUseCase acknowledgeAlertUseCase,
         ResolveConjunctionUseCase resolveConjunctionUseCase,
-        RunConjunctionScreeningUseCase screeningUseCase,      
+        RunConjunctionScreeningUseCase screeningUseCase,
         IUserOperatorRepository userOperatorRepository)
     {
-        _getDashboardUseCase       = getDashboardUseCase;
+        _getDashboardUseCase     = getDashboardUseCase;
+        _getSatellitesUseCase    = getSatellitesUseCase;
+        _getSatelliteByIdUseCase = getSatelliteByIdUseCase;
+        _getConjunctionsUseCase  = getConjunctionsUseCase;
+        _getConjunctionByIdUseCase = getConjunctionByIdUseCase;
+        _getAlertsUseCase        = getAlertsUseCase;
         _acknowledgeAlertUseCase   = acknowledgeAlertUseCase;
         _resolveConjunctionUseCase = resolveConjunctionUseCase;
-        _screeningUseCase          = screeningUseCase;  
+        _screeningUseCase          = screeningUseCase;
         _userOperatorRepository    = userOperatorRepository;
     }
 
@@ -36,7 +51,7 @@ public class HomeController : Controller
         var (userId, operatorId) = await GetOperatorContextAsync();
         if (userId == Guid.Empty || operatorId == Guid.Empty)
             return Forbid();
-        
+
         await _screeningUseCase.ExecuteAsync(operatorId, userId);
 
         var dashboard = await _getDashboardUseCase.ExecuteAsync(userId, operatorId);
@@ -50,7 +65,7 @@ public class HomeController : Controller
         if (userId == Guid.Empty || operatorId == Guid.Empty)
             return Forbid();
 
-        var satellites = await _getDashboardUseCase.GetSatellitesAsync(operatorId);
+        var satellites = await _getSatellitesUseCase.ExecuteAsync(operatorId);
         return View(satellites);
     }
 
@@ -61,7 +76,7 @@ public class HomeController : Controller
         if (userId == Guid.Empty || operatorId == Guid.Empty)
             return Forbid();
 
-        var satellite = await _getDashboardUseCase.GetSatelliteByIdAsync(id, operatorId);
+        var satellite = await _getSatelliteByIdUseCase.ExecuteAsync(id, operatorId);
         if (satellite == null)
             return NotFound();
 
@@ -75,7 +90,7 @@ public class HomeController : Controller
         if (userId == Guid.Empty || operatorId == Guid.Empty)
             return Forbid();
 
-        var conjunctions = await _getDashboardUseCase.GetConjunctionsAsync(operatorId);
+        var conjunctions = await _getConjunctionsUseCase.ExecuteAsync(operatorId);
         return View(conjunctions);
     }
 
@@ -86,7 +101,7 @@ public class HomeController : Controller
         if (userId == Guid.Empty || operatorId == Guid.Empty)
             return Forbid();
 
-        var conjunction = await _getDashboardUseCase.GetConjunctionByIdAsync(id, operatorId);
+        var conjunction = await _getConjunctionByIdUseCase.ExecuteAsync(id, operatorId);
         if (conjunction == null)
             return NotFound();
 
@@ -124,7 +139,7 @@ public class HomeController : Controller
         if (userId == Guid.Empty || operatorId == Guid.Empty)
             return Forbid();
 
-        var alerts = await _getDashboardUseCase.GetAlertsAsync(operatorId);
+        var alerts = await _getAlertsUseCase.ExecuteAsync(operatorId);
         return View(alerts);
     }
 
@@ -134,7 +149,7 @@ public class HomeController : Controller
         if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var userId))
             return (Guid.Empty, Guid.Empty);
 
-        if (!User.IsInRole("Operator"))
+        if (!User.IsInRole("Operator") && !User.IsInRole("OperatorHelper"))
             return (Guid.Empty, Guid.Empty);
 
         var userOperator = await _userOperatorRepository.GetByUserIdAsync(userId);

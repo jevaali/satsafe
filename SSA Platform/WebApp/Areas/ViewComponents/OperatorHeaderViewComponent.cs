@@ -9,14 +9,17 @@ using WebApp.Models;
 [Authorize]
 public class OperatorHeaderViewComponent : ViewComponent
 {
-    private readonly GetOperatorDashboardUseCase _dashboardUseCase;
+    private readonly GetOperatorSatellitesUseCase _getSatellitesUseCase;
+    private readonly GetOperatorAlertsUseCase _getAlertsUseCase;
     private readonly IUserOperatorRepository _userOperatorRepository;
 
     public OperatorHeaderViewComponent(
-        GetOperatorDashboardUseCase dashboardUseCase,
+        GetOperatorSatellitesUseCase getSatellitesUseCase,
+        GetOperatorAlertsUseCase getAlertsUseCase,
         IUserOperatorRepository userOperatorRepository)
     {
-        _dashboardUseCase = dashboardUseCase;
+        _getSatellitesUseCase   = getSatellitesUseCase;
+        _getAlertsUseCase       = getAlertsUseCase;
         _userOperatorRepository = userOperatorRepository;
     }
 
@@ -24,22 +27,22 @@ public class OperatorHeaderViewComponent : ViewComponent
     {
         var (userId, operatorId) = await GetOperatorContextAsync();
         if (userId == Guid.Empty || operatorId == Guid.Empty)
-            return Content(""); // return empty if no operator context
+            return Content("");
 
-        var satellites = await _dashboardUseCase.GetSatellitesAsync(operatorId);
-        var alerts = await _dashboardUseCase.GetAlertsAsync(operatorId);
+        var satellites = await _getSatellitesUseCase.ExecuteAsync(operatorId);
+        var alerts     = await _getAlertsUseCase.ExecuteAsync(operatorId);
 
         var vm = new OperatorHeaderViewModel
         {
             Satellites = satellites.Select(s => new SatelliteItem
             {
-                Id = s.Id,
+                Id   = s.Id,
                 Name = s.Name
             }).ToList(),
             UnacknowledgedAlertCount = alerts.Count(a => !a.IsAcknowledged)
         };
 
-        return View(vm); 
+        return View(vm);
     }
 
     private async Task<(Guid userId, Guid operatorId)> GetOperatorContextAsync()
@@ -48,7 +51,7 @@ public class OperatorHeaderViewComponent : ViewComponent
         if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var userId))
             return (Guid.Empty, Guid.Empty);
 
-        if (!User.IsInRole("Operator"))
+        if (!User.IsInRole("Operator") && !User.IsInRole("OperatorHelper"))
             return (Guid.Empty, Guid.Empty);
 
         var userOperator = await _userOperatorRepository.GetByUserIdAsync(userId);

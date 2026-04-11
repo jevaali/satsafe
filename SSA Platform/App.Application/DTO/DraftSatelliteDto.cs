@@ -23,4 +23,13 @@ public class DraftSatelliteDto
         < 35887  => "GEO",
         _        => "HEO"
     };
+
+    public double? RiskScore { get; set; }
+    public string RiskLevel => RiskScore switch
+    {
+        > 0.7  => "High",
+        > 0.4  => "Medium",
+        not null => "Low",
+        _        => "—"
+    };
 }

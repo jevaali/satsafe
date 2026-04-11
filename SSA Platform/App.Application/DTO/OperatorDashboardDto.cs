@@ -1,17 +1,15 @@
-using App.Domain.Entities;
-
 namespace App.Application.DTO;
 
 public class OperatorDashboardDto
 {
-    public string OperatorName { get; set; } = string.Empty;
-    public int TotalSatellites { get; set; }
-    public int ActiveSatellites { get; set; }
-    public int PendingConjunctions { get; set; }
-    public int HighRiskConjunctions { get; set; }
-    public int UnacknowledgedAlerts { get; set; }
-    
-    public IEnumerable<Satellite> Satellites { get; set; } = Enumerable.Empty<Satellite>();
-    public IEnumerable<ConjunctionEvent> Conjunctions { get; set; } = Enumerable.Empty<ConjunctionEvent>();
-    public IEnumerable<Alert> Alerts { get; set; } = Enumerable.Empty<Alert>();
+    public string OperatorName { get; init; } = string.Empty;
+    public int TotalSatellites { get; init; }
+    public int ActiveSatellites { get; init; }
+    public int PendingConjunctions { get; init; }
+    public int HighRiskConjunctions { get; init; }
+    public int UnacknowledgedAlerts { get; init; }
+
+    public IReadOnlyList<SatelliteSummaryDto> Satellites { get; init; } = [];
+    public IReadOnlyList<ConjunctionSummaryDto> Conjunctions { get; init; } = [];
+    public IReadOnlyList<AlertSummaryDto> Alerts { get; init; } = [];
 }

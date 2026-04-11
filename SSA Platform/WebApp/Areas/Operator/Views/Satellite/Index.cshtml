@@ -25,9 +25,12 @@ ViewData["Title"] = "Satellite Management";
         <div class="header-right">
             <span class="op-badge resolved"><i class="bi bi-circle-fill" style="font-size:0.45rem;"></i>@Model.Count(s => s.Status == ESatelliteStatus.Active) Active</span>
             <span class="op-badge low">@Model.Count(s => s.Status == ESatelliteStatus.Inactive) Inactive</span>
-            <a asp-area="Operator" asp-controller="Satellite" asp-action="Create" class="btn-add">
-                <i class="bi bi-plus-lg"></i> Add Satellite
-            </a>
+            @if (User.IsInRole("Operator"))
+            {
+                <a asp-area="Operator" asp-controller="Satellite" asp-action="Create" class="btn-add">
+                    <i class="bi bi-plus-lg"></i> Add Satellite
+                </a>
+            }
         </div>
     </div>
 
@@ -125,12 +128,15 @@ ViewData["Title"] = "Satellite Management";
                 <a asp-area="Operator" asp-controller="Satellite" asp-action="Details" asp-route-id="@sat.Id" class="btn-sat btn-sat-view">
                     <i class="bi bi-eye"></i> View
                 </a>
+                @if (User.IsInRole("Operator"))
+                {
                 <a asp-area="Operator" asp-controller="Satellite" asp-action="Edit" asp-route-id="@sat.Id" class="btn-sat btn-sat-edit">
                     <i class="bi bi-pencil"></i> Edit
                 </a>
                 <a asp-area="Operator" asp-controller="Satellite" asp-action="Delete" asp-route-id="@sat.Id" class="btn-sat btn-sat-delete">
                     <i class="bi bi-trash"></i> Delete
                 </a>
+                }
             </div>
         </div>
         }
@@ -139,9 +145,12 @@ ViewData["Title"] = "Satellite Management";
         {
         <div class="empty-state">
             <p>No satellites registered to your operator account.</p>
-            <a asp-area="Operator" asp-controller="Satellite" asp-action="Create" class="btn-add">
-                <i class="bi bi-plus-lg"></i> Add Your First Satellite
-            </a>
+            @if (User.IsInRole("Operator"))
+            {
+                <a asp-area="Operator" asp-controller="Satellite" asp-action="Create" class="btn-add">
+                    <i class="bi bi-plus-lg"></i> Add Your First Satellite
+                </a>
+            }
         </div>
         }
     </div>

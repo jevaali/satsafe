@@ -9,12 +9,15 @@ using App.Infrastructure.Repositories;
 using App.Infrastructure.Seeding;
 using App.Infrastructure.UnitOfWork;
 using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using WebApp.Infrastructure;
 using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using WebApp;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +37,12 @@ builder.Services.AddScoped<WebApp.UseCases.LoginUseCase>();
 builder.Services.AddScoped<RegisterUserUseCase>();
 builder.Services.AddScoped<RegisterOperatorUseCase>();
 builder.Services.AddScoped<GetOperatorDashboardUseCase>();
+builder.Services.AddScoped<GetOperatorSatellitesUseCase>();
+builder.Services.AddScoped<GetSatelliteByIdUseCase>();
+builder.Services.AddScoped<GetOperatorConjunctionsUseCase>();
+builder.Services.AddScoped<GetConjunctionByIdUseCase>();
+builder.Services.AddScoped<GetOperatorAlertsUseCase>();
+builder.Services.AddScoped<GetAlertByIdUseCase>();
 builder.Services.AddScoped<GetHomeStatsUseCase>();
 builder.Services.AddScoped<AcknowledgeAlertUseCase>();
 builder.Services.AddScoped<ResolveConjunctionUseCase>();
@@ -121,6 +130,10 @@ apiVersioningBuilder.AddApiExplorer(options =>
     options.SubstituteApiVersionInUrl = true;
 });
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+builder.Services.AddSwaggerGen();
+
 
 var app = builder.Build();
 
@@ -162,6 +175,23 @@ app.UseRequestLocalization(options: app.Services
 app.UseRouting();
 
 app.UseAuthorization();
+
+
+app.UseSwagger();
+app.UseSwaggerUI(options =>
+{
+    var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+    foreach (var description in provider.ApiVersionDescriptions)
+    {
+        options.SwaggerEndpoint(
+            $"/swagger/{description.GroupName}/swagger.json",
+            description.GroupName.ToUpperInvariant()
+        );
+    }
+    // serve from root
+    // options.RoutePrefix = string.Empty;
+});
+
 
 app.MapStaticAssets();
 

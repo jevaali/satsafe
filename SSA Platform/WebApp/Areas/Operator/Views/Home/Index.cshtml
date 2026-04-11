@@ -1,4 +1,3 @@
-@using App.Domain.Entities
 @using App.Domain.Entities.Enums
 @model App.Application.DTO.OperatorDashboardDto
 
@@ -34,6 +33,14 @@
         </div>
     </div>
     
+    @if (User.IsInRole("OperatorHelper"))
+    {
+        <div class="alert alert-info d-flex align-items-center gap-2 mb-3" style="font-size:0.88rem;">
+            <i class="bi bi-person-badge"></i>
+            <span>You are viewing this dashboard as an <strong>Operator Helper</strong>. Some actions are restricted to the operator.</span>
+        </div>
+    }
+
     <!-- MAIN GRID -->
     <div class="grid">
 
@@ -49,14 +56,14 @@
                                         .Where(s => s.Orbit != null)
                                         .Select(s => new {
                                             id   = s.Id,
-                                            name = s.Name.ToString(),
+                                            name = s.Name,
                                             orbit = new {
-                                                semiMajorAxis     = s.Orbit!.Parameters.SemiMajorAxis,
-                                                eccentricity      = s.Orbit!.Parameters.Eccentricity,
-                                                inclination       = s.Orbit!.Parameters.Inclination,
-                                                raan              = s.Orbit!.Parameters.RAAN,
-                                                argumentOfPerigee = s.Orbit!.Parameters.ArgumentOfPerigee,
-                                                meanAnomaly       = s.Orbit!.Parameters.MeanAnomaly
+                                                semiMajorAxis     = s.Orbit!.SemiMajorAxis,
+                                                eccentricity      = s.Orbit!.Eccentricity,
+                                                inclination       = s.Orbit!.Inclination,
+                                                raan              = s.Orbit!.RAAN,
+                                                argumentOfPerigee = s.Orbit!.ArgumentOfPerigee,
+                                                meanAnomaly       = s.Orbit!.MeanAnomaly
                                             }
                                         }))),
                     });
@@ -107,15 +114,15 @@
                             <span class="tile-status @(sat.Status == ESatelliteStatus.Active ? "active" : "inactive")">
                                 <i class="bi bi-circle-fill tile-status-dot"></i>@sat.Status
                             </span>
-                            @if (sat.RiskAssessment != null)
+                            @if (sat.RiskLevel != null)
                             {
-                                var riskCls = sat.RiskAssessment.RiskLevel switch {
+                                var riskCls = sat.RiskLevel switch {
                                     "High"   => "tile-risk-high",
                                     "Medium" => "tile-risk-med",
                                     _        => "tile-risk-low"
                                 };
                                 <span class="tile-risk @riskCls">
-                                    <i class="bi bi-shield-fill"></i>@sat.RiskAssessment.RiskLevel
+                                    <i class="bi bi-shield-fill"></i>@sat.RiskLevel
                                 </span>
                             }
                         </div>
@@ -137,28 +144,20 @@
 
             <div class="timeline">
                 @foreach (var conj in Model.Conjunctions
-                              .OrderByDescending(c => c.IsHighRisk())
+                              .OrderByDescending(c => c.IsHighRisk)
                               .ThenBy(c => c.TimeOfClosestApproach)
                               .Take(6))
                 {
                     <a asp-area="Operator" asp-controller="Conjunctions" asp-action="Details"
                        asp-route-id="@conj.Id"
-                       class="timeline-item @(conj.IsHighRisk() ? "high" : "") text-decoration-none">
+                       class="timeline-item @(conj.IsHighRisk ? "high" : "") text-decoration-none">
                         <div class="time">
                             @conj.TimeOfClosestApproach.ToString("HH:mm")
                         </div>
                         <div class="content">
-                            @(conj.PrimaryObject switch {
-                                Satellite s => s.Name.ToString(),
-                                DebrisObject d => $"DEBRIS-{d.NoradId}",
-                                _ => conj.PrimaryObjectId.ToString()
-                            })
+                            @conj.PrimaryObjectName
                             ↔
-                            @(conj.SecondaryObject switch {
-                                Satellite s => s.Name.ToString(),
-                                DebrisObject d => $"DEBRIS-{d.NoradId}",
-                                _ => conj.SecondaryObjectId.ToString()
-                            })
+                            @conj.SecondaryObjectName
                             <div class="meta">
                                 @App.Resources.Views.Operator.Index.Label_Miss: @conj.MissDistance.ToString("N0") m |
                                 @((conj.CollisionProbability * 100).ToString("F3"))%

@@ -21,12 +21,15 @@
         </div>
         <div class="header-right">
             <span class="badge-status @statusStr">@Model.Status</span>
-            <a asp-area="Operator" asp-controller="Satellite" asp-action="Edit" asp-route-id="@Model.Id" class="btn-sat btn-sat-edit">
-                <i class="bi bi-pencil"></i> Edit
-            </a>
-            <a asp-area="Operator" asp-controller="Satellite" asp-action="Delete" asp-route-id="@Model.Id" class="btn-sat btn-sat-delete">
-                <i class="bi bi-trash"></i> Delete
-            </a>
+            @if (User.IsInRole("Operator"))
+            {
+                <a asp-area="Operator" asp-controller="Satellite" asp-action="Edit" asp-route-id="@Model.Id" class="btn-sat btn-sat-edit">
+                    <i class="bi bi-pencil"></i> Edit
+                </a>
+                <a asp-area="Operator" asp-controller="Satellite" asp-action="Delete" asp-route-id="@Model.Id" class="btn-sat btn-sat-delete">
+                    <i class="bi bi-trash"></i> Delete
+                </a>
+            }
         </div>
     </div>
 
@@ -127,8 +130,11 @@
             {
                 <div class="text-center py-4 text-muted">
                     <p>No orbital parameters available.</p>
-                    <a asp-area="Operator" asp-controller="Satellite" asp-action="Edit" asp-route-id="@Model.Id"
-                       class="btn-sat btn-sat-edit"><i class="bi bi-pencil"></i> Add Orbit Data</a>
+                    @if (User.IsInRole("Operator"))
+                    {
+                        <a asp-area="Operator" asp-controller="Satellite" asp-action="Edit" asp-route-id="@Model.Id"
+                           class="btn-sat btn-sat-edit"><i class="bi bi-pencil"></i> Add Orbit Data</a>
+                    }
                 </div>
             }
         </div>

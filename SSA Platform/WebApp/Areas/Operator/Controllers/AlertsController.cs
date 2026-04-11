@@ -7,21 +7,24 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebApp.Areas.Operator.Controllers;
 
 [Area("Operator")]
-[Authorize(Roles = "Operator")]
+[Authorize(Roles = "Operator,OperatorHelper")]
 public class AlertsController : Controller
 {
-    private readonly GetOperatorDashboardUseCase _dashboardUseCase;
+    private readonly GetOperatorAlertsUseCase _getAlertsUseCase;
+    private readonly GetAlertByIdUseCase _getAlertByIdUseCase;
     private readonly AcknowledgeAlertUseCase _acknowledgeUseCase;
     private readonly UpdateAlertMessageUseCase _updateMessageUseCase;
     private readonly IUserOperatorRepository _userOperatorRepository;
 
     public AlertsController(
-        GetOperatorDashboardUseCase dashboardUseCase,
+        GetOperatorAlertsUseCase getAlertsUseCase,
+        GetAlertByIdUseCase getAlertByIdUseCase,
         AcknowledgeAlertUseCase acknowledgeUseCase,
         UpdateAlertMessageUseCase updateMessageUseCase,
         IUserOperatorRepository userOperatorRepository)
     {
-        _dashboardUseCase       = dashboardUseCase;
+        _getAlertsUseCase       = getAlertsUseCase;
+        _getAlertByIdUseCase    = getAlertByIdUseCase;
         _acknowledgeUseCase     = acknowledgeUseCase;
         _updateMessageUseCase   = updateMessageUseCase;
         _userOperatorRepository = userOperatorRepository;
@@ -33,7 +36,7 @@ public class AlertsController : Controller
         var operatorId = await GetOperatorIdAsync();
         if (operatorId == Guid.Empty) return Forbid();
 
-        var alerts = await _dashboardUseCase.GetAlertsAsync(operatorId);
+        var alerts = await _getAlertsUseCase.ExecuteAsync(operatorId);
         return View(alerts);
     }
 
@@ -43,7 +46,7 @@ public class AlertsController : Controller
         var operatorId = await GetOperatorIdAsync();
         if (operatorId == Guid.Empty) return Forbid();
 
-        var alert = await _dashboardUseCase.GetAlertByIdAsync(id, operatorId);
+        var alert = await _getAlertByIdUseCase.ExecuteAsync(id, operatorId);
         if (alert == null) return NotFound();
 
         return View(alert);
@@ -66,7 +69,7 @@ public class AlertsController : Controller
         var operatorId = await GetOperatorIdAsync();
         if (operatorId == Guid.Empty) return Forbid();
 
-        var alert = await _dashboardUseCase.GetAlertByIdAsync(id, operatorId);
+        var alert = await _getAlertByIdUseCase.ExecuteAsync(id, operatorId);
         if (alert == null) return NotFound();
 
         ViewBag.CurrentMessage = alert.Message?.ToString() ?? string.Empty;
@@ -83,7 +86,7 @@ public class AlertsController : Controller
         if (string.IsNullOrWhiteSpace(message))
         {
             ModelState.AddModelError(nameof(message), "Message cannot be empty.");
-            var alert = await _dashboardUseCase.GetAlertByIdAsync(id, operatorId);
+            var alert = await _getAlertByIdUseCase.ExecuteAsync(id, operatorId);
             if (alert == null) return NotFound();
             ViewBag.CurrentMessage = message;
             return View(alert);

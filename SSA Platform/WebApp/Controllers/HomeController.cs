@@ -19,7 +19,7 @@ public class HomeController : Controller
     [AllowAnonymous]
     public async Task<IActionResult> Index()
     {
-        if (User.IsInRole("Operator"))
+        if (User.IsInRole("Operator") || User.IsInRole("OperatorHelper"))
         {
             return RedirectToAction("Index", "Home", new { area = "Operator" });
         }

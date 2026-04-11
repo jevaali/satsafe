@@ -1,11 +1,9 @@
-using App.Domain.Entities;
-
 namespace App.Application.DTO;
 
 public class SettingsDto
 {
-    public Operator Operator { get; set; } = null!;
-    public IEnumerable<Satellite> Satellites { get; set; } = [];
-    public IEnumerable<UserOperator> Helpers { get; set; } = [];
-    public NotificationSetting? NotificationSetting { get; set; }
+    public OperatorSummaryDto Operator { get; init; } = null!;
+    public IReadOnlyList<SatelliteSummaryDto> Satellites { get; init; } = [];
+    public IReadOnlyList<HelperDto> Helpers { get; init; } = [];
+    public NotificationSettingDto? NotificationSetting { get; init; }
 }

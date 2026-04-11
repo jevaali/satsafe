@@ -1,7 +1,6 @@
 using System.Security.Claims;
 using App.Application.UseCases;
 using App.Application.Interfaces.IRepositories;
-using App.Domain.Entities;
 using App.Domain.Entities.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,27 +8,33 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebApp.Areas.Operator.Controllers;
 
 [Area("Operator")]
-[Authorize(Roles = "Operator")]
+[Authorize(Roles = "Operator,OperatorHelper")]
 public class ConjunctionsController : Controller
 {
-    private readonly GetOperatorDashboardUseCase _dashboardUseCase;
+    private readonly GetOperatorConjunctionsUseCase _getConjunctionsUseCase;
+    private readonly GetConjunctionByIdUseCase _getConjunctionByIdUseCase;
+    private readonly GetOperatorSatellitesUseCase _getSatellitesUseCase;
     private readonly ResolveConjunctionUseCase _resolveUseCase;
     private readonly AcknowledgeConjunctionSideUseCase _acknowledgeUseCase;
     private readonly RefreshConjunctionStatusesUseCase _refreshUseCase;
     private readonly IUserOperatorRepository _userOperatorRepository;
 
     public ConjunctionsController(
-        GetOperatorDashboardUseCase dashboardUseCase,
+        GetOperatorConjunctionsUseCase getConjunctionsUseCase,
+        GetConjunctionByIdUseCase getConjunctionByIdUseCase,
+        GetOperatorSatellitesUseCase getSatellitesUseCase,
         ResolveConjunctionUseCase resolveUseCase,
         AcknowledgeConjunctionSideUseCase acknowledgeUseCase,
         RefreshConjunctionStatusesUseCase refreshUseCase,
         IUserOperatorRepository userOperatorRepository)
     {
-        _dashboardUseCase       = dashboardUseCase;
-        _resolveUseCase         = resolveUseCase;
-        _acknowledgeUseCase     = acknowledgeUseCase;
-        _refreshUseCase         = refreshUseCase;
-        _userOperatorRepository = userOperatorRepository;
+        _getConjunctionsUseCase  = getConjunctionsUseCase;
+        _getConjunctionByIdUseCase = getConjunctionByIdUseCase;
+        _getSatellitesUseCase    = getSatellitesUseCase;
+        _resolveUseCase          = resolveUseCase;
+        _acknowledgeUseCase      = acknowledgeUseCase;
+        _refreshUseCase          = refreshUseCase;
+        _userOperatorRepository  = userOperatorRepository;
     }
 
     [HttpGet]
@@ -40,7 +45,7 @@ public class ConjunctionsController : Controller
 
         await _refreshUseCase.ExecuteAsync(operatorId, userId);
 
-        var conjunctions = await _dashboardUseCase.GetConjunctionsAsync(operatorId);
+        var conjunctions = await _getConjunctionsUseCase.ExecuteAsync(operatorId);
         return View(conjunctions);
     }
 
@@ -50,11 +55,10 @@ public class ConjunctionsController : Controller
         var (_, operatorId) = await GetOperatorContextAsync();
         if (operatorId == Guid.Empty) return Forbid();
 
-        var conjunction = await _dashboardUseCase.GetConjunctionByIdAsync(id, operatorId);
+        var conjunction = await _getConjunctionByIdUseCase.ExecuteAsync(id, operatorId);
         if (conjunction == null) return NotFound();
 
-        // Tell the view which side this operator owns so it can render the right buttons
-        var satellites = await _dashboardUseCase.GetSatellitesAsync(operatorId);
+        var satellites = await _getSatellitesUseCase.ExecuteAsync(operatorId);
         var satelliteIds = satellites.Select(s => s.Id).ToHashSet();
         ViewBag.OperatorSide = satelliteIds.Contains(conjunction.PrimaryObjectId)   ? "Primary"
                              : satelliteIds.Contains(conjunction.SecondaryObjectId) ? "Secondary"

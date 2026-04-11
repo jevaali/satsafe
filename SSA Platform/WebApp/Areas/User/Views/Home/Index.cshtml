@@ -69,6 +69,7 @@
                         <th>@App.Resources.Views.User.Index.COL_SEMI_MAJOR_AXIS</th>
                         <th>@App.Resources.Views.User.Index.COL_ECCENTRICITY</th>
                         <th>@App.Resources.Views.User.Index.COL_INCLINATION</th>
+                        <th>Risk</th>
                         <th>@App.Resources.Views.User.Index.SAVED</th>
                         <th></th>
                     </tr>
@@ -96,6 +97,23 @@
                             </td>
                             <td style="font-family: 'Share Tech Mono', monospace; font-size: 0.82rem; color: #8a9bb0;">
                                 @d.Inclination.ToString("F1")°
+                            </td>
+                            <td>
+                                @if (d.RiskScore.HasValue)
+                                {
+                                    var riskCls = d.RiskLevel switch {
+                                        "High"   => "tile-risk-high",
+                                        "Medium" => "tile-risk-med",
+                                        _        => "tile-risk-low"
+                                    };
+                                    <span class="tile-risk @riskCls">
+                                        <i class="bi bi-shield-fill"></i>@d.RiskLevel
+                                    </span>
+                                    <span style="font-family:'Share Tech Mono',monospace; font-size:0.75rem; color:#8a9bb0; margin-left:0.35rem;">
+                                        @d.RiskScore.Value.ToString("F4")
+                                    </span>
+                                }
+                                else { <span class="text-muted" style="font-size:0.75rem;">—</span> }
                             </td>
                             <td style="font-size: 0.78rem; color: #5a7a9a;">
                                 @d.CreatedAt.ToString("yyyy-MM-dd")

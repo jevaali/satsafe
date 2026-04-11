@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebApp.Areas.Operator.Controllers;
 
 [Area("Operator")]
-[Authorize(Roles = "Operator")]
+[Authorize(Roles = "Operator,OperatorHelper")]
 public class SatelliteController : Controller
 {
     private readonly AddSatelliteUseCase _addSatelliteUseCase;
@@ -46,6 +46,7 @@ public class SatelliteController : Controller
     }
     
     [HttpGet]
+    [Authorize(Roles = "Operator")]
     public IActionResult Create()
     {
         return View(new AddSatelliteRequest());
@@ -53,6 +54,7 @@ public class SatelliteController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Operator")]
     public async Task<IActionResult> Create([FromForm] AddSatelliteRequest request)
     {
         var (userId, operatorId) = await GetOperatorContextAsync();
@@ -77,6 +79,7 @@ public class SatelliteController : Controller
     }
 
     [HttpGet]
+    [Authorize(Roles = "Operator")]
     public async Task<IActionResult> Edit(Guid id)
     {
         var (userId, operatorId) = await GetOperatorContextAsync();
@@ -110,6 +113,7 @@ public class SatelliteController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Operator")]
     public async Task<IActionResult> Edit([FromForm] UpdateSatelliteRequest request)
     {
         var (userId, operatorId) = await GetOperatorContextAsync();
@@ -135,6 +139,7 @@ public class SatelliteController : Controller
     }
 
     [HttpGet]
+    [Authorize(Roles = "Operator")]
     public async Task<IActionResult> Delete(Guid id)
     {
         var (userId, operatorId) = await GetOperatorContextAsync();
@@ -153,6 +158,7 @@ public class SatelliteController : Controller
 
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Operator")]
     public async Task<IActionResult> DeleteConfirmed(Guid id)
     {
         var (userId, operatorId) = await GetOperatorContextAsync();
