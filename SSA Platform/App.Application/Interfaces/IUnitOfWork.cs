@@ -14,6 +14,7 @@ public interface IUnitOfWork
     INotificationSettingRepository NotificationSettings { get; }
     IDraftSatelliteRepository DraftSatellites { get; }
     IRiskAssessmentRepository RiskAssessments { get; }
+    IOperatorActionLogRepository OperatorActionLogs { get; }
 
     Task CommitAsync();
 }

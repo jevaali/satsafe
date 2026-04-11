@@ -19,6 +19,7 @@ public class SettingsController : Controller
     private readonly AddHelperUseCase _addHelper;
     private readonly RemoveHelperUseCase _removeHelper;
     private readonly SaveNotificationsUseCase _saveNotifications;
+    private readonly GetOperatorActionLogsUseCase _getActionLogs;
     private readonly UserManager<AppUser> _userManager;
     private readonly IUserOperatorRepository _userOperatorRepository;
 
@@ -28,6 +29,7 @@ public class SettingsController : Controller
         AddHelperUseCase addHelper,
         RemoveHelperUseCase removeHelper,
         SaveNotificationsUseCase saveNotifications,
+        GetOperatorActionLogsUseCase getActionLogs,
         UserManager<AppUser> userManager,
         IUserOperatorRepository userOperatorRepository)
     {
@@ -36,18 +38,22 @@ public class SettingsController : Controller
         _addHelper = addHelper;
         _removeHelper = removeHelper;
         _saveNotifications = saveNotifications;
+        _getActionLogs = getActionLogs;
         _userManager = userManager;
         _userOperatorRepository = userOperatorRepository;
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(Guid? filterUserId)
     {
         var (userId, operatorId) = await GetUserContextAsync();
         if (userId == Guid.Empty || operatorId == Guid.Empty) return Forbid();
 
         var settings = await _getSettings.ExecuteAsync(userId, operatorId);
+        var logs = await _getActionLogs.ExecuteAsync(operatorId, filterUserId);
         var vm = BuildViewModel(settings);
+        vm.ActionLogs = logs;
+        vm.ActivityFilterUserId = filterUserId;
         return View(vm);
     }
 

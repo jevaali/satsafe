@@ -24,6 +24,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
     
     public DbSet<AppRefreshToken> RefreshTokens { get; set; } = null!;
     public DbSet<DraftSatellite> DraftSatellites { get; set; } = null!;
+    public DbSet<OperatorActionLog> OperatorActionLogs { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

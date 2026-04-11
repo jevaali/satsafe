@@ -11,6 +11,9 @@ public class SettingsViewModel
     public UpdateOperatorForm OperatorForm { get; set; } = new();
     public AddHelperForm HelperForm { get; set; } = new();
     public NotificationForm NotificationForm { get; set; } = new();
+
+    public IEnumerable<OperatorActionLogDto> ActionLogs { get; set; } = [];
+    public Guid? ActivityFilterUserId { get; set; }
 }
 
 public class UpdateOperatorForm

@@ -3,7 +3,11 @@
 
 @{
     ViewData["Title"] = "Settings";
-    var activeTab = TempData["ActiveTab"]?.ToString() ?? "profile";
+    var activeTab = TempData["ActiveTab"]?.ToString()
+        ?? Context.Request.Query["activeTab"].FirstOrDefault()
+        ?? (Model.ActivityFilterUserId.HasValue ? "activity" : "profile");
+    var logs = Model.ActionLogs.ToList();
+    var teamMembers = Model.Settings.Helpers.ToList();
     var op = Model.Settings.Operator;
     var helpers = Model.Settings.Helpers.ToList();
     var satellites = Model.Settings.Satellites.ToList();
@@ -69,6 +73,16 @@
             <a class="nav-link @(activeTab == "notifications" ? "active" : "")"
                data-bs-toggle="tab" data-bs-target="#panel-notifications" role="tab">
                 <i class="bi bi-bell-fill me-1"></i> Notifications
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(activeTab == "activity" ? "active" : "")"
+               data-bs-toggle="tab" data-bs-target="#panel-activity" role="tab">
+                <i class="bi bi-clock-history me-1"></i> Activity Log
+                @if (logs.Any())
+                {
+                    <span class="badge bg-secondary ms-1" style="font-size:0.65rem;">@logs.Count</span>
+                }
             </a>
         </li>
     </ul>
@@ -255,6 +269,81 @@
                         </div>
                     </div>
                 </form>
+            </div>
+
+        </div>
+
+        <!-- ── Activity Log ── -->
+        <div class="tab-pane fade @(activeTab == "activity" ? "show active" : "")" id="panel-activity" role="tabpanel">
+
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between flex-wrap gap-2">
+                    <span><i class="bi bi-clock-history me-1"></i> Team Activity (@logs.Count)</span>
+                    <form method="get" asp-area="Operator" asp-controller="Settings" asp-action="Index"
+                          class="d-flex align-items-center gap-2">
+                        <input type="hidden" name="activeTab" value="activity" />
+                        <select name="filterUserId" class="form-select form-select-sm" style="width:auto;"
+                                onchange="this.form.submit()">
+                            <option value="">All members</option>
+                            @foreach (var member in teamMembers)
+                            {
+                                if (Model.ActivityFilterUserId == member.Id)
+                                {
+                                    <option value="@member.Id" selected>
+                                        @(string.IsNullOrWhiteSpace(member.FullName) ? member.Email : member.FullName)
+                                    </option>
+                                }
+                                else
+                                {
+                                    <option value="@member.Id">
+                                        @(string.IsNullOrWhiteSpace(member.FullName) ? member.Email : member.FullName)
+                                    </option>
+                                }
+                            }
+                        </select>
+                        @if (Model.ActivityFilterUserId.HasValue)
+                        {
+                            <a asp-area="Operator" asp-controller="Settings" asp-action="Index"
+                               class="btn btn-outline-secondary btn-sm">Clear</a>
+                        }
+                    </form>
+                </div>
+
+                @if (logs.Any())
+                {
+                    <table class="table table-sm table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>User</th>
+                                <th>Action</th>
+                                <th>Date &amp; Time (UTC)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var log in logs)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="fw-semibold" style="font-size:0.85rem;">
+                                        @(string.IsNullOrWhiteSpace(log.UserName) ? log.UserEmail : log.UserName)
+                                    </div>
+                                    <div class="text-muted" style="font-size:0.72rem;">@log.UserEmail</div>
+                                </td>
+                                <td><span class="badge bg-dark">@log.Action</span></td>
+                                <td class="font-monospace text-muted" style="font-size:0.8rem;">
+                                    @log.OccurredAt.ToString("yyyy-MM-dd HH:mm:ss")
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <div class="empty-state" style="padding:2rem">
+                        <p>No activity recorded yet.</p>
+                    </div>
+                }
             </div>
 
         </div>

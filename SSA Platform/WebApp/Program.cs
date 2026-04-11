@@ -1,4 +1,6 @@
 using System.Globalization;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 using App.Application.Interfaces;
 using App.Application.Interfaces.IRepositories;
 using App.Application.UseCases;
@@ -16,6 +18,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using WebApp.Infrastructure;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using WebApp;
 
@@ -59,6 +62,7 @@ builder.Services.AddScoped<UpdateAlertMessageUseCase>();
 builder.Services.AddScoped<SaveDraftSatelliteUseCase>();
 builder.Services.AddScoped<GetUserDraftsUseCase>();
 builder.Services.AddScoped<DeleteDraftSatelliteUseCase>();
+builder.Services.AddScoped<GetOperatorActionLogsUseCase>();
 
 builder.Services.AddScoped<ConjunctionAnalysisService>();
 builder.Services.AddScoped<SatelliteRiskScoringService>();
@@ -74,7 +78,10 @@ builder.Services.AddScoped<ISpaceObjectsRepository, SpaceObjectsRepository>();
 builder.Services.AddScoped<INotificationSettingRepository, NotificationSettingRepository>();
 builder.Services.AddScoped<IDraftSatelliteRepository, DraftSatelliteRepository>();
 builder.Services.AddScoped<IRiskAssessmentRepository, RiskAssessmentRepository>();
+builder.Services.AddScoped<IOperatorActionLogRepository, OperatorActionLogRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<UserOperatorRepository>();
+builder.Services.AddScoped<LogOperatorActionFilter>();
 
 builder.Services
     .AddIdentity<AppUser,  AppRole>(options => options.SignIn.RequireConfirmedAccount = false)
@@ -82,9 +89,29 @@ builder.Services
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
+builder.Services
+    .AddAuthentication()
+    .AddCookie(options => { options.SlidingExpiration = true; })
+    .AddJwtBearer(cfg =>
+    {
+        cfg.RequireHttpsMetadata = false; // TODO: set to true in production!
+        cfg.SaveToken = true;
+        cfg.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidIssuer = builder.Configuration["JWT:Issuer"],
+            ValidAudience = builder.Configuration["JWT:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]!)),
+            ClockSkew = TimeSpan.Zero // remove delay of token when expire
+        };
+    });
+
+
 builder.Services.AddControllersWithViews(options =>
 {
     options.ModelBinderProviders.Insert(0, new InvariantDoubleModelBinderProvider());
+    options.Filters.Add<LogOperatorActionFilter>();
 });
 
 var supportedCultures = builder.Configuration
@@ -109,6 +136,18 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
         new QueryStringRequestCultureProvider(),
         new CookieRequestCultureProvider()
     };
+});
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsAllowAll", policy =>
+    {
+        policy
+            .AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .WithExposedHeaders("X-Version", "X-Version-Created-At");
+    });
 });
 
 
@@ -171,6 +210,7 @@ app.UseHttpsRedirection();
 app.UseRequestLocalization(options: app.Services
     .GetService<IOptions<RequestLocalizationOptions>>()!.Value);
 
+app.UseCors("CorsAllowAll");
 
 app.UseRouting();
 
