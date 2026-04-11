@@ -30,6 +30,8 @@ builder.Services.AddScoped<UpdateSatelliteUseCase>();
 builder.Services.AddScoped<DeleteSatelliteUseCase>();
 builder.Services.AddScoped<AddOperatorUseCase>();
 builder.Services.AddScoped<AddDebrisObjectUseCase>();
+builder.Services.AddScoped<WebApp.UseCases.LoginUseCase>();
+builder.Services.AddScoped<RegisterUserUseCase>();
 builder.Services.AddScoped<RegisterOperatorUseCase>();
 builder.Services.AddScoped<GetOperatorDashboardUseCase>();
 builder.Services.AddScoped<GetHomeStatsUseCase>();

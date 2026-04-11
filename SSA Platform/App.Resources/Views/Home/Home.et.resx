@@ -66,7 +66,7 @@
         <value>POLAARORBIIT</value>
     </data>
     <data name="PlatformCapabilities" xml:space="preserve">
-        <value>Platvormi võimekused</value>
+        <value>Platvormi võimekused tulekul</value>
     </data>
     <data name="RealTimeTracking" xml:space="preserve">
         <value>Reaalajas jälgimine</value>
@@ -99,13 +99,13 @@
         <value>Tavakasutaja</value>
     </data>
     <data name="ReguralUser1" xml:space="preserve">
-        <value>Tekst</value>
+        <value>Luua testsatteliidid</value>
     </data>
     <data name="ReguralUser2" xml:space="preserve">
-        <value>Tekst</value>
+        <value>Uued võimalused tulekul</value>
     </data>
     <data name="ReguralUser3" xml:space="preserve">
-        <value>Tekst</value>
+        <value>Uued võimalused tulekul</value>
     </data>
     <data name="SpaceOperator1" xml:space="preserve">
         <value>Kõik kasutajafunktsioonid</value>
@@ -118,5 +118,8 @@
     </data>
     <data name="SpaceOperator4" xml:space="preserve">
         <value>Operaatoripõhine analüütika</value>
+    </data>
+    <data name="JoinPlatform" xml:space="preserve">
+        <value>Liitu Platvormiga</value>
     </data>
 </root>

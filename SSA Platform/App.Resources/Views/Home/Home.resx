@@ -73,7 +73,7 @@
         <value>POLAR ORBIT</value>
     </data>
     <data name="PlatformCapabilities" xml:space="preserve">
-        <value>Platform Capabilities</value>
+        <value>Platform Capabilities To Be</value>
     </data>
     <data name="RealTimeTracking" xml:space="preserve">
         <value>Real-Time Tracking</value>
@@ -106,13 +106,13 @@
         <value>Regular User</value>
     </data>
     <data name="ReguralUser1" xml:space="preserve">
-        <value>Text</value>
+        <value>Create draft sattelites</value>
     </data>
     <data name="ReguralUser2" xml:space="preserve">
-        <value>Text</value>
+        <value>New opportunities are coming</value>
     </data>
     <data name="ReguralUser3" xml:space="preserve">
-        <value>Text</value>
+        <value>New opportunities are coming</value>
     </data>
     <data name="SpaceOperator1" xml:space="preserve">
         <value>All user features</value>
@@ -125,5 +125,8 @@
     </data>
     <data name="SpaceOperator4" xml:space="preserve">
         <value>Operator-specific analytics</value>
+    </data>
+    <data name="JoinPlatform" xml:space="preserve">
+        <value>Join Platform</value>
     </data>
 </root>

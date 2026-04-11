@@ -260,5 +260,11 @@ namespace App.Resources.Views.Home {
                 return ResourceManager.GetString("SpaceOperator4", resourceCulture);
             }
         }
+        
+        public static string JoinPlatform {
+            get {
+                return ResourceManager.GetString("JoinPlatform", resourceCulture);
+            }
+        }
     }
 }

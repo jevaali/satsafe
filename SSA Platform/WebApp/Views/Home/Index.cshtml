@@ -30,11 +30,11 @@
                 @App.Resources.Views.Home.Home.Section_PlatformCapabilities
             </p>
             <div class="d-flex gap-3 flex-wrap">
-                <a asp-area="Identity" asp-page="/Account/Register" class="btn-add">
+                <a asp-controller="Register" asp-action="User" class="btn-add">
                     <i class="bi bi-person-plus"></i>
                     @App.Resources.Views.Home.Home.Btn_GetStarted
                 </a>
-                <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-secondary">
+                <a asp-controller="Login" asp-action="Index" class="btn btn-outline-secondary">
                     @App.Resources.Views.Home.Home.Btn_SignIn
                 </a>
             </div>
@@ -145,7 +145,7 @@
 
     <!-- Registration -->
     <div class="header mt-2">
-        <div><h3>Join the Platform</h3></div>
+        <div><h3>@App.Resources.Views.Home.Home.JoinPlatform</h3></div>
     </div>
     <div class="row g-3 mb-4">
         <div class="col-md-6">
@@ -159,7 +159,7 @@
                     <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>
                         @App.Resources.Views.Home.Home.ReguralUser3</li>
                 </ul>
-                <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-outline-primary w-100">
+                <a asp-controller="Register" asp-action="User" class="btn btn-outline-primary w-100">
                     @App.Resources.Views.Home.Home.RegisterUser
                 </a>
             </div>
@@ -177,8 +177,8 @@
                     <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>
                         @App.Resources.Views.Home.Home.SpaceOperator4</li>
                 </ul>
-                <a asp-area="Identity" asp-page="/Account/Register" class="btn-add w-100 justify-content-center">
-                    <i class="bi bi-building"></i> 
+                <a asp-controller="Register" asp-action="Operator" class="btn-add w-100 justify-content-center">
+                    <i class="bi bi-building"></i>
                     @App.Resources.Views.Home.Home.RegisterOperator
                 </a>
             </div>

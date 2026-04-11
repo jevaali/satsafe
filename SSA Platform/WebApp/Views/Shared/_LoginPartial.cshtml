@@ -12,7 +12,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+            <form class="form-inline" asp-area="" asp-controller="Login" asp-action="Logout">
                 <button type="submit" class="nav-link btn btn-link text-dark">
                     @App.Resources.Views.Header.Logout
                 </button>
@@ -22,12 +22,12 @@
     else
     {
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Register" asp-action="User">
                 @App.Resources.Views.Header.Register
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Index">
                 @App.Resources.Views.Header.Login
             </a>
         </li>
