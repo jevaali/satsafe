@@ -1,3 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+/* ── Override system-bar for consistency ── */
+.system-bar {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    color: #8a9bb0;
+    padding: 0.45rem 0.85rem;
+    background: #fff;
+    border: 1px solid #e8ecf4;
+    border-left: 3px solid #1565c0;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+/* ── Panel title — slightly bolder ── */
+.panel-title {
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #5a6a7a;
+    font-weight: 700;
+    margin-bottom: 0.85rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid #edf1f7;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* ── Auth prompt — improved ── */
+.auth-prompt {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.8rem 1rem;
+    background: #f0f4f8;
+    border: 1px solid #dce4ed;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    color: #5a6a7a;
+}
+
+.auth-prompt a {
+    color: #1565c0;
+    font-weight: 600;
+    text-decoration: none;
+}
+.auth-prompt a:hover { text-decoration: underline; }
+
 .sandbox-layout {
     display: grid;
     grid-template-columns: 1fr 320px;
@@ -13,18 +67,6 @@
     border: 1px solid #dce4ed;
     padding: 1.1rem 1.25rem;
     overflow-y: auto;
-}
-
-.panel-title {
-    font-size: 0.68rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: #8a9bb0;
-    font-weight: 700;
-    margin-bottom: 0.85rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
 }
 
 /* Form inputs */
@@ -175,17 +217,6 @@
     flex-shrink: 0;
 }
 .draft-card-del:hover { color: #c62828; background: #fdecea; }
-
-.auth-prompt {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.7rem 0.9rem;
-    background: #f0f4f8;
-    border-radius: 8px;
-    font-size: 0.8rem;
-    color: #5a6a7a;
-}
 
 .divider { border: none; border-top: 1px solid #edf1f7; margin: 0.85rem 0; }
 

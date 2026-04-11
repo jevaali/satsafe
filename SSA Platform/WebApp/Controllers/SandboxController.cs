@@ -23,7 +23,7 @@ public class SandboxController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(Guid? draftId = null)
     {
         var drafts = new List<DraftSatelliteDto>();
 
@@ -36,6 +36,10 @@ public class SandboxController : Controller
 
         ViewBag.Drafts = drafts;
         ViewBag.IsAuthenticated = User.Identity?.IsAuthenticated == true;
+
+        if (draftId.HasValue)
+            ViewBag.InitDraft = drafts.FirstOrDefault(d => d.Id == draftId.Value);
+
         return View();
     }
 

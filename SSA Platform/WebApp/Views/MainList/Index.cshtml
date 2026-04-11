@@ -19,20 +19,23 @@
         @(Model.Satellites.Count + Model.Debris.Count) OBJECTS TRACKED
     </div>
 
-    <div class="header">
+    <div class="cat-header">
         <div>
-            <h3>Space Object Catalogue</h3>
-            <small>All tracked satellites and debris objects — click any object to inspect orbit</small>
+            <h3 class="cat-title">Space Object Catalogue</h3>
+            <div class="cat-subtitle">All tracked satellites and debris — click any object to inspect orbit</div>
         </div>
-        <div class="header-right">
-            <span class="badge bg-primary">@Model.Satellites.Count Satellites</span>
-            <span class="badge warning">@Model.Debris.Count Debris</span>
+        <div class="cat-count-pills">
+            <span class="cat-pill satellite"><i class="bi bi-broadcast-pin me-1"></i>@Model.Satellites.Count Satellites</span>
+            <span class="cat-pill debris"><i class="bi bi-exclamation-diamond me-1"></i>@Model.Debris.Count Debris</span>
         </div>
     </div>
 
-    <div class="card mb-3">
+    <div class="filter-card mb-3">
         <div class="filter-bar">
-            <input type="text" id="searchBox" placeholder="Search name or NORAD ID…" />
+            <div class="filter-search-wrap">
+                <i class="bi bi-search"></i>
+                <input type="text" id="searchBox" placeholder="Search name or NORAD ID…" />
+            </div>
             <select id="typeFilter">
                 <option value="">All Types</option>
                 <option value="satellite">Satellites</option>

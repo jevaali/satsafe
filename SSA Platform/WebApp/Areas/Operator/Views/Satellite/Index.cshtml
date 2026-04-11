@@ -23,8 +23,8 @@ ViewData["Title"] = "Satellite Management";
             <small>Manage your registered satellites and orbital parameters</small>
         </div>
         <div class="header-right">
-            <span class="badge bg-success">@Model.Count(s => s.Status == ESatelliteStatus.Active) Active</span>
-            <span class="badge bg-secondary">@Model.Count(s => s.Status == ESatelliteStatus.Inactive) Inactive</span>
+            <span class="op-badge resolved"><i class="bi bi-circle-fill" style="font-size:0.45rem;"></i>@Model.Count(s => s.Status == ESatelliteStatus.Active) Active</span>
+            <span class="op-badge low">@Model.Count(s => s.Status == ESatelliteStatus.Inactive) Inactive</span>
             <a asp-area="Operator" asp-controller="Satellite" asp-action="Create" class="btn-add">
                 <i class="bi bi-plus-lg"></i> Add Satellite
             </a>

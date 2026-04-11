@@ -20,39 +20,38 @@
             <small>System-generated alerts for your conjunction events</small>
         </div>
         <div class="header-right">
-            <span class="badge danger">@Model.Count(a => !a.IsAcknowledged) UNACKNOWLEDGED</span>
-            <span class="badge bg-dark text-white">@Model.Count(a => a.Severity == EAlertSeverity.Critical) CRITICAL</span>
+            <span class="op-badge high-risk"><i class="bi bi-bell-fill"></i>@Model.Count(a => !a.IsAcknowledged) Unacknowledged</span>
+            <span class="op-badge critical">@Model.Count(a => a.Severity == EAlertSeverity.Critical) Critical</span>
         </div>
     </div>
 
     <!-- FILTER BAR -->
-    <div class="card mb-3 p-3">
-        <div class="d-flex gap-3 align-items-center flex-wrap">
-            <input type="text" id="searchInput" class="form-control w-auto"
-                   placeholder="Search by message..." />
-            <select id="severityFilter" class="form-select w-auto">
+    <div class="op-filter-card">
+        <div class="op-filter-bar">
+            <div class="op-filter-search">
+                <i class="bi bi-search"></i>
+                <input type="text" id="searchInput" placeholder="Search by message…" />
+            </div>
+            <select id="severityFilter">
                 <option value="">All Severities</option>
                 @foreach (var sev in Enum.GetValues<EAlertSeverity>())
                 {
                     <option value="@sev">@sev</option>
                 }
             </select>
-            <select id="statusFilter" class="form-select w-auto">
+            <select id="statusFilter">
                 <option value="">All Statuses</option>
                 <option value="unacknowledged">Unacknowledged</option>
                 <option value="acknowledged">Acknowledged</option>
             </select>
         </div>
-    </div>
 
-    <!-- TABLE -->
-    <div class="card">
-        <table class="table table-hover mb-0" id="alertTable">
+        <table class="op-table" id="alertTable">
             <thead>
                 <tr>
                     <th>Severity</th>
                     <th>Message</th>
-                    <th>Conjunction Event</th>
+                    <th>Conjunction</th>
                     <th>Created</th>
                     <th>Status</th>
                     <th></th>
@@ -63,56 +62,41 @@
                                             .ThenByDescending(a => a.Severity)
                                             .ThenByDescending(a => a.CreatedAt))
                 {
-                    var rowClass = alert.Severity switch {
-                        EAlertSeverity.Critical => "table-danger",
-                        EAlertSeverity.High     => "table-warning",
-                        _                       => ""
-                    };
-                    var severityBadge = alert.Severity switch {
-                        EAlertSeverity.Critical => "bg-danger",
-                        EAlertSeverity.High     => "bg-warning text-dark",
-                        EAlertSeverity.Medium   => "bg-info text-dark",
-                        _                       => "bg-secondary"
+                    var severityClass = alert.Severity switch {
+                        EAlertSeverity.Critical => "critical",
+                        EAlertSeverity.High     => "high",
+                        EAlertSeverity.Medium   => "medium",
+                        _                       => "low"
                     };
                     var message = alert.Message?.ToString() ?? "—";
                     var ackStatus = alert.IsAcknowledged ? "acknowledged" : "unacknowledged";
 
-                    <tr class="alert-row @rowClass"
+                    <tr class="alert-row @(alert.Severity == EAlertSeverity.Critical ? "row-high-risk" : "")"
                         data-message="@message.ToLower()"
                         data-severity="@alert.Severity"
                         data-status="@ackStatus">
-                        <td>
-                            <span class="badge @severityBadge">@alert.Severity</span>
-                        </td>
-                        <td>@message</td>
+                        <td><span class="op-badge @severityClass">@alert.Severity</span></td>
+                        <td style="font-size:0.85rem;color:#2c3e50;">@message</td>
                         <td>
                             @if (alert.ConjunctionEvent != null)
                             {
                                 <a asp-area="Operator" asp-controller="Conjunctions" asp-action="Details"
                                    asp-route-id="@alert.ConjunctionEventId"
-                                   class="text-decoration-none">
+                                   class="text-decoration-none" style="font-family:'Share Tech Mono',monospace;font-size:0.78rem;color:#1565c0;">
                                     @alert.ConjunctionEventId.ToString()[..8]…
                                 </a>
                             }
                             else
                             {
-                                <span class="text-muted">@alert.ConjunctionEventId.ToString()[..8]…</span>
+                                <span style="font-family:'Share Tech Mono',monospace;font-size:0.78rem;color:#8a9bb0;">@alert.ConjunctionEventId.ToString()[..8]…</span>
                             }
                         </td>
-                        <td>@alert.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                        <td style="font-family:'Share Tech Mono',monospace;font-size:0.78rem;color:#8a9bb0;">@alert.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                        <td><span class="op-badge @(alert.IsAcknowledged ? "acked" : "pending")">@(alert.IsAcknowledged ? "Acknowledged" : "Pending")</span></td>
                         <td>
-                            @if (alert.IsAcknowledged)
-                            {
-                                <span class="badge bg-success">Acknowledged</span>
-                            }
-                            else
-                            {
-                                <span class="badge bg-warning text-dark">Pending</span>
-                            }
-                        </td>
-                        <td>
-                            <a asp-action="Details" asp-route-id="@alert.Id"
-                               class="btn btn-sm btn-outline-primary">Details</a>
+                            <a asp-action="Details" asp-route-id="@alert.Id" class="btn-sat btn-sat-view">
+                                <i class="bi bi-eye"></i> Details
+                            </a>
                         </td>
                     </tr>
                 }
@@ -121,7 +105,7 @@
 
         @if (!Model.Any())
         {
-            <div class="text-center py-5 text-muted">
+            <div class="empty-state">
                 <p>No alerts found.</p>
             </div>
         }

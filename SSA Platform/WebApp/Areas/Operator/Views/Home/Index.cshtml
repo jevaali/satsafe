@@ -163,25 +163,40 @@
     
     <!-- KPI STRIP -->
     <div class="kpi-bar">
-        <div>
-            <span>@App.Resources.Views.Operator.Index.Kpi_Total</span>
-            <strong>@Model.TotalSatellites</strong>
+        <div class="kpi-item kpi-blue">
+            <div class="kpi-icon"><i class="bi bi-rocket-takeoff-fill"></i></div>
+            <div>
+                <div class="kpi-label">@App.Resources.Views.Operator.Index.Kpi_Total</div>
+                <div class="kpi-value">@Model.TotalSatellites</div>
+            </div>
         </div>
-        <div>
-            <span>@App.Resources.Views.Operator.Index.Kpi_Active</span>
-            <strong class="green">@Model.ActiveSatellites</strong>
+        <div class="kpi-item kpi-green">
+            <div class="kpi-icon"><i class="bi bi-broadcast-pin"></i></div>
+            <div>
+                <div class="kpi-label">@App.Resources.Views.Operator.Index.Kpi_Active</div>
+                <div class="kpi-value">@Model.ActiveSatellites</div>
+            </div>
         </div>
-        <div>
-            <span>@App.Resources.Views.Operator.Index.Kpi_Conjunctions</span>
-            <strong class="yellow">@Model.PendingConjunctions</strong>
+        <div class="kpi-item kpi-yellow">
+            <div class="kpi-icon"><i class="bi bi-arrow-left-right"></i></div>
+            <div>
+                <div class="kpi-label">@App.Resources.Views.Operator.Index.Kpi_Conjunctions</div>
+                <div class="kpi-value">@Model.PendingConjunctions</div>
+            </div>
         </div>
-        <div>
-            <span>@App.Resources.Views.Operator.Index.Kpi_HighRisk</span>
-            <strong class="red">@Model.HighRiskConjunctions</strong>
+        <div class="kpi-item kpi-red">
+            <div class="kpi-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
+            <div>
+                <div class="kpi-label">@App.Resources.Views.Operator.Index.Kpi_HighRisk</div>
+                <div class="kpi-value">@Model.HighRiskConjunctions</div>
+            </div>
         </div>
-        <div>
-            <span>@App.Resources.Views.Operator.Index.Kpi_Alerts</span>
-            <strong class="red">@Model.UnacknowledgedAlerts</strong>
+        <div class="kpi-item kpi-red">
+            <div class="kpi-icon"><i class="bi bi-bell-fill"></i></div>
+            <div>
+                <div class="kpi-label">@App.Resources.Views.Operator.Index.Kpi_Alerts</div>
+                <div class="kpi-value">@Model.UnacknowledgedAlerts</div>
+            </div>
         </div>
     </div>
 </div>

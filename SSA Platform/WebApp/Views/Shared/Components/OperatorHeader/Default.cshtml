@@ -19,17 +19,17 @@
     </ul>
 </li>
 <li class="nav-item">
-    <a class="nav-link text-dark" asp-area="" asp-controller="MainList" asp-action="Index">
+    <a class="nav-link" asp-area="" asp-controller="MainList" asp-action="Index">
         @App.Resources.Views.Header.AllSpaceObjects
     </a>
 </li>
 <li class="nav-item">
-    <a class="nav-link text-dark" asp-area="Operator" asp-controller="Conjunctions" asp-action="Index">
+    <a class="nav-link" asp-area="Operator" asp-controller="Conjunctions" asp-action="Index">
         @App.Resources.Views.Header.ConjunctionEvents
     </a>
 </li>
 <li class="nav-item">
-    <a class="nav-link text-dark" asp-area="Operator" asp-controller="Alerts" asp-action="Index">
+    <a class="nav-link" asp-area="Operator" asp-controller="Alerts" asp-action="Index">
         @App.Resources.Views.Header.Alerts
         @if (Model.UnacknowledgedAlertCount > 0)
         {
@@ -38,11 +38,11 @@
     </a>
 </li>
 <li class="nav-item">
-    <a class="nav-link text-dark" asp-area="Operator" asp-controller="Settings" asp-action="Index">
+    <a class="nav-link" asp-area="Operator" asp-controller="Settings" asp-action="Index">
         @App.Resources.Views.Header.OperatorSettings
     </a>
 </li><li class="nav-item">
-    <a class="nav-link text-dark" asp-area="" asp-controller="Sandbox" asp-action="Index">
+    <a class="nav-link" asp-area="" asp-controller="Sandbox" asp-action="Index">
         @App.Resources.Views.Header.Sandbox
     </a>
 </li>

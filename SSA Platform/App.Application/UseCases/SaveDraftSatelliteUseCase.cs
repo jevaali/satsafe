@@ -21,9 +21,21 @@ public class SaveDraftSatelliteUseCase
             request.ArgumentOfPerigee,
             request.MeanAnomaly);
 
-        var draft = DraftSatellite.Create(userId, request.Name, request.Notes, parameters);
+        DraftSatellite draft;
 
-        await _uow.DraftSatellites.AddAsync(draft);
+        if (request.Id.HasValue)
+        {
+            var existing = await _uow.DraftSatellites.GetByIdAndUserAsync(request.Id.Value, userId)
+                ?? throw new InvalidOperationException("Draft not found.");
+            existing.Update(request.Name, request.Notes, parameters);
+            draft = existing;
+        }
+        else
+        {
+            draft = DraftSatellite.Create(userId, request.Name, request.Notes, parameters);
+            await _uow.DraftSatellites.AddAsync(draft);
+        }
+
         await _uow.CommitAsync();
 
         return ToDto(draft);

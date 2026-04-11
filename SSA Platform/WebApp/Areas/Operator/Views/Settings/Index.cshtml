@@ -25,8 +25,8 @@
             <small>Manage your operator profile, team access, and notification preferences</small>
         </div>
         <div class="header-right">
-            <span class="badge bg-success">@satellites.Count(s => s.Status == ESatelliteStatus.Active) Active</span>
-            <span class="badge bg-secondary">@helpers.Count Team</span>
+            <span class="op-badge resolved"><i class="bi bi-circle-fill" style="font-size:0.45rem;"></i>@satellites.Count(s => s.Status == ESatelliteStatus.Active) Active</span>
+            <span class="op-badge low"><i class="bi bi-people-fill"></i>@helpers.Count Team</span>
         </div>
     </div>
 
@@ -128,7 +128,7 @@
                         </div>
                     </div>
                     <div class="p-2 pt-0">
-                        <button type="submit" class="btn btn-dark btn-sm">
+                        <button type="submit" class="btn-ssa-primary">
                             <i class="bi bi-floppy me-1"></i> Save Changes
                         </button>
                     </div>
@@ -343,7 +343,7 @@
 
                     </div>
                     <div class="px-3 pb-3">
-                        <button type="submit" class="btn btn-dark btn-sm">
+                        <button type="submit" class="btn-ssa-primary">
                             <i class="bi bi-floppy me-1"></i> Save Preferences
                         </button>
                     </div>

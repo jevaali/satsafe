@@ -3,6 +3,7 @@
     ViewData["Title"] = "Orbital Sandbox";
     var drafts = (List<DraftSatelliteDto>)ViewBag.Drafts;
     var isAuthenticated = (bool)ViewBag.IsAuthenticated;
+    var initDraft = ViewBag.InitDraft as DraftSatelliteDto;
 }
 
 <link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
@@ -110,6 +111,7 @@
                 {
                     <form id="saveForm" asp-controller="Sandbox" asp-action="Save" method="post">
                         @Html.AntiForgeryToken()
+                        <input type="hidden" name="Id" id="hidId" />
                         <input type="hidden" name="Name" id="hidName" />
                         <input type="hidden" name="Notes" id="hidNotes" />
                         <input type="hidden" name="SemiMajorAxis" id="hidSma" />
@@ -126,8 +128,13 @@
                 else
                 {
                     <div class="auth-prompt">
-                        <i class="bi bi-lock" style="font-size:1.1rem;color:#8a9bb0;"></i>
-                        <span><a asp-area="Identity" asp-page="/Account/Login">Sign in</a> or <a asp-area="Identity" asp-page="/Account/Register">register</a> to save your orbital designs.</span>
+                        <i class="bi bi-lock" style="font-size:1.1rem;color:#8a9bb0;flex-shrink:0;"></i>
+                        <span>
+                            <a asp-controller="Login" asp-action="Index">Sign in</a>
+                            or
+                            <a asp-controller="Register" asp-action="User">register</a>
+                            to save your orbital designs.
+                        </span>
                     </div>
                 }
             </div>
@@ -160,7 +167,7 @@
                             var argp = d.ArgumentOfPerigee.ToString(System.Globalization.CultureInfo.InvariantCulture);
                             var ma   = d.MeanAnomaly.ToString(System.Globalization.CultureInfo.InvariantCulture);
                             <div class="draft-card"
-                                 onclick="loadDraft(@sma, @ecc, @inc, @raan, @argp, @ma, '@d.Name.Replace("'", "\\'")','@(d.Notes?.Replace("'", "\\'") ?? "")')">
+                                 onclick="loadDraft(@sma, @ecc, @inc, @raan, @argp, @ma, '@d.Name.Replace("'", "\\'")','@(d.Notes?.Replace("'", "\\'") ?? "")','@d.Id')">
                                 <div class="draft-card-icon"><i class="bi bi-stars"></i></div>
                                 <div class="draft-card-body">
                                     <div class="draft-card-name">@d.Name</div>
@@ -448,9 +455,11 @@ function loadPreset(key) {
     satAngle = 0;
     if (document.getElementById('draftName'))
         document.getElementById('draftName').value = key.charAt(0).toUpperCase() + key.slice(1) + '-1';
+    const hidId = document.getElementById('hidId');
+    if (hidId) hidId.value = ''; // new draft
 }
 
-function loadDraft(sma, ecc, inc, raan, argp, ma, name, notes) {
+function loadDraft(sma, ecc, inc, raan, argp, ma, name, notes, draftId) {
     document.getElementById('pSma').value  = sma;
     document.getElementById('pEcc').value  = ecc;
     document.getElementById('pInc').value  = inc;
@@ -462,26 +471,43 @@ function loadDraft(sma, ecc, inc, raan, argp, ma, name, notes) {
         document.getElementById('draftName').value = name;
         document.getElementById('draftNotes').value = notes;
     }
+    const hidId = document.getElementById('hidId');
+    if (hidId) hidId.value = draftId ?? '';
 }
 
 // ─── Save form sync ────────────────────────────────────────────────────
 function submitSave() {
     const name = document.getElementById('draftName')?.value?.trim();
     if (!name) { alert('Please enter a satellite name.'); return; }
-    document.getElementById('hidName').value = name;
+    // hidId is already set by loadDraft / cleared by loadPreset
+    document.getElementById('hidName').value  = name;
     document.getElementById('hidNotes').value = document.getElementById('draftNotes')?.value ?? '';
-    document.getElementById('hidSma').value  = document.getElementById('pSma').value;
-    document.getElementById('hidEcc').value  = document.getElementById('pEcc').value;
-    document.getElementById('hidInc').value  = document.getElementById('pInc').value;
-    document.getElementById('hidRaan').value = document.getElementById('pRaan').value;
-    document.getElementById('hidArgp').value = document.getElementById('pArgp').value;
-    document.getElementById('hidMa').value   = document.getElementById('pMa').value;
+    document.getElementById('hidSma').value   = document.getElementById('pSma').value;
+    document.getElementById('hidEcc').value   = document.getElementById('pEcc').value;
+    document.getElementById('hidInc').value   = document.getElementById('pInc').value;
+    document.getElementById('hidRaan').value  = document.getElementById('pRaan').value;
+    document.getElementById('hidArgp').value  = document.getElementById('pArgp').value;
+    document.getElementById('hidMa').value    = document.getElementById('pMa').value;
     document.getElementById('saveForm').submit();
 }
 
 // ─── Boot ──────────────────────────────────────────────────────────────
 window.addEventListener('load', () => {
     resizeCanvas();
+    @if (initDraft != null)
+    {
+        var sma  = initDraft.SemiMajorAxis.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        var ecc  = initDraft.Eccentricity.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        var inc  = initDraft.Inclination.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        var raan = initDraft.RAAN.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        var argp = initDraft.ArgumentOfPerigee.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        var ma   = initDraft.MeanAnomaly.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        var name = initDraft.Name.Replace("'", "\\'");
+        var notes = (initDraft.Notes ?? "").Replace("'", "\\'");
+        <text>
+    loadDraft(@sma, @ecc, @inc, @raan, @argp, @ma, '@name', '@notes', '@initDraft.Id');
+        </text>
+    }
     animId = requestAnimationFrame(drawFrame);
 });
 

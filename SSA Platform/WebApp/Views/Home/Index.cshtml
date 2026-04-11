@@ -8,25 +8,27 @@
 
 <div class="ssa-container">
 
+    <!-- System bar -->
     <div class="system-bar">
         <span class="status-dot"></span>
-        @App.Resources.Views.Home.Home.SSAPLATFORM | @App.Resources.Views.Home.Home.SystemBar_Status |
-        @DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") UTC |
-        @Model.TotalSpaceObjects.ToString("N0") @App.Resources.Views.Home.Home.SystemBar_ObjectsTracked
+        @App.Resources.Views.Home.Home.SSAPLATFORM
+        &nbsp;|&nbsp;@App.Resources.Views.Home.Home.SystemBar_Status
+        &nbsp;|&nbsp;@DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") UTC
+        &nbsp;|&nbsp;@Model.TotalSpaceObjects.ToString("N0") @App.Resources.Views.Home.Home.SystemBar_ObjectsTracked
     </div>
 
     <!-- Hero -->
     <div class="row align-items-center py-4 mb-2">
         <div class="col-lg-6">
-            <p class="mb-2" style="font-family:'Share Tech Mono',monospace;font-size:0.72rem;letter-spacing:0.15em;color:#8a9bb0;text-transform:uppercase;">
+            <p style="font-family:'Share Tech Mono',monospace;font-size:0.72rem;letter-spacing:0.15em;color:#8a9bb0;text-transform:uppercase;margin-bottom:0.6rem;">
                 @App.Resources.Views.Home.Home.PageTitle
             </p>
             <h1 style="font-family:'Share Tech Mono',monospace;font-size:2.2rem;font-weight:700;color:#1a2332;line-height:1.2;margin-bottom:1rem;">
-                @App.Resources.Views.Home.Home.Monitor. 
-                @App.Resources.Views.Home.Home.Track.<br />
+                @App.Resources.Views.Home.Home.Monitor.&nbsp;
+                @App.Resources.Views.Home.Home.Track.<br/>
                 @App.Resources.Views.Home.Home.StaySafe.
             </h1>
-            <p class="mb-4" style="color:#5a6a7a;font-size:1rem;line-height:1.6;max-width:480px;">
+            <p style="color:#5a6a7a;font-size:1rem;line-height:1.6;max-width:480px;margin-bottom:1.75rem;">
                 @App.Resources.Views.Home.Home.Section_PlatformCapabilities
             </p>
             <div class="d-flex gap-3 flex-wrap">
@@ -62,24 +64,27 @@
     </div>
 
     <!-- KPI Strip -->
-    <div class="kpi-bar mb-4">
-        <div>
-            <div style="font-size:0.68rem;letter-spacing:0.1em;color:#8a9bb0;text-transform:uppercase;margin-bottom:4px;">
-                @App.Resources.Views.Home.Home.Kpi_TotalObjects
+    <div class="kpi-bar">
+        <div class="kpi-item kpi-blue">
+            <div class="kpi-icon"><i class="bi bi-globe2"></i></div>
+            <div>
+                <div class="kpi-label">@App.Resources.Views.Home.Home.Kpi_TotalObjects</div>
+                <div class="kpi-value">@Model.TotalSpaceObjects.ToString("N0")</div>
             </div>
-            <strong style="font-family:'Share Tech Mono',monospace;font-size:1.5rem;color:#1a2332;">@Model.TotalSpaceObjects.ToString("N0")</strong>
         </div>
-        <div>
-            <div style="font-size:0.68rem;letter-spacing:0.1em;color:#8a9bb0;text-transform:uppercase;margin-bottom:4px;">
-                @App.Resources.Views.Home.Home.Kpi_ActiveSatellites
+        <div class="kpi-item kpi-green">
+            <div class="kpi-icon"><i class="bi bi-broadcast-pin"></i></div>
+            <div>
+                <div class="kpi-label">@App.Resources.Views.Home.Home.Kpi_ActiveSatellites</div>
+                <div class="kpi-value">@Model.ActiveSatellites.ToString("N0")</div>
             </div>
-            <strong style="font-family:'Share Tech Mono',monospace;font-size:1.5rem;" class="green">@Model.ActiveSatellites.ToString("N0")</strong>
         </div>
-        <div>
-            <div style="font-size:0.68rem;letter-spacing:0.1em;color:#8a9bb0;text-transform:uppercase;margin-bottom:4px;">
-                @App.Resources.Views.Home.Home.Kpi_DebrisObjects
+        <div class="kpi-item kpi-yellow">
+            <div class="kpi-icon"><i class="bi bi-exclamation-diamond"></i></div>
+            <div>
+                <div class="kpi-label">@App.Resources.Views.Home.Home.Kpi_DebrisObjects</div>
+                <div class="kpi-value">@Model.DebrisObjects.ToString("N0")</div>
             </div>
-            <strong style="font-family:'Share Tech Mono',monospace;font-size:1.5rem;" class="yellow">@Model.DebrisObjects.ToString("N0")</strong>
         </div>
     </div>
 
@@ -87,19 +92,22 @@
     @if (Model.Satellites.Any())
     {
         <div class="header mt-2">
-            <div><h3>
+            <div class="home-section-label" style="flex:1;">
+                <i class="bi bi-reception-4"></i>
                 @App.Resources.Views.Home.Home.Section_TopSatellites
-            </h3></div>
-            <div class="header-right">
-                <a asp-controller="MainList" asp-action="Index" class="btn btn-outline-secondary btn-sm">@App.Resources.Views.Home.Home.Btn_ViewFullCatalogue</a>
             </div>
+            <a asp-controller="MainList" asp-action="Index"
+               class="btn btn-outline-secondary btn-sm ms-3" style="flex-shrink:0;">
+                @App.Resources.Views.Home.Home.Btn_ViewFullCatalogue
+            </a>
         </div>
         <div class="sat-grid mb-4">
             @foreach (var sat in Model.Satellites)
             {
                 <div class="sat-tile">
+                    <div class="sat-tile-dot"></div>
                     <div>
-                        <div class="sat-name" style="font-size:0.85rem;">@sat.Name</div>
+                        <div class="sat-name">@sat.Name</div>
                         <div class="sat-norad">@sat.Operator</div>
                     </div>
                 </div>
@@ -107,80 +115,76 @@
         </div>
     }
 
-    <!-- Features -->
-    <div class="header mt-2">
-        <div><h3>
-            @App.Resources.Views.Home.Home.PlatformCapabilities
-        </h3></div>
+    <!-- Platform capabilities -->
+    <div class="home-section-label mt-2">
+        <i class="bi bi-cpu"></i>
+        @App.Resources.Views.Home.Home.PlatformCapabilities
     </div>
     <div class="row g-3 mb-4">
         <div class="col-md-4">
-            <div class="card h-100">
-                <h5><i class="bi bi-broadcast me-2 text-primary"></i>
-                    @App.Resources.Views.Home.Home.RealTimeTracking</h5>
-                <p class="text-muted small mb-0">
-                    @App.Resources.Views.Home.Home.RealTimeTrackingText
-                </p>
+            <div class="feature-card fc-blue">
+                <div class="feature-icon-box"><i class="bi bi-broadcast"></i></div>
+                <h5>@App.Resources.Views.Home.Home.RealTimeTracking</h5>
+                <p>@App.Resources.Views.Home.Home.RealTimeTrackingText</p>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card h-100">
-                <h5><i class="bi bi-exclamation-triangle me-2 text-warning"></i>
-                    @App.Resources.Views.Home.Home.ConjunctionAlerts</h5>
-                <p class="text-muted small mb-0">
-                    @App.Resources.Views.Home.Home.ConjunctionAlertsText
-                </p>
+            <div class="feature-card fc-yellow">
+                <div class="feature-icon-box"><i class="bi bi-exclamation-triangle"></i></div>
+                <h5>@App.Resources.Views.Home.Home.ConjunctionAlerts</h5>
+                <p>@App.Resources.Views.Home.Home.ConjunctionAlertsText</p>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card h-100">
-                <h5><i class="bi bi-building me-2 text-success"></i>
-                    @App.Resources.Views.Home.Home.OperatorManagement</h5>
-                <p class="text-muted small mb-0">
-                    @App.Resources.Views.Home.Home.OperatorManagementText
-                </p>
+            <div class="feature-card fc-green">
+                <div class="feature-icon-box"><i class="bi bi-building"></i></div>
+                <h5>@App.Resources.Views.Home.Home.OperatorManagement</h5>
+                <p>@App.Resources.Views.Home.Home.OperatorManagementText</p>
             </div>
         </div>
     </div>
 
-    <!-- Registration -->
-    <div class="header mt-2">
-        <div><h3>@App.Resources.Views.Home.Home.JoinPlatform</h3></div>
+    <!-- Join platform -->
+    <div class="home-section-label mt-2">
+        <i class="bi bi-person-plus"></i>
+        @App.Resources.Views.Home.Home.JoinPlatform
     </div>
     <div class="row g-3 mb-4">
         <div class="col-md-6">
-            <div class="card h-100">
-                <h5>@App.Resources.Views.Home.Home.RegularUser</h5>
-                <ul class="list-unstyled small mt-2 mb-3">
-                    <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>
-                        @App.Resources.Views.Home.Home.ReguralUser1</li>
-                    <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>
-                        @App.Resources.Views.Home.Home.ReguralUser2</li>
-                    <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>
-                        @App.Resources.Views.Home.Home.ReguralUser3</li>
-                </ul>
-                <a asp-controller="Register" asp-action="User" class="btn btn-outline-primary w-100">
-                    @App.Resources.Views.Home.Home.RegisterUser
-                </a>
+            <div class="join-card jc-user">
+                <div class="join-card-header">
+                    <i class="bi bi-person-circle"></i>
+                    <h5>@App.Resources.Views.Home.Home.RegularUser</h5>
+                </div>
+                <div class="join-card-body">
+                    <ul class="join-check-list">
+                        <li><i class="bi bi-check-circle-fill"></i>@App.Resources.Views.Home.Home.ReguralUser1</li>
+                        <li><i class="bi bi-check-circle-fill"></i>@App.Resources.Views.Home.Home.ReguralUser2</li>
+                        <li><i class="bi bi-check-circle-fill"></i>@App.Resources.Views.Home.Home.ReguralUser3</li>
+                    </ul>
+                    <a asp-controller="Register" asp-action="User" class="btn btn-outline-primary w-100">
+                        @App.Resources.Views.Home.Home.RegisterUser
+                    </a>
+                </div>
             </div>
         </div>
         <div class="col-md-6">
-            <div class="card h-100">
-                <h5>@App.Resources.Views.Home.Home.SpaceOperator</h5>
-                <ul class="list-unstyled small mt-2 mb-3">
-                    <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>
-                        @App.Resources.Views.Home.Home.SpaceOperator1</li>
-                    <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>
-                        @App.Resources.Views.Home.Home.SpaceOperator2</li>
-                    <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>
-                        @App.Resources.Views.Home.Home.SpaceOperator3</li>
-                    <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>
-                        @App.Resources.Views.Home.Home.SpaceOperator4</li>
-                </ul>
-                <a asp-controller="Register" asp-action="Operator" class="btn-add w-100 justify-content-center">
-                    <i class="bi bi-building"></i>
-                    @App.Resources.Views.Home.Home.RegisterOperator
-                </a>
+            <div class="join-card jc-operator">
+                <div class="join-card-header">
+                    <i class="bi bi-building-fill"></i>
+                    <h5>@App.Resources.Views.Home.Home.SpaceOperator</h5>
+                </div>
+                <div class="join-card-body">
+                    <ul class="join-check-list">
+                        <li><i class="bi bi-check-circle-fill"></i>@App.Resources.Views.Home.Home.SpaceOperator2</li>
+                        <li><i class="bi bi-check-circle-fill"></i>@App.Resources.Views.Home.Home.SpaceOperator3</li>
+                        <li><i class="bi bi-check-circle-fill"></i>@App.Resources.Views.Home.Home.SpaceOperator4</li>
+                    </ul>
+                    <a asp-controller="Register" asp-action="Operator" class="btn-add w-100 justify-content-center">
+                        <i class="bi bi-building"></i>
+                        @App.Resources.Views.Home.Home.RegisterOperator
+                    </a>
+                </div>
             </div>
         </div>
     </div>

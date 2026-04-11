@@ -1,4 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 
+/* ============================================================
+   HOME PAGE — index.css
+   ============================================================ */
+
+/* --- Hero orbit canvas --- */
 .hero-orbit-wrap {
     position: relative;
     height: 340px;
@@ -38,4 +44,291 @@
     height: 7px;
     border-radius: 50%;
     flex-shrink: 0;
+}
+
+/* --- System bar --- */
+.system-bar {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    color: #8a9bb0;
+    padding: 0.45rem 0.85rem;
+    background: #fff;
+    border: 1px solid #e8ecf4;
+    border-left: 3px solid #1565c0;
+    border-radius: 6px;
+    margin-bottom: 1.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+/* --- Section label --- */
+.home-section-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #8a9bb0;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-bottom: 1rem;
+}
+
+.home-section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #edf1f7;
+}
+
+/* Keep old .header for layout compat */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+.header h3 { margin: 0; }
+
+/* --- KPI bar --- */
+.kpi-bar {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.75rem;
+}
+
+.kpi-item {
+    background: #fff;
+    border: 1px solid #e8ecf4;
+    border-radius: 10px;
+    padding: 1.1rem 1.4rem;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.kpi-item::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 10px 10px 0 0;
+}
+
+.kpi-item.kpi-blue::before   { background: linear-gradient(90deg, #1565c0, #4fc3f7); }
+.kpi-item.kpi-green::before  { background: linear-gradient(90deg, #2e7d32, #66bb6a); }
+.kpi-item.kpi-yellow::before { background: linear-gradient(90deg, #e65100, #ffb74d); }
+
+.kpi-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.kpi-blue  .kpi-icon { background: #e8f0fb; color: #1565c0; }
+.kpi-green .kpi-icon { background: #e6faf5; color: #2e7d32; }
+.kpi-yellow .kpi-icon { background: #fff8e8; color: #e65100; }
+
+.kpi-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #8a9bb0;
+    margin-bottom: 3px;
+}
+
+.kpi-value {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.kpi-blue   .kpi-value { color: #1a2332; }
+.kpi-green  .kpi-value { color: #2e7d32; }
+.kpi-yellow .kpi-value { color: #e65100; }
+
+/* --- Feature cards --- */
+.feature-card {
+    background: #fff;
+    border: 1px solid #e8ecf4;
+    border-radius: 12px;
+    padding: 1.4rem;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+.feature-card:hover {
+    border-color: #b8ceea;
+    box-shadow: 0 6px 20px rgba(21, 101, 192, 0.07);
+    transform: translateY(-2px);
+}
+
+.feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 12px 12px 0 0;
+}
+
+.feature-card.fc-blue::before   { background: linear-gradient(90deg, #1565c0, #4fc3f7); }
+.feature-card.fc-yellow::before { background: linear-gradient(90deg, #e65100, #ffb74d); }
+.feature-card.fc-green::before  { background: linear-gradient(90deg, #2e7d32, #66bb6a); }
+
+.feature-icon-box {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.fc-blue   .feature-icon-box { background: #e8f0fb; color: #1565c0; }
+.fc-yellow .feature-icon-box { background: #fff8e8; color: #e65100; }
+.fc-green  .feature-icon-box { background: #e6faf5; color: #2e7d32; }
+
+.feature-card h5 {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #1a2332;
+    margin-bottom: 0.5rem;
+}
+
+.feature-card p {
+    font-size: 0.82rem;
+    color: #6c757d;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* --- Top satellites grid --- */
+.sat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 0.75rem;
+}
+
+.sat-tile {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid #e8ecf4;
+    border-radius: 8px;
+    background: #fff;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.sat-tile:hover {
+    border-color: #b8ceea;
+    box-shadow: 0 3px 10px rgba(21, 101, 192, 0.07);
+}
+
+.sat-tile-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #4fc3f7;
+    box-shadow: 0 0 6px #4fc3f7;
+    flex-shrink: 0;
+}
+
+.sat-name  { font-family: 'Share Tech Mono', monospace; font-size: 0.82rem; font-weight: 700; color: #1a2332; }
+.sat-norad { font-size: 0.68rem; letter-spacing: 0.07em; color: #8a9bb0; text-transform: uppercase; margin-top: 1px; }
+
+/* --- Join platform cards --- */
+.join-card {
+    background: #fff;
+    border: 1px solid #e8ecf4;
+    border-radius: 12px;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+.join-card:hover {
+    border-color: #b8ceea;
+    box-shadow: 0 6px 24px rgba(21, 101, 192, 0.09);
+    transform: translateY(-2px);
+}
+
+.join-card-header {
+    padding: 1.1rem 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.join-card-header i {
+    font-size: 1.15rem;
+}
+
+.join-card-header h5 {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: 0.03em;
+}
+
+.join-card.jc-user .join-card-header    { background: #e8f0fb; color: #1565c0; border-bottom: 1px solid #d0e4f7; }
+.join-card.jc-user .join-card-header h5 { color: #1565c0; }
+
+.join-card.jc-operator .join-card-header    { background: #0d1b2a; border-bottom: 1px solid #1a2e42; }
+.join-card.jc-operator .join-card-header h5 { color: #e8f0fb; }
+.join-card.jc-operator .join-card-header i  { color: #4fc3f7; }
+
+.join-card-body {
+    padding: 1.2rem 1.4rem;
+    flex: 1;
+}
+
+.join-check-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.2rem;
+}
+
+.join-check-list li {
+    font-size: 0.82rem;
+    color: #5a6a7a;
+    padding: 0.3rem 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.join-check-list li i {
+    color: #2e7d32;
+    margin-top: 1px;
+    flex-shrink: 0;
+}
+
+.join-card.jc-operator .join-check-list li i { color: #4fc3f7; }
+
+/* --- Shared btn styles (already in dashboard-ssa.css, ensure compat) --- */
+.green  { color: #2e7d32; }
+.yellow { color: #e65100; }
+
+@media (max-width: 768px) {
+    .kpi-bar { grid-template-columns: 1fr; }
 }

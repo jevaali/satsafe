@@ -11,81 +11,105 @@
     <link rel="stylesheet" href="~/WebApp.styles.css" asp-append-version="true"/>
 </head>
 <body class="d-flex flex-column min-vh-100">
-<header>
-<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-<div class="container">
-<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SatSafe</a>
-<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-</button>
 
-<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-    <ul class="navbar-nav flex-grow-1">
-        @if (User.Identity is { IsAuthenticated: false })
-        {
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="MainList" asp-action="Index">
-                    @App.Resources.Views.Header.AllSpaceObjects
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Sandbox" asp-action="Index">
-                    @App.Resources.Views.Header.Sandbox
-                </a>
-            </li>
-        }
-                    
-        @if (User.IsInRole("Operator") || User.IsInRole("OperatorHelper"))
-        {
-            @await Component.InvokeAsync("OperatorHeader")
-        }
-                    
-        @if (User.IsInRole("User"))
-        {
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="MainList" asp-action="Index">
-                    @App.Resources.Views.Header.MySatellites
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Sandbox" asp-action="Index">
-                    @App.Resources.Views.Header.Sandbox
-                </a>
-            </li>
-            }
-    </ul>
-    <partial name="_LoginPartial"/>
-</div>
+<header>
+    <nav class="ssa-navbar">
+        <div class="container">
+            <a class="ssa-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                <i class="bi bi-broadcast-pin"></i> SatSafe
+            </a>
+
+            <button class="ssa-toggler" id="ssaNavToggle" aria-label="Toggle navigation">
+                <i class="bi bi-list"></i>
+            </button>
+
+            <div class="ssa-navbar-collapse" id="ssaNavCollapse">
+                <ul class="ssa-nav">
+                    @if (User.Identity is { IsAuthenticated: false })
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="MainList" asp-action="Index">
+                                @App.Resources.Views.Header.AllSpaceObjects
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Sandbox" asp-action="Index">
+                                @App.Resources.Views.Header.Sandbox
+                            </a>
+                        </li>
+                    }
+                    @if (User.IsInRole("Operator") || User.IsInRole("OperatorHelper"))
+                    {
+                        @await Component.InvokeAsync("OperatorHeader")
+                    }
+                    @if (User.IsInRole("User"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="User" asp-controller="Home" asp-action="Index">
+                                @App.Resources.Views.Header.MySatellites
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Sandbox" asp-action="Index">
+                                @App.Resources.Views.Header.Sandbox
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="MainList" asp-action="Index">
+                                @App.Resources.Views.Header.AllSpaceObjects
+                            </a>
+                        </li>
+                    }
+                </ul>
+                <partial name="_LoginPartial"/>
+            </div>
         </div>
     </nav>
 </header>
+
 <div class="container flex-grow-1">
     <main role="main" class="pb-3">
         @RenderBody()
     </main>
 </div>
 
-<footer class="border-top bg-white text-muted mt-auto py-3">
-    <div class="container d-flex justify-content-between align-items-center flex-wrap gap-2">
-        <div class="d-flex align-items-center gap-2">
-            <span>
-                &copy; 2026 SatSafe &mdash; @App.Resources.Views.Header.SpaceSituationalAwareness
-            </span>
-        </div>
-        <div class="d-flex gap-3 small">
-            <a class="text-muted text-decoration-none" asp-area="" asp-controller="Home" asp-action="Privacy">
-                @App.Resources.Views.Header.Privacy
-            </a>
-            <span class="text-muted">
-                @App.Resources.Views.Header.DataUpdatedEveryXh
-            </span>
+<footer class="ssa-footer">
+    <div class="container">
+        <div class="ssa-footer-inner">
+            <div class="ssa-footer-brand">
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="ssa-footer-logo">
+                    <i class="bi bi-broadcast-pin"></i> SatSafe
+                </a>
+                <span class="ssa-footer-tagline">@App.Resources.Views.Header.SpaceSituationalAwareness</span>
+            </div>
+
+            <div class="ssa-footer-status">
+                <span class="status-dot"></span>
+                System operational
+            </div>
+
+            <div class="ssa-footer-links">
+                <a asp-area="" asp-controller="Home" asp-action="Privacy">
+                    @App.Resources.Views.Header.Privacy
+                </a>
+                <span class="footer-sep">|</span>
+                <span style="color:rgba(200,210,220,0.4);font-size:0.72rem;">
+                    @App.Resources.Views.Header.DataUpdatedEveryXh
+                </span>
+            </div>
+
+            <div class="ssa-footer-copy">&copy; 2026 SatSafe</div>
         </div>
     </div>
 </footer>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
+<script>
+    document.getElementById('ssaNavToggle')?.addEventListener('click', function () {
+        document.getElementById('ssaNavCollapse').classList.toggle('open');
+    });
+</script>
 @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

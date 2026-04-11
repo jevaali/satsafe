@@ -23,34 +23,33 @@
             <small>All detected conjunction events for your satellites</small>
         </div>
         <div class="header-right">
-            <span class="badge danger">@Model.Count(c => c.IsHighRisk()) HIGH RISK</span>
-            <span class="badge warning">@Model.Count(c => c.Status == EConjunctionEventStatus.Pending) PENDING</span>
+            <span class="op-badge high-risk"><i class="bi bi-exclamation-triangle-fill"></i>@Model.Count(c => c.IsHighRisk()) High Risk</span>
+            <span class="op-badge pending">@Model.Count(c => c.Status == EConjunctionEventStatus.Pending) Pending</span>
         </div>
     </div>
 
     <!-- FILTER BAR -->
-    <div class="card mb-3 p-3">
-        <div class="d-flex gap-3 align-items-center flex-wrap">
-            <input type="text" id="searchInput" class="form-control w-auto"
-                   placeholder="Search by object name or NORAD ID..." />
-            <select id="statusFilter" class="form-select w-auto">
+    <div class="op-filter-card">
+        <div class="op-filter-bar">
+            <div class="op-filter-search">
+                <i class="bi bi-search"></i>
+                <input type="text" id="searchInput" placeholder="Search by object name or NORAD ID…" />
+            </div>
+            <select id="statusFilter">
                 <option value="">All Statuses</option>
                 @foreach (var status in Enum.GetValues<EConjunctionEventStatus>())
                 {
                     <option value="@status">@status</option>
                 }
             </select>
-            <select id="riskFilter" class="form-select w-auto">
+            <select id="riskFilter">
                 <option value="">All Risk Levels</option>
                 <option value="high">High Risk</option>
                 <option value="normal">Normal</option>
             </select>
         </div>
-    </div>
 
-    <!-- TABLE -->
-    <div class="card">
-        <table class="table table-hover mb-0" id="conjunctionTable">
+        <table class="op-table" id="conjunctionTable">
             <thead>
                 <tr>
                     <th>Primary Object</th>
@@ -67,57 +66,45 @@
                 @foreach (var c in Model.OrderByDescending(c => c.IsHighRisk()).ThenBy(c => c.TimeOfClosestApproach))
                 {
                     var primaryName = c.PrimaryObject switch {
-                        Satellite s      => s.Name.ToString(),
-                        DebrisObject d   => $"DEBRIS-{d.NoradId}",
-                        _                => c.PrimaryObjectId.ToString()[..8]
+                        Satellite s    => s.Name.ToString(),
+                        DebrisObject d => $"DEBRIS-{d.NoradId}",
+                        _              => c.PrimaryObjectId.ToString()[..8]
                     };
                     var secondaryName = c.SecondaryObject switch {
-                        Satellite s      => s.Name.ToString(),
-                        DebrisObject d   => $"DEBRIS-{d.NoradId}",
-                        _                => c.SecondaryObjectId.ToString()[..8]
+                        Satellite s    => s.Name.ToString(),
+                        DebrisObject d => $"DEBRIS-{d.NoradId}",
+                        _              => c.SecondaryObjectId.ToString()[..8]
                     };
-                    var tca = c.TimeOfClosestApproach;
                     var isHighRisk = c.IsHighRisk();
+                    var statusBadge = c.Status switch {
+                        EConjunctionEventStatus.Resolved        => "resolved",
+                        EConjunctionEventStatus.Imminent        => "imminent",
+                        EConjunctionEventStatus.Potential       => "potential",
+                        EConjunctionEventStatus.Pending         => "pending",
+                        EConjunctionEventStatus.AlreadyOccurred => "occurred",
+                        _                                       => "low"
+                    };
 
-                    <tr class="conjunction-row @(isHighRisk ? "table-danger" : "")"
+                    <tr class="conjunction-row @(isHighRisk ? "row-high-risk" : "")"
                         data-primary="@primaryName.ToLower()"
                         data-secondary="@secondaryName.ToLower()"
                         data-status="@c.Status"
                         data-risk="@(isHighRisk ? "high" : "normal")">
-                        <td><strong>@primaryName</strong></td>
-                        <td><strong>@secondaryName</strong></td>
-                        <td>@tca.ToString("yyyy-MM-dd HH:mm")</td>
+                        <td><span style="font-family:'Share Tech Mono',monospace;font-size:0.85rem;font-weight:700;color:#1a2332;">@primaryName</span></td>
+                        <td><span style="font-family:'Share Tech Mono',monospace;font-size:0.85rem;color:#5a6a7a;">@secondaryName</span></td>
+                        <td style="font-family:'Share Tech Mono',monospace;font-size:0.8rem;color:#8a9bb0;">@c.TimeOfClosestApproach.ToString("yyyy-MM-dd HH:mm")</td>
                         <td>
-                            <span class="@(c.MissDistance < 1000 ? "text-danger fw-bold" : c.MissDistance < 5000 ? "text-warning" : "")">
-                                @(c.MissDistance < 1000
-                                    ? $"{c.MissDistance:N0} m"
-                                    : $"{c.MissDistance / 1000:F2} km")
+                            <span class="op-badge @(c.MissDistance < 1000 ? "critical" : c.MissDistance < 5000 ? "high" : "low")">
+                                @(c.MissDistance < 1000 ? $"{c.MissDistance:N0} m" : $"{c.MissDistance / 1000:F2} km")
                             </span>
                         </td>
-                        <td>@((c.CollisionProbability * 100).ToString("F4"))%</td>
+                        <td style="font-family:'Share Tech Mono',monospace;font-size:0.8rem;">@((c.CollisionProbability * 100).ToString("F4"))%</td>
+                        <td><span class="op-badge @statusBadge">@c.Status</span></td>
+                        <td><span class="op-badge @(isHighRisk ? "high-risk" : "normal")">@(isHighRisk ? "HIGH" : "NORMAL")</span></td>
                         <td>
-                            <span class="badge @(c.Status switch {
-                                EConjunctionEventStatus.Resolved        => "bg-success",
-                                EConjunctionEventStatus.Imminent        => "bg-danger",
-                                EConjunctionEventStatus.Potential       => "bg-warning text-dark",
-                                EConjunctionEventStatus.Pending         => "bg-info text-dark",
-                                EConjunctionEventStatus.AlreadyOccurred => "bg-secondary",
-                                _                                       => "bg-secondary"
-                            })">@c.Status</span>
-                        </td>
-                        <td>
-                            @if (isHighRisk)
-                            {
-                                <span class="badge danger">HIGH</span>
-                            }
-                            else
-                            {
-                                <span class="badge bg-secondary">NORMAL</span>
-                            }
-                        </td>
-                        <td>
-                            <a asp-action="Details" asp-route-id="@c.Id"
-                               class="btn btn-sm btn-outline-primary">Details</a>
+                            <a asp-action="Details" asp-route-id="@c.Id" class="btn-sat btn-sat-view">
+                                <i class="bi bi-eye"></i> Details
+                            </a>
                         </td>
                     </tr>
                 }
@@ -126,7 +113,7 @@
 
         @if (!Model.Any())
         {
-            <div class="text-center py-5 text-muted">
+            <div class="empty-state">
                 <p>No conjunction events detected.</p>
             </div>
         }

@@ -4,6 +4,8 @@ namespace App.Application.DTO;
 
 public class SaveDraftSatelliteRequest
 {
+    public Guid? Id { get; set; }
+
     [Required, MaxLength(120)]
     public string Name { get; set; } = string.Empty;
 
