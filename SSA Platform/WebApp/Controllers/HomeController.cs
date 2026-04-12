@@ -1,5 +1,5 @@
 using System.Diagnostics;
-using App.Application.UseCases;
+using App.Application.Features.Dashboard.UseCases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;

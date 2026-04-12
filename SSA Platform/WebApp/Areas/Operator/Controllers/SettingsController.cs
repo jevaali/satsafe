@@ -1,7 +1,10 @@
 using System.Security.Claims;
-using App.Application.DTO;
+using App.Application.Features.Dashboard.UseCases;
+using App.Application.Features.Notifications.DTOs;
+using App.Application.Features.Notifications.UseCases;
+using App.Application.Features.Operators.DTOs;
+using App.Application.Features.Operators.UseCases;
 using App.Application.Interfaces.IRepositories;
-using App.Application.UseCases;
 using App.Domain.Entities.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

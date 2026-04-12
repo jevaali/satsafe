@@ -1,6 +1,6 @@
 using System.Security.Claims;
-using App.Application.DTO;
-using App.Application.UseCases;
+using App.Application.Features.Satellites.DTOs;
+using App.Application.Features.Satellites.UseCases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

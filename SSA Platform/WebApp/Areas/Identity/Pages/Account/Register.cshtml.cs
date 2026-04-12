@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
-using App.Application.DTO;
-using App.Application.UseCases;
+using App.Application.Features.Operators.DTOs;
+using App.Application.Features.Operators.UseCases;
 using App.Domain.Entities.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;

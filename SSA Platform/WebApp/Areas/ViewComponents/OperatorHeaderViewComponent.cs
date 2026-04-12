@@ -1,4 +1,5 @@
-using App.Application.UseCases;
+using App.Application.Features.Alerts.UseCases;
+using App.Application.Features.Satellites.UseCases;
 using App.Application.Interfaces.IRepositories;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;

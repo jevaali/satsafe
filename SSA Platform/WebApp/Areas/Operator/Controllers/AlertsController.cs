@@ -1,5 +1,5 @@
 using System.Security.Claims;
-using App.Application.UseCases;
+using App.Application.Features.Alerts.UseCases;
 using App.Application.Interfaces.IRepositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

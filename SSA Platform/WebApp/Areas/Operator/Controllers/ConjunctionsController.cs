@@ -1,5 +1,6 @@
 using System.Security.Claims;
-using App.Application.UseCases;
+using App.Application.Features.Conjunctions.UseCases;
+using App.Application.Features.Satellites.UseCases;
 using App.Application.Interfaces.IRepositories;
 using App.Domain.Entities.Enums;
 using Microsoft.AspNetCore.Authorization;

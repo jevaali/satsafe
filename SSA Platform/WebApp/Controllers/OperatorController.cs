@@ -1,6 +1,6 @@
 using System.Globalization;
-using App.Application.DTO;
-using App.Application.UseCases;
+using App.Application.Features.Operators.DTOs;
+using App.Application.Features.Operators.UseCases;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 

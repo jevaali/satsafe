@@ -1,5 +1,5 @@
-using App.Application.DTO;
-using App.Application.UseCases;
+using App.Application.Features.Dashboard.DTOs;
+using App.Application.Features.Dashboard.UseCases;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApp.Controllers;

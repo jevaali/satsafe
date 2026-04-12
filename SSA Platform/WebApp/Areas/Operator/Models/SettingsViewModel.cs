@@ -1,4 +1,5 @@
-using App.Application.DTO;
+using App.Application.Features.Dashboard.DTOs;
+using App.Application.Features.Operators.DTOs;
 using App.Domain.Entities.Enums;
 using System.ComponentModel.DataAnnotations;
 
