@@ -1,5 +1,4 @@
-@model App.Domain.Entities.ConjunctionEvent
-@using App.Domain.Entities
+@model App.Application.Features.Conjunctions.DTOs.ConjunctionDetailDto
 @using App.Domain.Entities.Enums
 
 @functions {
@@ -13,16 +12,6 @@
 
 @{
     ViewData["Title"] = "Conjunction Details";
-    var primaryName = Model.PrimaryObject switch {
-        Satellite s    => s.Name.ToString(),
-        DebrisObject d => $"DEBRIS-{d.NoradId}",
-        _              => Model.PrimaryObjectId.ToString()
-    };
-    var secondaryName = Model.SecondaryObject switch {
-        Satellite s    => s.Name.ToString(),
-        DebrisObject d => $"DEBRIS-{d.NoradId}",
-        _              => Model.SecondaryObjectId.ToString()
-    };
     var tca = Model.TimeOfClosestApproach;
 }
 
@@ -38,11 +27,11 @@
 
     <div class="header">
         <div>
-            <h3>@primaryName ↔ @secondaryName</h3>
+            <h3>@Model.PrimaryObjectName ↔ @Model.SecondaryObjectName</h3>
             <small>Conjunction Event — @Model.Id</small>
         </div>
         <div class="header-right">
-            @if (Model.IsHighRisk())
+            @if (Model.IsHighRisk)
             {
                 <span class="badge danger">HIGH RISK</span>
             }
@@ -96,14 +85,15 @@
                 <tr>
                     <td class="text-muted">Primary</td>
                     <td>
-                        <strong>@primaryName</strong>
-                        @if (Model.PrimaryObject is Satellite ps)
+                        <strong>@Model.PrimaryObjectName</strong>
+                        @if (Model.PrimaryNoradId.HasValue)
                         {
-                            <div><small>NORAD @ps.NoradId | @ps.Status</small></div>
-                        }
-                        else if (Model.PrimaryObject is DebrisObject pd)
-                        {
-                            <div><small>NORAD @pd.NoradId | Debris</small></div>
+                            <div>
+                                <small>
+                                    NORAD @Model.PrimaryNoradId |
+                                    @(Model.PrimaryIsSatellite ? Model.PrimaryObjectStatus?.ToString() ?? "" : "Debris")
+                                </small>
+                            </div>
                         }
                         <span class="badge @AckBadge(Model.PrimaryAcknowledgement) mt-1">@Model.PrimaryAcknowledgement</span>
                     </td>
@@ -111,14 +101,15 @@
                 <tr>
                     <td class="text-muted">Secondary</td>
                     <td>
-                        <strong>@secondaryName</strong>
-                        @if (Model.SecondaryObject is Satellite ss)
+                        <strong>@Model.SecondaryObjectName</strong>
+                        @if (Model.SecondaryNoradId.HasValue)
                         {
-                            <div><small>NORAD @ss.NoradId | @ss.Status</small></div>
-                        }
-                        else if (Model.SecondaryObject is DebrisObject sd)
-                        {
-                            <div><small>NORAD @sd.NoradId | Debris</small></div>
+                            <div>
+                                <small>
+                                    NORAD @Model.SecondaryNoradId |
+                                    @(Model.SecondaryIsSatellite ? Model.SecondaryObjectStatus?.ToString() ?? "" : "Debris")
+                                </small>
+                            </div>
                         }
                         <span class="badge @AckBadge(Model.SecondaryAcknowledgement) mt-1">@Model.SecondaryAcknowledgement</span>
                     </td>
@@ -127,7 +118,7 @@
         </div>
 
     </div>
-    
+
     @await Html.PartialAsync("_ConjunctionOrbit", Model)
 
     <!-- ALERTS PANEL -->
@@ -152,17 +143,17 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var alert in Model.Alerts.OrderByDescending(a => !a.IsAcknowledged).ThenByDescending(a => a.Severity))
+                    @foreach (var alert in Model.Alerts)
                     {
                         var severityBadge = alert.Severity switch {
-                            App.Domain.Entities.Enums.EAlertSeverity.Critical => "bg-danger",
-                            App.Domain.Entities.Enums.EAlertSeverity.High     => "bg-warning text-dark",
-                            App.Domain.Entities.Enums.EAlertSeverity.Medium   => "bg-info text-dark",
-                            _                                                  => "bg-secondary"
+                            EAlertSeverity.Critical => "bg-danger",
+                            EAlertSeverity.High     => "bg-warning text-dark",
+                            EAlertSeverity.Medium   => "bg-info text-dark",
+                            _                       => "bg-secondary"
                         };
                         <tr class="@(alert.IsAcknowledged ? "opacity-50" : "")">
                             <td><span class="badge @severityBadge">@alert.Severity</span></td>
-                            <td>@(alert.Message?.ToString() ?? "—")</td>
+                            <td>@(alert.Message ?? "—")</td>
                             <td>@alert.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
                             <td>
                                 @if (alert.IsAcknowledged)
@@ -187,12 +178,13 @@
 
     <!-- ACTIONS -->
     @{
-        var operatorSide = (string?)ViewBag.OperatorSide ?? "None";
+        var operatorSide = Model.OperatorSide;
         var myAck = operatorSide == "Primary"   ? Model.PrimaryAcknowledgement
                   : operatorSide == "Secondary" ? Model.SecondaryAcknowledgement
                   : EOperatorAcknowledgement.Resolved; // "None" side — no buttons
         var isFullyResolved = Model.Status == EConjunctionEventStatus.Resolved ||
                               Model.Status == EConjunctionEventStatus.AlreadyOccurred;
+        var unackedCount = Model.Alerts.Count(a => !a.IsAcknowledged);
     }
     <div class="card mt-3 p-3">
         <h6 class="mb-3" style="font-size:0.8rem;letter-spacing:0.06em;text-transform:uppercase;color:#6b7c93;">
@@ -217,7 +209,6 @@
                 }
                 @if (myAck < EOperatorAcknowledgement.Resolved)
                 {
-                    var unackedCount = Model.Alerts.Count(a => !a.IsAcknowledged);
                     <form asp-action="Acknowledge" asp-route-id="@Model.Id" asp-route-state="@EOperatorAcknowledgement.Resolved" method="post" class="d-inline">
                         @Html.AntiForgeryToken()
                         <button type="submit" class="btn btn-success btn-sm">
@@ -233,9 +224,17 @@
                     </form>
                 }
             }
-            @if (myAck == EOperatorAcknowledgement.Resolved || isFullyResolved)
+            @if (myAck == EOperatorAcknowledgement.Resolved)
             {
                 <span class="badge bg-success">Your side resolved</span>
+            }
+            else if (Model.Status == EConjunctionEventStatus.AlreadyOccurred)
+            {
+                <span class="badge bg-secondary">Event already occurred</span>
+            }
+            else if (Model.Status == EConjunctionEventStatus.Resolved)
+            {
+                <span class="badge bg-success">Event fully resolved</span>
             }
             <a asp-action="Index" class="btn btn-outline-secondary btn-sm ms-auto">Back to List</a>
         </div>

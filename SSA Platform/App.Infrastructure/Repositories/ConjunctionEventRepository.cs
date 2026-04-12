@@ -17,8 +17,8 @@ public class ConjunctionEventRepository : IConjunctionEventRepository
     public async Task<ConjunctionEvent?> GetByIdAsync(Guid? id)
     {
         return await _context.ConjunctionEvents
-            .Include(c => c.PrimaryObject)
-            .Include(c => c.SecondaryObject)
+            .Include(c => c.PrimaryObject).ThenInclude(o => o!.Orbit)
+            .Include(c => c.SecondaryObject).ThenInclude(o => o!.Orbit)
             .Include(c => c.Alerts)
             .FirstOrDefaultAsync(c => c.Id == id);
     }

@@ -3,9 +3,7 @@ using System.Security.Claims;
 using App.Application.DTO.v1;
 using App.Application.Features.Conjunctions.DTOs;
 using App.Application.Features.Conjunctions.UseCases;
-using App.Application.Features.Satellites.UseCases;
 using App.Application.Interfaces.IRepositories;
-using App.Domain.Entities;
 using App.Domain.Entities.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +17,6 @@ public class ConjunctionsController : ControllerBase
 {
     private readonly GetOperatorConjunctionsUseCase _getConjunctionsUseCase;
     private readonly GetConjunctionByIdUseCase _getConjunctionByIdUseCase;
-    private readonly GetOperatorSatellitesUseCase _getSatellitesUseCase;
     private readonly AcknowledgeConjunctionSideUseCase _acknowledgeUseCase;
     private readonly RefreshConjunctionStatusesUseCase _refreshUseCase;
     private readonly IUserOperatorRepository _userOperatorRepository;
@@ -27,17 +24,15 @@ public class ConjunctionsController : ControllerBase
     public ConjunctionsController(
         GetOperatorConjunctionsUseCase getConjunctionsUseCase,
         GetConjunctionByIdUseCase getConjunctionByIdUseCase,
-        GetOperatorSatellitesUseCase getSatellitesUseCase,
         AcknowledgeConjunctionSideUseCase acknowledgeUseCase,
         RefreshConjunctionStatusesUseCase refreshUseCase,
         IUserOperatorRepository userOperatorRepository)
     {
-        _getConjunctionsUseCase  = getConjunctionsUseCase;
+        _getConjunctionsUseCase    = getConjunctionsUseCase;
         _getConjunctionByIdUseCase = getConjunctionByIdUseCase;
-        _getSatellitesUseCase    = getSatellitesUseCase;
-        _acknowledgeUseCase      = acknowledgeUseCase;
-        _refreshUseCase          = refreshUseCase;
-        _userOperatorRepository  = userOperatorRepository;
+        _acknowledgeUseCase        = acknowledgeUseCase;
+        _refreshUseCase            = refreshUseCase;
+        _userOperatorRepository    = userOperatorRepository;
     }
 
     /// <summary>
@@ -59,10 +54,7 @@ public class ConjunctionsController : ControllerBase
         await _refreshUseCase.ExecuteAsync(operatorId, userId);
 
         var conjunctions = await _getConjunctionsUseCase.ExecuteAsync(operatorId);
-
-        var result = conjunctions.Select(c => MapToDto(c));
-
-        return Ok(result);
+        return Ok(conjunctions);
     }
 
     /// <summary>
@@ -90,14 +82,7 @@ public class ConjunctionsController : ControllerBase
                 Error  = "Conjunction event not found."
             });
 
-        var satellites   = await _getSatellitesUseCase.ExecuteAsync(operatorId);
-        var satelliteIds = satellites.Select(s => s.Id).ToHashSet();
-
-        var operatorSide = satelliteIds.Contains(conjunction.PrimaryObjectId)   ? "Primary"
-                         : satelliteIds.Contains(conjunction.SecondaryObjectId) ? "Secondary"
-                         : "None";
-
-        return Ok(new ConjunctionDetailDto(MapToDto(conjunction), operatorSide));
+        return Ok(conjunction);
     }
 
     /// <summary>
@@ -118,18 +103,26 @@ public class ConjunctionsController : ControllerBase
                 Error  = "No operator account is linked to this user."
             });
 
-        var conjunction = await _getConjunctionByIdUseCase.ExecuteAsync(id, operatorId);
-        if (conjunction == null)
-            return NotFound(new RestApiErrorResponse
-            {
-                Status = HttpStatusCode.NotFound,
-                Error  = "Conjunction event not found."
-            });
-
         try
         {
             await _acknowledgeUseCase.ExecuteAsync(id, operatorId, state);
             return NoContent();
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return StatusCode((int) HttpStatusCode.Forbidden, new RestApiErrorResponse
+            {
+                Status = HttpStatusCode.Forbidden,
+                Error  = ex.Message
+            });
+        }
+        catch (Exception ex) when (ex.Message.Contains("not found", StringComparison.OrdinalIgnoreCase))
+        {
+            return NotFound(new RestApiErrorResponse
+            {
+                Status = HttpStatusCode.NotFound,
+                Error  = ex.Message
+            });
         }
         catch (Exception ex)
         {
@@ -141,29 +134,6 @@ public class ConjunctionsController : ControllerBase
         }
     }
 
-    private static ConjunctionSummaryDto MapToDto(ConjunctionEvent c) => new()
-    {
-        Id                    = c.Id,
-        IsHighRisk            = c.IsHighRisk(),
-        TimeOfClosestApproach = c.TimeOfClosestApproach,
-        PrimaryObjectId       = c.PrimaryObjectId,
-        SecondaryObjectId     = c.SecondaryObjectId,
-        PrimaryObjectName     = c.PrimaryObject switch
-        {
-            Satellite s    => s.Name.ToString(),
-            DebrisObject d => $"DEBRIS-{d.NoradId}",
-            _              => c.PrimaryObjectId.ToString()
-        },
-        SecondaryObjectName = c.SecondaryObject switch
-        {
-            Satellite s    => s.Name.ToString(),
-            DebrisObject d => $"DEBRIS-{d.NoradId}",
-            _              => c.SecondaryObjectId.ToString()
-        },
-        MissDistance         = c.MissDistance,
-        CollisionProbability = c.CollisionProbability
-    };
-
     private async Task<(Guid userId, Guid operatorId)> GetOperatorContextAsync()
     {
         var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -172,8 +142,3 @@ public class ConjunctionsController : ControllerBase
         return (userId, userOperator?.OperatorId ?? Guid.Empty);
     }
 }
-
-/// <summary>
-/// Conjunction event details enriched with which side of the event this operator owns.
-/// </summary>
-public record ConjunctionDetailDto(ConjunctionSummaryDto Conjunction, string OperatorSide);

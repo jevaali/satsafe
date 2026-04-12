@@ -1,6 +1,5 @@
 using System.Security.Claims;
 using App.Application.Features.Conjunctions.UseCases;
-using App.Application.Features.Satellites.UseCases;
 using App.Application.Interfaces.IRepositories;
 using App.Domain.Entities.Enums;
 using Microsoft.AspNetCore.Authorization;
@@ -14,8 +13,6 @@ public class ConjunctionsController : Controller
 {
     private readonly GetOperatorConjunctionsUseCase _getConjunctionsUseCase;
     private readonly GetConjunctionByIdUseCase _getConjunctionByIdUseCase;
-    private readonly GetOperatorSatellitesUseCase _getSatellitesUseCase;
-    private readonly ResolveConjunctionUseCase _resolveUseCase;
     private readonly AcknowledgeConjunctionSideUseCase _acknowledgeUseCase;
     private readonly RefreshConjunctionStatusesUseCase _refreshUseCase;
     private readonly IUserOperatorRepository _userOperatorRepository;
@@ -23,19 +20,15 @@ public class ConjunctionsController : Controller
     public ConjunctionsController(
         GetOperatorConjunctionsUseCase getConjunctionsUseCase,
         GetConjunctionByIdUseCase getConjunctionByIdUseCase,
-        GetOperatorSatellitesUseCase getSatellitesUseCase,
-        ResolveConjunctionUseCase resolveUseCase,
         AcknowledgeConjunctionSideUseCase acknowledgeUseCase,
         RefreshConjunctionStatusesUseCase refreshUseCase,
         IUserOperatorRepository userOperatorRepository)
     {
-        _getConjunctionsUseCase  = getConjunctionsUseCase;
+        _getConjunctionsUseCase    = getConjunctionsUseCase;
         _getConjunctionByIdUseCase = getConjunctionByIdUseCase;
-        _getSatellitesUseCase    = getSatellitesUseCase;
-        _resolveUseCase          = resolveUseCase;
-        _acknowledgeUseCase      = acknowledgeUseCase;
-        _refreshUseCase          = refreshUseCase;
-        _userOperatorRepository  = userOperatorRepository;
+        _acknowledgeUseCase        = acknowledgeUseCase;
+        _refreshUseCase            = refreshUseCase;
+        _userOperatorRepository    = userOperatorRepository;
     }
 
     [HttpGet]
@@ -58,12 +51,6 @@ public class ConjunctionsController : Controller
 
         var conjunction = await _getConjunctionByIdUseCase.ExecuteAsync(id, operatorId);
         if (conjunction == null) return NotFound();
-
-        var satellites = await _getSatellitesUseCase.ExecuteAsync(operatorId);
-        var satelliteIds = satellites.Select(s => s.Id).ToHashSet();
-        ViewBag.OperatorSide = satelliteIds.Contains(conjunction.PrimaryObjectId)   ? "Primary"
-                             : satelliteIds.Contains(conjunction.SecondaryObjectId) ? "Secondary"
-                             : "None";
 
         return View(conjunction);
     }

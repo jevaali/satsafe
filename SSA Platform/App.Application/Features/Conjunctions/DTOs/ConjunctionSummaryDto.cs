@@ -1,3 +1,5 @@
+using App.Domain.Entities.Enums;
+
 namespace App.Application.Features.Conjunctions.DTOs;
 
 public class ConjunctionSummaryDto
@@ -11,4 +13,5 @@ public class ConjunctionSummaryDto
     public string SecondaryObjectName { get; init; } = string.Empty;
     public double MissDistance { get; init; }
     public double CollisionProbability { get; init; }
+    public EConjunctionEventStatus Status { get; init; }
 }

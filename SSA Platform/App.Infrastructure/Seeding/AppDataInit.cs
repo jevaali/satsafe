@@ -85,7 +85,7 @@ public static class AppDataInit
         {
             Id           = Guid.NewGuid(),
             Name         = "SSA-TEST-OPS",
-            CountryCode      = "EE",
+            CountryCode  = "EE",
             OperatorType = EOperatorType.Commercial,
             CreatedAt    = DateTime.UtcNow,
             CreatedBy    = "seed"
@@ -100,10 +100,11 @@ public static class AppDataInit
             AppUserId  = user.Id,
             OperatorId = op.Id
         });
-        context.SaveChanges(); 
+        context.SaveChanges();
 
-        // 4. Satellites — operator already in DB so FK is valid
-        var satA = Satellite.Create("SENTINEL-A", DateTime.UtcNow.AddYears(-1), op);
+        // 4. Satellites
+        // A & B — nearly identical orbit; will produce a conjunction when screening runs
+        var satA = Satellite.Create("SENTINEL-A", DateTime.UtcNow.AddYears(-2), op);
         satA.SetOrbit(new OrbitParameters(
             semiMajorAxis:     6_778_000,
             eccentricity:      0.0001,
@@ -113,7 +114,7 @@ public static class AppDataInit
             meanAnomaly:       45.0
         ));
 
-        var satB = Satellite.Create("SENTINEL-B", DateTime.UtcNow.AddYears(-1), op);
+        var satB = Satellite.Create("SENTINEL-B", DateTime.UtcNow.AddYears(-2), op);
         satB.SetOrbit(new OrbitParameters(
             semiMajorAxis:     6_778_100,
             eccentricity:      0.0001,
@@ -123,8 +124,72 @@ public static class AppDataInit
             meanAnomaly:       45.5
         ));
 
-        context.Satellites.Add(satA);
-        context.Satellites.Add(satB);
+        // C — same orbit plane as A, slight RAAN offset; crosses A and B periodically
+        var satC = Satellite.Create("SENTINEL-C", DateTime.UtcNow.AddYears(-1), op);
+        satC.SetOrbit(new OrbitParameters(
+            semiMajorAxis:     6_778_050,
+            eccentricity:      0.0001,
+            inclination:       51.6,
+            RAAN:              95.0,
+            argumentOfPerigee: 120.0,
+            meanAnomaly:       46.2
+        ));
+
+        // D — slightly higher orbit, different inclination; orbit plane crosses A/B/C
+        var satD = Satellite.Create("GUARDIAN-1", DateTime.UtcNow.AddYears(-1), op);
+        satD.SetOrbit(new OrbitParameters(
+            semiMajorAxis:     6_788_000,
+            eccentricity:      0.0003,
+            inclination:       52.1,
+            RAAN:              94.0,
+            argumentOfPerigee: 100.0,
+            meanAnomaly:       20.0
+        ));
+
+        // E — polar-ish orbit; crosses other orbital planes twice per orbit
+        var satE = Satellite.Create("GUARDIAN-2", DateTime.UtcNow.AddMonths(-6), op);
+        satE.SetOrbit(new OrbitParameters(
+            semiMajorAxis:     6_780_000,
+            eccentricity:      0.0002,
+            inclination:       97.4,
+            RAAN:              170.0,
+            argumentOfPerigee: 90.0,
+            meanAnomaly:       0.0
+        ));
+
+        context.Satellites.AddRange(satA, satB, satC, satD, satE);
+        context.SaveChanges();
+
+        // 5. Pre-seed two conjunction events with future TCAs so the UI is testable
+        //    immediately — no need to trigger screening manually first.
+        const double threshold = 5_000; // 5 km
+
+        // High-risk event: A vs C, TCA ~14 h from now, miss ~650 m
+        var evtHighRisk = new ConjunctionEvent(
+            satA.Id, satC.Id,
+            DateTime.UtcNow.AddHours(14),
+            missDistance: 650,
+            threshold:    threshold);
+        evtHighRisk.UpdateCollisionProbability(0.035);
+        evtHighRisk.RefreshStatus();
+
+        // Normal-risk event: B vs D, TCA ~38 h from now, miss ~3 200 m
+        var evtNormal = new ConjunctionEvent(
+            satB.Id, satD.Id,
+            DateTime.UtcNow.AddHours(38),
+            missDistance: 3_200,
+            threshold:    threshold);
+        evtNormal.UpdateCollisionProbability(0.002);
+        evtNormal.RefreshStatus();
+
+        context.ConjunctionEvents.AddRange(evtHighRisk, evtNormal);
+        context.SaveChanges();
+
+        // Alerts for both events
+        var alertHigh = evtHighRisk.CreateAlert(user.Id, alertThresholdKm: 5.0);
+        var alertNorm = evtNormal.CreateAlert(user.Id, alertThresholdKm: 5.0);
+        if (alertHigh != null) context.Alerts.Add(alertHigh);
+        if (alertNorm != null) context.Alerts.Add(alertNorm);
         context.SaveChanges();
 
         Console.WriteLine("✅ Conjunction test data seeded — login: operator@ssa.com / Operator@123");

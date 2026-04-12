@@ -1,5 +1,4 @@
-@model IEnumerable<App.Domain.Entities.ConjunctionEvent>
-@using App.Domain.Entities
+@model IEnumerable<App.Application.Features.Conjunctions.DTOs.ConjunctionSummaryDto>
 @using App.Domain.Entities.Enums
 
 @{
@@ -23,7 +22,7 @@
             <small>All detected conjunction events for your satellites</small>
         </div>
         <div class="header-right">
-            <span class="op-badge high-risk"><i class="bi bi-exclamation-triangle-fill"></i>@Model.Count(c => c.IsHighRisk()) High Risk</span>
+            <span class="op-badge high-risk"><i class="bi bi-exclamation-triangle-fill"></i>@Model.Count(c => c.IsHighRisk) High Risk</span>
             <span class="op-badge pending">@Model.Count(c => c.Status == EConjunctionEventStatus.Pending) Pending</span>
         </div>
     </div>
@@ -63,19 +62,8 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var c in Model.OrderByDescending(c => c.IsHighRisk()).ThenBy(c => c.TimeOfClosestApproach))
+                @foreach (var c in Model.OrderByDescending(c => c.IsHighRisk).ThenBy(c => c.TimeOfClosestApproach))
                 {
-                    var primaryName = c.PrimaryObject switch {
-                        Satellite s    => s.Name.ToString(),
-                        DebrisObject d => $"DEBRIS-{d.NoradId}",
-                        _              => c.PrimaryObjectId.ToString()[..8]
-                    };
-                    var secondaryName = c.SecondaryObject switch {
-                        Satellite s    => s.Name.ToString(),
-                        DebrisObject d => $"DEBRIS-{d.NoradId}",
-                        _              => c.SecondaryObjectId.ToString()[..8]
-                    };
-                    var isHighRisk = c.IsHighRisk();
                     var statusBadge = c.Status switch {
                         EConjunctionEventStatus.Resolved        => "resolved",
                         EConjunctionEventStatus.Imminent        => "imminent",
@@ -85,13 +73,13 @@
                         _                                       => "low"
                     };
 
-                    <tr class="conjunction-row @(isHighRisk ? "row-high-risk" : "")"
-                        data-primary="@primaryName.ToLower()"
-                        data-secondary="@secondaryName.ToLower()"
+                    <tr class="conjunction-row @(c.IsHighRisk ? "row-high-risk" : "")"
+                        data-primary="@c.PrimaryObjectName.ToLower()"
+                        data-secondary="@c.SecondaryObjectName.ToLower()"
                         data-status="@c.Status"
-                        data-risk="@(isHighRisk ? "high" : "normal")">
-                        <td><span style="font-family:'Share Tech Mono',monospace;font-size:0.85rem;font-weight:700;color:#1a2332;">@primaryName</span></td>
-                        <td><span style="font-family:'Share Tech Mono',monospace;font-size:0.85rem;color:#5a6a7a;">@secondaryName</span></td>
+                        data-risk="@(c.IsHighRisk ? "high" : "normal")">
+                        <td><span style="font-family:'Share Tech Mono',monospace;font-size:0.85rem;font-weight:700;color:#1a2332;">@c.PrimaryObjectName</span></td>
+                        <td><span style="font-family:'Share Tech Mono',monospace;font-size:0.85rem;color:#5a6a7a;">@c.SecondaryObjectName</span></td>
                         <td style="font-family:'Share Tech Mono',monospace;font-size:0.8rem;color:#8a9bb0;">@c.TimeOfClosestApproach.ToString("yyyy-MM-dd HH:mm")</td>
                         <td>
                             <span class="op-badge @(c.MissDistance < 1000 ? "critical" : c.MissDistance < 5000 ? "high" : "low")">
@@ -100,7 +88,7 @@
                         </td>
                         <td style="font-family:'Share Tech Mono',monospace;font-size:0.8rem;">@((c.CollisionProbability * 100).ToString("F4"))%</td>
                         <td><span class="op-badge @statusBadge">@c.Status</span></td>
-                        <td><span class="op-badge @(isHighRisk ? "high-risk" : "normal")">@(isHighRisk ? "HIGH" : "NORMAL")</span></td>
+                        <td><span class="op-badge @(c.IsHighRisk ? "high-risk" : "normal")">@(c.IsHighRisk ? "HIGH" : "NORMAL")</span></td>
                         <td>
                             <a asp-action="Details" asp-route-id="@c.Id" class="btn-sat btn-sat-view">
                                 <i class="bi bi-eye"></i> Details

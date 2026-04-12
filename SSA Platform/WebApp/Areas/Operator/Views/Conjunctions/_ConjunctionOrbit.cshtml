@@ -2,26 +2,14 @@
    Include in ConjunctionDetails.cshtml:
    @await Html.PartialAsync("_ConjunctionOrbit", Model)
 *@
-@model App.Domain.Entities.ConjunctionEvent
-@using App.Domain.Entities
+@model App.Application.Features.Conjunctions.DTOs.ConjunctionDetailDto
 @using System.Globalization
 
 @{
     var inv = CultureInfo.InvariantCulture;
 
-    var primaryOrbit   = (Model.PrimaryObject   as SpaceObject)?.Orbit?.Parameters;
-    var secondaryOrbit = (Model.SecondaryObject as SpaceObject)?.Orbit?.Parameters;
-
-    var primaryName = Model.PrimaryObject switch {
-        Satellite s    => s.Name.ToString(),
-        DebrisObject d => $"DEBRIS-{d.NoradId}",
-        _              => "Object A"
-    };
-    var secondaryName = Model.SecondaryObject switch {
-        Satellite s    => s.Name.ToString(),
-        DebrisObject d => $"DEBRIS-{d.NoradId}",
-        _              => "Object B"
-    };
+    var primaryOrbit   = Model.PrimaryOrbit;
+    var secondaryOrbit = Model.SecondaryOrbit;
 
     bool hasPrimary   = primaryOrbit   != null;
     bool hasSecondary = secondaryOrbit != null;
@@ -144,14 +132,14 @@
             {
                 <div class="cj-legend-item">
                     <div class="cj-legend-dot" style="background:#4fc3f7;"></div>
-                    @primaryName
+                    @Model.PrimaryObjectName
                 </div>
             }
             @if (hasSecondary)
             {
                 <div class="cj-legend-item">
                     <div class="cj-legend-dot" style="background:#ff7043;"></div>
-                    @secondaryName
+                    @Model.SecondaryObjectName
                 </div>
             }
             <div class="cj-legend-item">
@@ -179,21 +167,21 @@
         </div>
         <div class="cj-stat">
             <div class="cj-stat-label">Collision probability</div>
-            <div class="cj-stat-value @(Model.IsHighRisk() ? "danger" : "")">
+            <div class="cj-stat-value @(Model.IsHighRisk ? "danger" : "")">
                 @((Model.CollisionProbability * 100).ToString("F4", inv))%
             </div>
         </div>
         @if (hasPrimary)
         {
             <div class="cj-stat">
-                <div class="cj-stat-label">@primaryName inclination</div>
+                <div class="cj-stat-label">@Model.PrimaryObjectName inclination</div>
                 <div class="cj-stat-value">@primaryOrbit!.Inclination.ToString("F2", inv)°</div>
             </div>
         }
         @if (hasSecondary)
         {
             <div class="cj-stat">
-                <div class="cj-stat-label">@secondaryName inclination</div>
+                <div class="cj-stat-label">@Model.SecondaryObjectName inclination</div>
                 <div class="cj-stat-value">@secondaryOrbit!.Inclination.ToString("F2", inv)°</div>
             </div>
         }
@@ -410,10 +398,10 @@
         }
 
         if (primaryParams) {
-            posA = drawSatellite(primaryParams, simTime, '#4fc3f7', '@primaryName');
+            posA = drawSatellite(primaryParams, simTime, '#4fc3f7', '@Model.PrimaryObjectName');
         }
         if (secondaryParams) {
-            posB = drawSatellite(secondaryParams, simTime, '#ff7043', '@secondaryName');
+            posB = drawSatellite(secondaryParams, simTime, '#ff7043', '@Model.SecondaryObjectName');
         }
 
         // At TCA — show closest approach marker
