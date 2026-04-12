@@ -62,6 +62,7 @@
                         </div>
                         <div class="mb-3">
                             <label asp-for="Input.OperatorCountry" class="form-label"></label>
+                            <input type="text" id="country-search" class="form-control mb-1" placeholder="Search country…" autocomplete="off" />
                             <select asp-for="Input.OperatorCountry" id="country-select"
                                     class="form-select" asp-items="Model.Countries">
                             </select>
