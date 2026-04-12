@@ -1,4 +1,4 @@
-@model App.Domain.Entities.Satellite
+@model App.Application.Features.Satellites.DTOs.SatelliteDetailDto
 
 @{
     ViewData["Title"] = "Satellite Details";
@@ -69,52 +69,44 @@
                     <td class="text-muted">Launch Date</td>
                     <td>@Model.LaunchDate.ToString("yyyy-MM-dd")</td>
                 </tr>
-                <tr>
-                    <td class="text-muted">Operator</td>
-                    <td>@(Model.Operator?.Name.ToString() ?? Model.OperatorName ?? "—")</td>
-                </tr>
-                <tr>
-                    <td class="text-muted">Created</td>
-                    <td><small>@Model.CreatedAt.ToString("yyyy-MM-dd HH:mm") by @Model.CreatedBy</small></td>
-                </tr>
             </table>
         </div>
 
         <div class="card">
             <h5>Orbital Parameters</h5>
-            @if (Model.Orbit?.Parameters != null)
+            @if (Model.Orbit != null)
             {
-                var p = Model.Orbit.Parameters;
+                var o = Model.Orbit;
                 <table class="table mb-0">
                     <tr>
                         <td class="text-muted">Semi-Major Axis</td>
-                        <td class="fw-bold">@p.SemiMajorAxis.ToString("N0") m</td>
+                        <td class="fw-bold">@o.SemiMajorAxis.ToString("N0") m</td>
                     </tr>
                     <tr>
                         <td class="text-muted">Eccentricity</td>
-                        <td class="font-monospace">@p.Eccentricity.ToString("F5")</td>
+                        <td class="font-monospace">@o.Eccentricity.ToString("F5")</td>
                     </tr>
                     <tr>
                         <td class="text-muted">Inclination</td>
-                        <td class="font-monospace">@p.Inclination.ToString("F2")°</td>
+                        <td class="font-monospace">@o.Inclination.ToString("F2")°</td>
                     </tr>
                     <tr>
                         <td class="text-muted">RAAN</td>
-                        <td class="font-monospace">@p.RAAN.ToString("F2")°</td>
+                        <td class="font-monospace">@o.RAAN.ToString("F2")°</td>
                     </tr>
                     <tr>
                         <td class="text-muted">Argument of Perigee</td>
-                        <td class="font-monospace">@p.ArgumentOfPerigee.ToString("F2")°</td>
+                        <td class="font-monospace">@o.ArgumentOfPerigee.ToString("F2")°</td>
                     </tr>
                     <tr>
                         <td class="text-muted">Mean Anomaly</td>
-                        <td class="font-monospace">@p.MeanAnomaly.ToString("F2")°</td>
+                        <td class="font-monospace">@o.MeanAnomaly.ToString("F2")°</td>
                     </tr>
                     <tr>
                         <td class="text-muted">Orbital Period</td>
                         <td class="font-monospace">
                             @{
-                                var periodSec = 2 * Math.PI * Math.Sqrt(Math.Pow(p.SemiMajorAxis, 3) / (3.986004418e14));
+                                var periodSec = 2 * Math.PI * Math.Sqrt(Math.Pow(o.SemiMajorAxis, 3) / (3.986004418e14));
                                 var periodMin = periodSec / 60;
                             }
                             @periodMin.ToString("F1") min
@@ -122,7 +114,7 @@
                     </tr>
                     <tr>
                         <td class="text-muted">Altitude (approx)</td>
-                        <td class="font-monospace">@((p.SemiMajorAxis - 6_371_000).ToString("N0")) m</td>
+                        <td class="font-monospace">@((o.SemiMajorAxis - 6_371_000).ToString("N0")) m</td>
                     </tr>
                 </table>
             }
@@ -189,34 +181,35 @@
     </div>
 
     @* Orbit visualisation — only shown when orbital data exists *@
-    @if (Model.Orbit?.Parameters != null)
+    @if (Model.Orbit != null)
     {
+        var o = Model.Orbit;
         <div class="card mt-3 orbit-card">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                 <h5 style="margin:0;">Orbital View</h5>
                 <small style="color:#6c757d;">
                     @Model.Name &nbsp;·&nbsp;
-                    Alt ~@(((Model.Orbit.Parameters.SemiMajorAxis - 6_371_000) / 1000).ToString("N0")) km &nbsp;·&nbsp;
-                    Inc @Model.Orbit.Parameters.Inclination.ToString("F1")°
+                    Alt ~@(((o.SemiMajorAxis - 6_371_000) / 1000).ToString("N0")) km &nbsp;·&nbsp;
+                    Inc @o.Inclination.ToString("F1")°
                 </small>
             </div>
             <div class="orbit-visualization">
                 <canvas id="orbitCanvas"></canvas>
             </div>
         </div>
-        @await Html.PartialAsync("_GroundTrack", Model)
+        @await Html.PartialAsync("_GroundTrack", Model.Orbit)
 
         <script>
             var satelliteData = [@Html.Raw(Json.Serialize(new {
                 id   = Model.Id,
-                name = Model.Name.ToString(),
+                name = Model.Name,
                 orbit = new {
-                    semiMajorAxis     = Model.Orbit.Parameters.SemiMajorAxis,
-                    eccentricity      = Model.Orbit.Parameters.Eccentricity,
-                    inclination       = Model.Orbit.Parameters.Inclination,
-                    raan              = Model.Orbit.Parameters.RAAN,
-                    argumentOfPerigee = Model.Orbit.Parameters.ArgumentOfPerigee,
-                    meanAnomaly       = Model.Orbit.Parameters.MeanAnomaly
+                    semiMajorAxis     = o.SemiMajorAxis,
+                    eccentricity      = o.Eccentricity,
+                    inclination       = o.Inclination,
+                    raan              = o.RAAN,
+                    argumentOfPerigee = o.ArgumentOfPerigee,
+                    meanAnomaly       = o.MeanAnomaly
                 }
             }))];
         </script>

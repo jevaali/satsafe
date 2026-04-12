@@ -14,37 +14,39 @@ public class SatelliteController : Controller
     private readonly AddSatelliteUseCase _addSatelliteUseCase;
     private readonly UpdateSatelliteUseCase _updateSatelliteUseCase;
     private readonly DeleteSatelliteUseCase _deleteSatelliteUseCase;
-    private readonly ISatelliteRepository _satelliteRepository;
-    private readonly IUserOperatorRepository _userOperatorRepository;
+    private readonly GetSatelliteByIdUseCase _getSatelliteByIdUseCase;
+    private readonly GetOperatorSatellitesUseCase _getOperatorSatellitesUseCase;
     private readonly CalculateSatelliteRiskUseCase _calculateRiskUseCase;
+    private readonly IUserOperatorRepository _userOperatorRepository;
 
     public SatelliteController(
         AddSatelliteUseCase addSatelliteUseCase,
         UpdateSatelliteUseCase updateSatelliteUseCase,
         DeleteSatelliteUseCase deleteSatelliteUseCase,
-        ISatelliteRepository satelliteRepository,
-        IUserOperatorRepository userOperatorRepository,
-        CalculateSatelliteRiskUseCase calculateRiskUseCase)
+        GetSatelliteByIdUseCase getSatelliteByIdUseCase,
+        GetOperatorSatellitesUseCase getOperatorSatellitesUseCase,
+        CalculateSatelliteRiskUseCase calculateRiskUseCase,
+        IUserOperatorRepository userOperatorRepository)
     {
-        _addSatelliteUseCase = addSatelliteUseCase;
-        _updateSatelliteUseCase = updateSatelliteUseCase;
-        _deleteSatelliteUseCase = deleteSatelliteUseCase;
-        _satelliteRepository = satelliteRepository;
-        _userOperatorRepository = userOperatorRepository;
-        _calculateRiskUseCase = calculateRiskUseCase;
+        _addSatelliteUseCase          = addSatelliteUseCase;
+        _updateSatelliteUseCase       = updateSatelliteUseCase;
+        _deleteSatelliteUseCase       = deleteSatelliteUseCase;
+        _getSatelliteByIdUseCase      = getSatelliteByIdUseCase;
+        _getOperatorSatellitesUseCase = getOperatorSatellitesUseCase;
+        _calculateRiskUseCase         = calculateRiskUseCase;
+        _userOperatorRepository       = userOperatorRepository;
     }
 
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        var (userId, operatorId) = await GetOperatorContextAsync();
-        if (userId == Guid.Empty || operatorId == Guid.Empty)
-            return Forbid();
+        var (_, operatorId) = await GetOperatorContextAsync();
+        if (operatorId == Guid.Empty) return Forbid();
 
-        var satellites = await _satelliteRepository.GetByOperatorIdAsync(operatorId);
+        var satellites = await _getOperatorSatellitesUseCase.ExecuteAsync(operatorId);
         return View(satellites);
     }
-    
+
     [HttpGet]
     [Authorize(Roles = "Operator")]
     public IActionResult Create()
@@ -57,9 +59,8 @@ public class SatelliteController : Controller
     [Authorize(Roles = "Operator")]
     public async Task<IActionResult> Create([FromForm] AddSatelliteRequest request)
     {
-        var (userId, operatorId) = await GetOperatorContextAsync();
-        if (userId == Guid.Empty || operatorId == Guid.Empty)
-            return Forbid();
+        var (_, operatorId) = await GetOperatorContextAsync();
+        if (operatorId == Guid.Empty) return Forbid();
 
         if (!ModelState.IsValid)
             return View(request);
@@ -82,30 +83,26 @@ public class SatelliteController : Controller
     [Authorize(Roles = "Operator")]
     public async Task<IActionResult> Edit(Guid id)
     {
-        var (userId, operatorId) = await GetOperatorContextAsync();
-        if (userId == Guid.Empty || operatorId == Guid.Empty)
-            return Forbid();
+        var (_, operatorId) = await GetOperatorContextAsync();
+        if (operatorId == Guid.Empty) return Forbid();
 
-        var satellite = await _satelliteRepository.GetByIdAsync(id);
-        if (satellite == null || satellite.DeletedAt != null)
+        var satellite = await _getSatelliteByIdUseCase.ExecuteAsync(id, operatorId);
+        if (satellite == null)
             return NotFound();
-
-        if (satellite.OperatorId != operatorId)
-            return Forbid();
 
         var request = new UpdateSatelliteRequest
         {
-            SatelliteId = satellite.Id,
-            Name = satellite.Name,
-            LaunchDate = satellite.LaunchDate,
-            OperatorId = satellite.OperatorId,
-            NoradId = satellite.NoradId == 0 ? null : satellite.NoradId,
-            SemiMajorAxis = satellite.Orbit?.Parameters?.SemiMajorAxis,
-            Eccentricity = satellite.Orbit?.Parameters?.Eccentricity,
-            Inclination = satellite.Orbit?.Parameters?.Inclination,
-            RAAN = satellite.Orbit?.Parameters?.RAAN,
-            ArgumentOfPerigee = satellite.Orbit?.Parameters?.ArgumentOfPerigee,
-            MeanAnomaly = satellite.Orbit?.Parameters?.MeanAnomaly
+            SatelliteId       = satellite.Id,
+            Name              = satellite.Name,
+            LaunchDate        = satellite.LaunchDate,
+            OperatorId        = operatorId,
+            NoradId           = satellite.NoradId == 0 ? null : satellite.NoradId,
+            SemiMajorAxis     = satellite.Orbit?.SemiMajorAxis,
+            Eccentricity      = satellite.Orbit?.Eccentricity,
+            Inclination       = satellite.Orbit?.Inclination,
+            RAAN              = satellite.Orbit?.RAAN,
+            ArgumentOfPerigee = satellite.Orbit?.ArgumentOfPerigee,
+            MeanAnomaly       = satellite.Orbit?.MeanAnomaly
         };
 
         return View(request);
@@ -116,9 +113,8 @@ public class SatelliteController : Controller
     [Authorize(Roles = "Operator")]
     public async Task<IActionResult> Edit([FromForm] UpdateSatelliteRequest request)
     {
-        var (userId, operatorId) = await GetOperatorContextAsync();
-        if (userId == Guid.Empty || operatorId == Guid.Empty)
-            return Forbid();
+        var (_, operatorId) = await GetOperatorContextAsync();
+        if (operatorId == Guid.Empty) return Forbid();
 
         if (!ModelState.IsValid)
             return View(request);
@@ -142,16 +138,12 @@ public class SatelliteController : Controller
     [Authorize(Roles = "Operator")]
     public async Task<IActionResult> Delete(Guid id)
     {
-        var (userId, operatorId) = await GetOperatorContextAsync();
-        if (userId == Guid.Empty || operatorId == Guid.Empty)
-            return Forbid();
+        var (_, operatorId) = await GetOperatorContextAsync();
+        if (operatorId == Guid.Empty) return Forbid();
 
-        var satellite = await _satelliteRepository.GetByIdAsync(id);
-        if (satellite == null || satellite.DeletedAt != null)
+        var satellite = await _getSatelliteByIdUseCase.ExecuteAsync(id, operatorId);
+        if (satellite == null)
             return NotFound();
-
-        if (satellite.OperatorId != operatorId)
-            return Forbid();
 
         return View(satellite);
     }
@@ -161,9 +153,8 @@ public class SatelliteController : Controller
     [Authorize(Roles = "Operator")]
     public async Task<IActionResult> DeleteConfirmed(Guid id)
     {
-        var (userId, operatorId) = await GetOperatorContextAsync();
-        if (userId == Guid.Empty || operatorId == Guid.Empty)
-            return Forbid();
+        var (_, operatorId) = await GetOperatorContextAsync();
+        if (operatorId == Guid.Empty) return Forbid();
 
         try
         {
@@ -182,34 +173,27 @@ public class SatelliteController : Controller
     [HttpGet]
     public async Task<IActionResult> Details(Guid id)
     {
-        var (userId, operatorId) = await GetOperatorContextAsync();
-        if (userId == Guid.Empty || operatorId == Guid.Empty)
-            return Forbid();
+        var (_, operatorId) = await GetOperatorContextAsync();
+        if (operatorId == Guid.Empty) return Forbid();
 
-        var satellite = await _satelliteRepository.GetByIdAsync(id);
-        if (satellite == null || satellite.DeletedAt != null)
+        var satellite = await _getSatelliteByIdUseCase.ExecuteAsync(id, operatorId);
+        if (satellite == null)
             return NotFound();
-
-        if (satellite.OperatorId != operatorId)
-            return Forbid();
 
         return View(satellite);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Operator")]
     public async Task<IActionResult> RegenerateRisk(Guid id)
     {
-        var (userId, operatorId) = await GetOperatorContextAsync();
-        if (userId == Guid.Empty || operatorId == Guid.Empty)
-            return Forbid();
+        var (_, operatorId) = await GetOperatorContextAsync();
+        if (operatorId == Guid.Empty) return Forbid();
 
-        var satellite = await _satelliteRepository.GetByIdAsync(id);
-        if (satellite == null || satellite.DeletedAt != null)
+        var satellite = await _getSatelliteByIdUseCase.ExecuteAsync(id, operatorId);
+        if (satellite == null)
             return NotFound();
-
-        if (satellite.OperatorId != operatorId)
-            return Forbid();
 
         try
         {
@@ -231,9 +215,8 @@ public class SatelliteController : Controller
             return (Guid.Empty, Guid.Empty);
 
         var userOperator = await _userOperatorRepository.GetByUserIdAsync(userId);
-        if (userOperator == null)
-            return (Guid.Empty, Guid.Empty);
-
-        return (userId, userOperator.OperatorId);
+        return userOperator == null
+            ? (Guid.Empty, Guid.Empty)
+            : (userId, userOperator.OperatorId);
     }
 }

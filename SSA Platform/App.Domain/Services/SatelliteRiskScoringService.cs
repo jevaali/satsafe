@@ -30,8 +30,6 @@ public class SatelliteRiskScoringService
         int count = 0;
         foreach (var other in others)
         {
-            if (other is null) continue;
-
             double otherPerigee = other.SemiMajorAxis * (1 - other.Eccentricity) - EarthRadiusMeters;
             double otherApogee  = other.SemiMajorAxis * (1 + other.Eccentricity) - EarthRadiusMeters;
 

@@ -1,4 +1,4 @@
-@model App.Domain.Entities.Satellite
+@model App.Application.Features.Satellites.DTOs.SatelliteDetailDto
 
 @{
     ViewData["Title"] = "Delete Satellite";
@@ -45,16 +45,15 @@
                     <td class="text-muted">Launch Date</td>
                     <td>@Model.LaunchDate.ToString("yyyy-MM-dd")</td>
                 </tr>
-                @if (Model.Orbit?.Parameters != null)
+                @if (Model.Orbit != null)
                 {
-                    var p = Model.Orbit.Parameters;
                     <tr>
                         <td class="text-muted">Inclination</td>
-                        <td>@p.Inclination.ToString("F2")°</td>
+                        <td>@Model.Orbit.Inclination.ToString("F2")°</td>
                     </tr>
                     <tr>
                         <td class="text-muted">Semi-Major Axis</td>
-                        <td>@p.SemiMajorAxis.ToString("N0") m</td>
+                        <td>@Model.Orbit.SemiMajorAxis.ToString("N0") m</td>
                     </tr>
                 }
             </table>

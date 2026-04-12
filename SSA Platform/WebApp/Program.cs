@@ -191,10 +191,15 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("OperatorPolicy", policy =>
     {
         policy.AuthenticationSchemes.Add(JwtBearerDefaults.AuthenticationScheme);
-   
         policy.RequireAuthenticatedUser();
-   
         policy.RequireRole("Operator", "OperatorHelper");
+    });
+
+    options.AddPolicy("OperatorOnlyPolicy", policy =>
+    {
+        policy.AuthenticationSchemes.Add(JwtBearerDefaults.AuthenticationScheme);
+        policy.RequireAuthenticatedUser();
+        policy.RequireRole("Operator");
     });
 });
 

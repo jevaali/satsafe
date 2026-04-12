@@ -2,13 +2,13 @@
    Include in SatelliteDetails.cshtml:
    @await Html.PartialAsync("_GroundTrack", Model)
 *@
-@model App.Domain.Entities.Satellite
+@model App.Application.Common.DTOs.OrbitDto
 @using System.Globalization
 
-@if (Model.Orbit?.Parameters == null) { return; }
+@if (Model == null) { return; }
 
 @{
-var p   = Model.Orbit.Parameters;
+var p   = Model;
 var inv = CultureInfo.InvariantCulture;
 
 var periodSec = 2 * Math.PI * Math.Sqrt(Math.Pow(p.SemiMajorAxis, 3) / 3.986004418e14);
