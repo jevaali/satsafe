@@ -20,25 +20,38 @@ public class GetOperatorDashboardUseCase
 
     public async Task<OperatorDashboardDto> ExecuteAsync(Guid userId, Guid operatorId)
     {
+        // Validation checks to ensure the user has access to the operator's dashboard
+        
+        if (userId == Guid.Empty || operatorId == Guid.Empty)
+            throw new ArgumentException("Invalid user or operator ID.");
+        
+        if (await _unitOfWork.UserOperators.GetByUserAndOperatorAsync(userId, operatorId) == null)
+            throw new UnauthorizedAccessException("User does not have access to this operator's dashboard.");
+        
+        // Fetch satellites, conjunctions, and alerts for the operator
+        
         var satellites  = await _unitOfWork.Satellites.GetByOperatorIdAsync(operatorId);
-        var satelliteIds = satellites.Select(s => s.Id).ToList();
+        var enumerable = satellites.ToList();
+        var satelliteIds = enumerable.Select(s => s.Id).ToList();
 
         var conjunctions  = await _unitOfWork.ConjunctionEvents.GetBySatelliteIdsAsync(satelliteIds);
-        var conjunctionIds = conjunctions.Select(c => c.Id).ToList();
+        var conjunctionEvents = conjunctions as ConjunctionEvent[] ?? conjunctions.ToArray();
+        var conjunctionIds = conjunctionEvents.Select(c => c.Id).ToList();
 
         var alerts = await _unitOfWork.Alerts.GetByConjunctionIdsAsync(conjunctionIds);
 
         var operatorEntity = await _unitOfWork.Operators.GetByIdAsync(operatorId);
 
+        var enumerable1 = alerts as Alert[] ?? alerts.ToArray();
         return new OperatorDashboardDto
         {
-            OperatorName         = operatorEntity?.Name?.ToString() ?? "Operator",
-            TotalSatellites      = satellites.Count(),
-            ActiveSatellites     = satellites.Count(s => s.Status == ESatelliteStatus.Active),
-            PendingConjunctions  = conjunctions.Count(c => c.Status == EConjunctionEventStatus.Pending),
-            HighRiskConjunctions = conjunctions.Count(c => c.IsHighRisk()),
-            UnacknowledgedAlerts = alerts.Count(a => !a.IsAcknowledged),
-            Satellites = satellites.Select(s => new SatelliteSummaryDto
+            OperatorName         = operatorEntity?.Name.ToString() ?? "Operator",
+            TotalSatellites      = enumerable.Count(),
+            ActiveSatellites     = enumerable.Count(s => s.Status == ESatelliteStatus.Active),
+            PendingConjunctions  = conjunctionEvents.Count(c => c.Status == EConjunctionEventStatus.Pending),
+            HighRiskConjunctions = conjunctionEvents.Count(c => c.IsHighRisk()),
+            UnacknowledgedAlerts = enumerable1.Count(a => !a.IsAcknowledged),
+            Satellites = enumerable.Select(s => new SatelliteSummaryDto
             {
                 Id        = s.Id,
                 Name      = s.Name.ToString(),
@@ -56,7 +69,7 @@ public class GetOperatorDashboardUseCase
                     MeanAnomaly       = s.Orbit.Parameters.MeanAnomaly
                 }
             }).ToList(),
-            Conjunctions = conjunctions.Select(c => new ConjunctionSummaryDto
+            Conjunctions = conjunctionEvents.Select(c => new ConjunctionSummaryDto
             {
                 Id                    = c.Id,
                 IsHighRisk            = c.IsHighRisk(),
@@ -78,7 +91,7 @@ public class GetOperatorDashboardUseCase
                 MissDistance         = c.MissDistance,
                 CollisionProbability = c.CollisionProbability
             }).ToList(),
-            Alerts = alerts.Select(a => new AlertSummaryDto
+            Alerts = enumerable1.Select(a => new AlertSummaryDto
             {
                 Id             = a.Id,
                 IsAcknowledged = a.IsAcknowledged,

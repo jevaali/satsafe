@@ -19,6 +19,8 @@ using App.Infrastructure.Seeding;
 using App.Infrastructure.UnitOfWork;
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
@@ -180,6 +182,21 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 builder.Services.AddSwaggerGen();
 
+// Add authorization policies
+
+builder.Services.AddSingleton<IAuthorizationMiddlewareResultHandler, ApiAuthorizationMiddlewareResultHandler>();
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("OperatorPolicy", policy =>
+    {
+        policy.AuthenticationSchemes.Add(JwtBearerDefaults.AuthenticationScheme);
+   
+        policy.RequireAuthenticatedUser();
+   
+        policy.RequireRole("Operator", "OperatorHelper");
+    });
+});
 
 var app = builder.Build();
 

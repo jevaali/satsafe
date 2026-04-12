@@ -115,5 +115,40 @@ public class ConjunctionEvent : BaseEntityWithMeta
 
         Status = EConjunctionEventStatus.Resolved;
     }
-    
+
+    /// <summary>
+    /// Returns a normalised (smaller, larger) pair used for deduplication.
+    /// </summary>
+    public (Guid Min, Guid Max) GetOrderedPair() =>
+        PrimaryObjectId < SecondaryObjectId
+            ? (PrimaryObjectId, SecondaryObjectId)
+            : (SecondaryObjectId, PrimaryObjectId);
+
+    /// <summary>
+    /// Creates an Alert for this event if the miss-distance is within the alert
+    /// threshold, or returns null when no alert is warranted.
+    /// </summary>
+    public Alert? CreateAlert(Guid userId, double alertThresholdKm)
+    {
+        var alertThresholdM = alertThresholdKm * 1000;
+        
+        if (MissDistance > alertThresholdM) return null;
+
+        var severity = MissDistance <= alertThresholdM / 5
+            ? EAlertSeverity.Critical
+            : EAlertSeverity.High;
+
+        return new Alert
+        {
+            ConjunctionEventId = Id,
+            UserId             = userId,
+            Severity           = severity,
+            Message            = $"Conjunction detected: miss distance " +
+                                 $"{MissDistance / 1000:F2} km in " +
+                                 $"{(TimeOfClosestApproach - DateTime.UtcNow).TotalHours:F1}h",
+            IsAcknowledged     = false,
+            CreatedAt          = DateTime.UtcNow,
+            CreatedBy          = "system"
+        };
+    }
 }

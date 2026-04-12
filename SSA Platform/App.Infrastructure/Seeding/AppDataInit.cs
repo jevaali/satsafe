@@ -91,7 +91,7 @@ public static class AppDataInit
             CreatedBy    = "seed"
         };
         context.Operators.Add(op);
-        context.SaveChanges(); // ✅ operator must exist before UserOperator references it
+        context.SaveChanges();
 
         // 3. Link user → operator
         context.UserOperators.Add(new UserOperator
@@ -100,7 +100,7 @@ public static class AppDataInit
             AppUserId  = user.Id,
             OperatorId = op.Id
         });
-        context.SaveChanges(); // ✅ commit the link before adding satellites
+        context.SaveChanges(); 
 
         // 4. Satellites — operator already in DB so FK is valid
         var satA = Satellite.Create("SENTINEL-A", DateTime.UtcNow.AddYears(-1), op);
