@@ -1,4 +1,4 @@
-@model IEnumerable<App.Domain.Entities.Alert>
+@model IEnumerable<App.Application.Features.Alerts.DTOs.AlertSummaryDto>
 @using App.Domain.Entities.Enums
 
 @{
@@ -68,7 +68,7 @@
                         EAlertSeverity.Medium   => "medium",
                         _                       => "low"
                     };
-                    var message = alert.Message?.ToString() ?? "—";
+                    var message = alert.Message ?? "—";
                     var ackStatus = alert.IsAcknowledged ? "acknowledged" : "unacknowledged";
 
                     <tr class="alert-row @(alert.Severity == EAlertSeverity.Critical ? "row-high-risk" : "")"
@@ -78,7 +78,7 @@
                         <td><span class="op-badge @severityClass">@alert.Severity</span></td>
                         <td style="font-size:0.85rem;color:#2c3e50;">@message</td>
                         <td>
-                            @if (alert.ConjunctionEvent != null)
+                            @if (alert.HasConjunctionEvent)
                             {
                                 <a asp-area="Operator" asp-controller="Conjunctions" asp-action="Details"
                                    asp-route-id="@alert.ConjunctionEventId"

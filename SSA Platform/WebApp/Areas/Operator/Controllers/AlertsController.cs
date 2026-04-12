@@ -72,7 +72,7 @@ public class AlertsController : Controller
         var alert = await _getAlertByIdUseCase.ExecuteAsync(id, operatorId);
         if (alert == null) return NotFound();
 
-        ViewBag.CurrentMessage = alert.Message?.ToString() ?? string.Empty;
+        ViewBag.CurrentMessage = alert.Message ?? string.Empty;
         return View(alert);
     }
 

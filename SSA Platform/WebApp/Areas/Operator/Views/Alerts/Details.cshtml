@@ -1,4 +1,4 @@
-@model App.Domain.Entities.Alert
+@model App.Application.Features.Alerts.DTOs.AlertDetailsDto
 @using App.Domain.Entities.Enums
 
 @{
@@ -9,10 +9,8 @@
         EAlertSeverity.Medium   => "bg-info text-dark",
         _                       => "bg-secondary"
     };
-    var message = Model.Message?.ToString() ?? "—";
-    var tcaIso = Model.ConjunctionEvent != null
-        ? Model.ConjunctionEvent.TimeOfClosestApproach.ToString("o")
-        : null;
+    var message = Model.Message ?? "—";
+    var tcaIso = Model.ConjunctionEvent?.TimeOfClosestApproach.ToString("o");
 }
 
 <link rel="stylesheet" href="~/css/dashboard-ssa.css" asp-append-version="true" />
@@ -134,7 +132,7 @@
                     <tr>
                         <td class="text-muted">Risk</td>
                         <td>
-                            @if (c.IsHighRisk())
+                            @if (c.IsHighRisk)
                             {
                                 <span class="badge danger">HIGH RISK</span>
                             }
@@ -147,7 +145,7 @@
                     <tr>
                         <td class="text-muted">Status</td>
                         <td>
-                            <span class="badge @(c.Status == App.Domain.Entities.Enums.EConjunctionEventStatus.Resolved ? "bg-success" : "bg-warning text-dark")">
+                            <span class="badge @(c.Status == EConjunctionEventStatus.Resolved ? "bg-success" : "bg-warning text-dark")">
                                 @c.Status
                             </span>
                         </td>

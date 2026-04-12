@@ -9,4 +9,6 @@ public class AlertSummaryDto
     public DateTime CreatedAt { get; init; }
     public EAlertSeverity Severity { get; init; }
     public string? Message { get; init; }
+    public Guid ConjunctionEventId { get; init; }
+    public bool HasConjunctionEvent { get; init; }
 }

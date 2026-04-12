@@ -50,28 +50,17 @@ public class AlertsController : ControllerBase
                 Error  = "No operator account is linked to this user."
             });
 
-        var alerts = await _getAlertsUseCase.ExecuteAsync(operatorId);
-
-        var result = alerts.Select(a => new AlertSummaryDto
-        {
-            Id             = a.Id,
-            IsAcknowledged = a.IsAcknowledged,
-            CreatedAt      = a.CreatedAt,
-            Severity       = a.Severity,
-            Message        = a.Message?.ToString()
-        });
-
-        return Ok(result);
+        return Ok(await _getAlertsUseCase.ExecuteAsync(operatorId));
     }
 
     /// <summary>
     /// Returns an alert by ID.
     /// </summary>
     [HttpGet("{id:guid}")]
-    [ProducesResponseType(typeof(AlertSummaryDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(AlertDetailsDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(RestApiErrorResponse), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(RestApiErrorResponse), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<AlertSummaryDto>> Details(Guid id)
+    public async Task<ActionResult<AlertDetailsDto>> Details(Guid id)
     {
         var operatorId = await GetOperatorIdAsync();
         if (operatorId == Guid.Empty)
@@ -89,14 +78,7 @@ public class AlertsController : ControllerBase
                 Error  = "Alert not found."
             });
 
-        return Ok(new AlertSummaryDto
-        {
-            Id             = alert.Id,
-            IsAcknowledged = alert.IsAcknowledged,
-            CreatedAt      = alert.CreatedAt,
-            Severity       = alert.Severity,
-            Message        = alert.Message?.ToString()
-        });
+        return Ok(alert);
     }
 
     /// <summary>
