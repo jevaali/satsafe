@@ -63,6 +63,7 @@ builder.Services.AddScoped<RefreshConjunctionStatusesUseCase>();
 builder.Services.AddScoped<GetMainListUseCase>();
 builder.Services.AddScoped<RunConjunctionScreeningUseCase>();
 builder.Services.AddScoped<GetSettingsUseCase>();
+builder.Services.AddScoped<GetUserContextUseCase>();
 builder.Services.AddScoped<UpdateOperatorSettingsUseCase>();
 builder.Services.AddScoped<AddHelperUseCase>();
 builder.Services.AddScoped<RemoveHelperUseCase>();

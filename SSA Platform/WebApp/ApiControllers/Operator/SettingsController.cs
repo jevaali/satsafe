@@ -7,10 +7,7 @@ using App.Application.Features.Notifications.DTOs;
 using App.Application.Features.Notifications.UseCases;
 using App.Application.Features.Operators.DTOs;
 using App.Application.Features.Operators.UseCases;
-using App.Application.Interfaces.IRepositories;
-using App.Domain.Entities.Identity;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApp.ApiControllers.Operator;
@@ -26,8 +23,7 @@ public class SettingsController : ControllerBase
     private readonly RemoveHelperUseCase _removeHelper;
     private readonly SaveNotificationsUseCase _saveNotifications;
     private readonly GetOperatorActionLogsUseCase _getActionLogs;
-    private readonly UserManager<AppUser> _userManager;
-    private readonly IUserOperatorRepository _userOperatorRepository;
+    private readonly GetUserContextUseCase _getUserContext;
 
     public SettingsController(
         GetSettingsUseCase getSettings,
@@ -36,17 +32,15 @@ public class SettingsController : ControllerBase
         RemoveHelperUseCase removeHelper,
         SaveNotificationsUseCase saveNotifications,
         GetOperatorActionLogsUseCase getActionLogs,
-        UserManager<AppUser> userManager,
-        IUserOperatorRepository userOperatorRepository)
+        GetUserContextUseCase getUserContext)
     {
-        _getSettings            = getSettings;
-        _updateOperator         = updateOperator;
-        _addHelper              = addHelper;
-        _removeHelper           = removeHelper;
-        _saveNotifications      = saveNotifications;
-        _getActionLogs          = getActionLogs;
-        _userManager            = userManager;
-        _userOperatorRepository = userOperatorRepository;
+        _getSettings       = getSettings;
+        _updateOperator    = updateOperator;
+        _addHelper         = addHelper;
+        _removeHelper      = removeHelper;
+        _saveNotifications = saveNotifications;
+        _getActionLogs     = getActionLogs;
+        _getUserContext    = getUserContext;
     }
 
     /// <summary>
@@ -57,7 +51,7 @@ public class SettingsController : ControllerBase
     [ProducesResponseType(typeof(RestApiErrorResponse), StatusCodes.Status403Forbidden)]
     public async Task<ActionResult<SettingsDto>> Index()
     {
-        var (userId, operatorId) = await GetUserContextAsync();
+        var (userId, operatorId) = await _getUserContext.ExecuteAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
         if (userId == Guid.Empty || operatorId == Guid.Empty)
             return StatusCode((int) HttpStatusCode.Forbidden, new RestApiErrorResponse
             {
@@ -65,8 +59,7 @@ public class SettingsController : ControllerBase
                 Error  = "No operator account is linked to this user."
             });
 
-        var settings = await _getSettings.ExecuteAsync(userId, operatorId);
-        return Ok(settings);
+        return Ok(await _getSettings.ExecuteAsync(userId, operatorId));
     }
 
     /// <summary>
@@ -77,7 +70,7 @@ public class SettingsController : ControllerBase
     [ProducesResponseType(typeof(RestApiErrorResponse), StatusCodes.Status403Forbidden)]
     public async Task<ActionResult<IEnumerable<OperatorActionLogDto>>> ActionLogs([FromQuery] Guid? filterUserId = null)
     {
-        var (_, operatorId) = await GetUserContextAsync();
+        var (_, operatorId) = await _getUserContext.ExecuteAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
         if (operatorId == Guid.Empty)
             return StatusCode((int) HttpStatusCode.Forbidden, new RestApiErrorResponse
             {
@@ -85,8 +78,7 @@ public class SettingsController : ControllerBase
                 Error  = "No operator account is linked to this user."
             });
 
-        var logs = await _getActionLogs.ExecuteAsync(operatorId, filterUserId);
-        return Ok(logs);
+        return Ok(await _getActionLogs.ExecuteAsync(operatorId, filterUserId));
     }
 
     /// <summary>
@@ -105,7 +97,7 @@ public class SettingsController : ControllerBase
                 Error  = "Operator role required."
             });
 
-        var (_, operatorId) = await GetUserContextAsync();
+        var (_, operatorId) = await _getUserContext.ExecuteAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
         if (operatorId == Guid.Empty)
             return StatusCode((int) HttpStatusCode.Forbidden, new RestApiErrorResponse
             {
@@ -120,11 +112,7 @@ public class SettingsController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BadRequest(new RestApiErrorResponse
-            {
-                Status = HttpStatusCode.BadRequest,
-                Error  = ex.Message
-            });
+            return BadRequest(new RestApiErrorResponse { Status = HttpStatusCode.BadRequest, Error = ex.Message });
         }
     }
 
@@ -135,7 +123,7 @@ public class SettingsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(RestApiErrorResponse), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(RestApiErrorResponse), StatusCodes.Status403Forbidden)]
-    public async Task<IActionResult> AddHelper([FromBody] string email)
+    public async Task<IActionResult> AddHelper([FromBody] AddHelperRequest request)
     {
         if (!User.IsInRole("Operator"))
             return StatusCode((int) HttpStatusCode.Forbidden, new RestApiErrorResponse
@@ -144,14 +132,7 @@ public class SettingsController : ControllerBase
                 Error  = "Operator role required."
             });
 
-        if (string.IsNullOrWhiteSpace(email))
-            return BadRequest(new RestApiErrorResponse
-            {
-                Status = HttpStatusCode.BadRequest,
-                Error  = "Email cannot be empty."
-            });
-
-        var (_, operatorId) = await GetUserContextAsync();
+        var (_, operatorId) = await _getUserContext.ExecuteAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
         if (operatorId == Guid.Empty)
             return StatusCode((int) HttpStatusCode.Forbidden, new RestApiErrorResponse
             {
@@ -161,24 +142,12 @@ public class SettingsController : ControllerBase
 
         try
         {
-            var targetUser = await _userManager.FindByEmailAsync(email);
-            if (targetUser == null)
-                return BadRequest(new RestApiErrorResponse
-                {
-                    Status = HttpStatusCode.BadRequest,
-                    Error  = $"No user found with email '{email}'."
-                });
-
-            await _addHelper.ExecuteAsync(operatorId, targetUser.Id);
+            await _addHelper.ExecuteAsync(operatorId, request);
             return NoContent();
         }
         catch (Exception ex)
         {
-            return BadRequest(new RestApiErrorResponse
-            {
-                Status = HttpStatusCode.BadRequest,
-                Error  = ex.Message
-            });
+            return BadRequest(new RestApiErrorResponse { Status = HttpStatusCode.BadRequest, Error = ex.Message });
         }
     }
 
@@ -198,7 +167,7 @@ public class SettingsController : ControllerBase
                 Error  = "Operator role required."
             });
 
-        var (userId, operatorId) = await GetUserContextAsync();
+        var (userId, operatorId) = await _getUserContext.ExecuteAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
         if (operatorId == Guid.Empty)
             return StatusCode((int) HttpStatusCode.Forbidden, new RestApiErrorResponse
             {
@@ -213,11 +182,7 @@ public class SettingsController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BadRequest(new RestApiErrorResponse
-            {
-                Status = HttpStatusCode.BadRequest,
-                Error  = ex.Message
-            });
+            return BadRequest(new RestApiErrorResponse { Status = HttpStatusCode.BadRequest, Error = ex.Message });
         }
     }
 
@@ -230,7 +195,7 @@ public class SettingsController : ControllerBase
     [ProducesResponseType(typeof(RestApiErrorResponse), StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> SaveNotifications([FromBody] SaveNotificationsRequest request)
     {
-        var (userId, operatorId) = await GetUserContextAsync();
+        var (userId, operatorId) = await _getUserContext.ExecuteAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
         if (userId == Guid.Empty || operatorId == Guid.Empty)
             return StatusCode((int) HttpStatusCode.Forbidden, new RestApiErrorResponse
             {
@@ -245,23 +210,7 @@ public class SettingsController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BadRequest(new RestApiErrorResponse
-            {
-                Status = HttpStatusCode.BadRequest,
-                Error  = ex.Message
-            });
+            return BadRequest(new RestApiErrorResponse { Status = HttpStatusCode.BadRequest, Error = ex.Message });
         }
-    }
-
-    private async Task<(Guid userId, Guid operatorId)> GetUserContextAsync()
-    {
-        var userIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
-            return (Guid.Empty, Guid.Empty);
-
-        var userOperator = await _userOperatorRepository.GetByUserIdAsync(userId);
-        return userOperator == null
-            ? (Guid.Empty, Guid.Empty)
-            : (userId, userOperator.OperatorId);
     }
 }

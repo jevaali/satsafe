@@ -1,3 +1,4 @@
+using App.Application.Features.Operators.DTOs;
 using App.Application.Interfaces;
 using App.Domain.Entities;
 using App.Domain.Entities.Identity;
@@ -16,14 +17,12 @@ public class AddHelperUseCase
         _userManager = userManager;
     }
 
-    public async Task ExecuteAsync(Guid operatorId, Guid helperUserId)
+    public async Task ExecuteAsync(Guid operatorId, AddHelperRequest request)
     {
-        var user = await _userManager.FindByIdAsync(helperUserId.ToString());
+        var user = await _userManager.FindByEmailAsync(request.Email)
+            ?? throw new InvalidOperationException($"No user found with email '{request.Email}'.");
 
-        if (user == null)
-            throw new InvalidOperationException("User not found");
-
-        var existing = await _uow.UserOperators.GetByUserAndOperatorAsync(helperUserId, operatorId);
+        var existing = await _uow.UserOperators.GetByUserAndOperatorAsync(user.Id, operatorId);
         if (existing != null)
             throw new Exception("This user already has access to this operator.");
 
@@ -41,7 +40,7 @@ public class AddHelperUseCase
         var userOperator = new UserOperator
         {
             Id = Guid.NewGuid(),
-            AppUserId = helperUserId,
+            AppUserId = user.Id,
             OperatorId = operatorId
         };
 
