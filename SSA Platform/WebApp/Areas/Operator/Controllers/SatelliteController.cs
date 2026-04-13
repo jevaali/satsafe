@@ -2,8 +2,10 @@ using System.Security.Claims;
 using App.Application.Features.Satellites.DTOs;
 using App.Application.Features.Satellites.UseCases;
 using App.Application.Interfaces.IRepositories;
+using App.Application.Options;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace WebApp.Areas.Operator.Controllers;
 
@@ -17,6 +19,9 @@ public class SatelliteController : Controller
     private readonly GetSatelliteByIdUseCase _getSatelliteByIdUseCase;
     private readonly GetOperatorSatellitesUseCase _getOperatorSatellitesUseCase;
     private readonly CalculateSatelliteRiskUseCase _calculateRiskUseCase;
+    private readonly ImportTleFromCelesTrakUseCase _importTle;
+    private readonly AddTleManuallyUseCase _addTleManually;
+    private readonly CelesTrakOptions _celestrakOptions;
     private readonly IUserOperatorRepository _userOperatorRepository;
 
     public SatelliteController(
@@ -26,6 +31,9 @@ public class SatelliteController : Controller
         GetSatelliteByIdUseCase getSatelliteByIdUseCase,
         GetOperatorSatellitesUseCase getOperatorSatellitesUseCase,
         CalculateSatelliteRiskUseCase calculateRiskUseCase,
+        ImportTleFromCelesTrakUseCase importTle,
+        AddTleManuallyUseCase addTleManually,
+        IOptions<CelesTrakOptions> celestrakOptions,
         IUserOperatorRepository userOperatorRepository)
     {
         _addSatelliteUseCase          = addSatelliteUseCase;
@@ -34,6 +42,9 @@ public class SatelliteController : Controller
         _getSatelliteByIdUseCase      = getSatelliteByIdUseCase;
         _getOperatorSatellitesUseCase = getOperatorSatellitesUseCase;
         _calculateRiskUseCase         = calculateRiskUseCase;
+        _importTle                    = importTle;
+        _addTleManually               = addTleManually;
+        _celestrakOptions             = celestrakOptions.Value;
         _userOperatorRepository       = userOperatorRepository;
     }
 
@@ -180,6 +191,7 @@ public class SatelliteController : Controller
         if (satellite == null)
             return NotFound();
 
+        ViewData["CelesTrakFetchEnabled"] = _celestrakOptions.FetchEnabled;
         return View(satellite);
     }
 
@@ -199,6 +211,64 @@ public class SatelliteController : Controller
         {
             await _calculateRiskUseCase.CalculateForSatelliteAsync(id);
             TempData["SuccessMessage"] = "Risk score recalculated.";
+        }
+        catch (Exception ex)
+        {
+            TempData["ErrorMessage"] = ex.Message;
+        }
+
+        return RedirectToAction(nameof(Details), new { id });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Operator")]
+    public async Task<IActionResult> FetchTle(Guid id)
+    {
+        if (!_celestrakOptions.FetchEnabled)
+        {
+            TempData["ErrorMessage"] = "CelesTrak fetching is currently disabled.";
+            return RedirectToAction(nameof(Details), new { id });
+        }
+
+        var (_, operatorId) = await GetOperatorContextAsync();
+        if (operatorId == Guid.Empty) return Forbid();
+
+        try
+        {
+            var username = User.FindFirstValue(ClaimTypes.Name) ?? "operator";
+            await _importTle.ExecuteAsync(id, username, operatorId);
+            TempData["SuccessMessage"] = "TLE fetched from CelesTrak successfully.";
+        }
+        catch (Exception ex)
+        {
+            TempData["ErrorMessage"] = ex.Message;
+        }
+
+        return RedirectToAction(nameof(Details), new { id });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Operator,OperatorHelper")]
+    public async Task<IActionResult> AddTleManually(Guid id, [FromForm] AddTleManuallyRequest request)
+    {
+        var (_, operatorId) = await GetOperatorContextAsync();
+        if (operatorId == Guid.Empty) return Forbid();
+
+        if (!ModelState.IsValid)
+        {
+            TempData["ErrorMessage"] = string.Join(" ", ModelState.Values
+                .SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage));
+            return RedirectToAction(nameof(Details), new { id });
+        }
+
+        try
+        {
+            var username = User.FindFirstValue(ClaimTypes.Name) ?? "operator";
+            await _addTleManually.ExecuteAsync(id, request.RawLine1, request.RawLine2, username, operatorId);
+            TempData["SuccessMessage"] = "TLE record added successfully.";
         }
         catch (Exception ex)
         {

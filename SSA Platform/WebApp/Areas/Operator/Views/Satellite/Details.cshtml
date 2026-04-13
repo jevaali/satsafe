@@ -227,6 +227,82 @@
         </script>
     }
 
+    @{
+        var fetchEnabled = (bool)(ViewData["CelesTrakFetchEnabled"] ?? true);
+    }
+
+    <div class="card mt-3">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <h5 style="margin:0;"><i class="bi bi-broadcast-pin me-2"></i>TLE Records</h5>
+            @if (User.IsInRole("Operator") && fetchEnabled)
+            {
+                <form asp-area="Operator" asp-controller="Satellite" asp-action="FetchTle" asp-route-id="@Model.Id" method="post">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn-sat btn-sat-edit" style="font-size:0.8rem;">
+                        <i class="bi bi-cloud-download"></i> Fetch from CelesTrak
+                    </button>
+                </form>
+            }
+        </div>
+        @if (Model.TleRecords.Any())
+        {
+            <table class="table table-sm mb-0">
+                <thead>
+                    <tr>
+                        <th>Epoch (UTC)</th>
+                        <th>Added At (UTC)</th>
+                        <th>Inclination (°)</th>
+                        <th>Mean Motion (rev/day)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var tle in Model.TleRecords)
+                    {
+                        <tr>
+                            <td><small class="font-monospace">@tle.Epoch.ToString("yyyy-MM-dd HH:mm")</small></td>
+                            <td><small class="text-muted">@tle.FetchedAt.ToString("yyyy-MM-dd HH:mm")</small></td>
+                            <td class="font-monospace">@tle.Inclination.ToString("F4")</td>
+                            <td class="font-monospace">@tle.MeanMotion.ToString("F8")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p class="text-muted mb-0" style="font-size:0.85rem;">No TLE records yet.</p>
+        }
+    </div>
+
+    @* Manual TLE entry — Operator and OperatorHelper *@
+    <div class="card mt-3">
+        <h5 style="margin-bottom:12px;"><i class="bi bi-pencil-square me-2"></i>Add TLE Manually</h5>
+        <p class="text-muted" style="font-size:0.82rem; margin-bottom:10px;">
+            Paste TLE Line 1 and Line 2 (each exactly 69 characters). You can copy these from
+            <a href="https://www.space-track.org" target="_blank" rel="noopener">Space-Track.org</a>
+            or any other TLE source.
+        </p>
+        <form asp-area="Operator" asp-controller="Satellite" asp-action="AddTleManually" asp-route-id="@Model.Id" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="request.SatelliteId" value="@Model.Id" />
+            <div class="mb-2">
+                <label class="form-label" style="font-size:0.85rem;">TLE Line 1</label>
+                <input type="text" name="request.RawLine1" class="form-control form-control-sm font-monospace"
+                       placeholder="1 25544U 98067A   26097.50000000  .00007330  00000-0  49679-3 0  9999"
+                       maxlength="69" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label" style="font-size:0.85rem;">TLE Line 2</label>
+                <input type="text" name="request.RawLine2" class="form-control form-control-sm font-monospace"
+                       placeholder="2 25544  51.6416 208.7236 0007511 311.2271 134.3485 15.49557417447411"
+                       maxlength="69" required />
+            </div>
+            <button type="submit" class="btn-sat btn-sat-edit" style="font-size:0.8rem;">
+                <i class="bi bi-plus-lg"></i> Add TLE Record
+            </button>
+        </form>
+    </div>
+
     <div class="card mt-3 p-3">
         <a asp-area="Operator" asp-controller="Satellite" asp-action="Index" class="btn btn-outline-secondary">
             <i class="bi bi-arrow-left me-1"></i> Back to Satellites

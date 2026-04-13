@@ -1,3 +1,5 @@
+using App.Application.Features.Satellites.UseCases;
+using App.Application.Options;
 using App.Domain.Entities;
 using App.Domain.Entities.Enums;
 using App.Infrastructure.Persistence;
@@ -5,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using WebApp.Areas.Admin.ViewModels;
 
 namespace WebApp.Areas.Admin.Controllers;
@@ -14,10 +17,14 @@ namespace WebApp.Areas.Admin.Controllers;
 public class SatelliteController : Controller
 {
     private readonly AppDbContext _context;
+    private readonly ImportTleFromCelesTrakUseCase _importTle;
+    private readonly CelesTrakOptions _celestrakOptions;
 
-    public SatelliteController(AppDbContext context)
+    public SatelliteController(AppDbContext context, ImportTleFromCelesTrakUseCase importTle, IOptions<CelesTrakOptions> celestrakOptions)
     {
-        _context = context;
+        _context          = context;
+        _importTle        = importTle;
+        _celestrakOptions = celestrakOptions.Value;
     }
 
     // GET: Admin/Satellite
@@ -60,6 +67,7 @@ public class SatelliteController : Controller
         var s = await _context.Satellites
             .Include(s => s.Orbit)
             .Include(s => s.Operator)
+            .Include(s => s.TleRecords)
             .FirstOrDefaultAsync(s => s.Id == id);
 
         if (s == null) return NotFound();
@@ -82,8 +90,20 @@ public class SatelliteController : Controller
             CreatedBy        = s.CreatedBy,
             CreatedAt        = s.CreatedAt,
             UpdatedBy        = s.UpdatedBy,
-            UpdatedAt        = s.UpdatedAt
+            UpdatedAt        = s.UpdatedAt,
+            TleRecords       = s.TleRecords
+                .OrderByDescending(t => t.Epoch)
+                .Select(t => new TleRecordAdminListItem
+                {
+                    Id          = t.Id,
+                    Epoch       = t.Epoch,
+                    FetchedAt   = t.CreatedAt,
+                    MeanMotion  = t.MeanMotion,
+                    Inclination = t.Inclination
+                })
+                .ToList()
         };
+        ViewData["CelesTrakFetchEnabled"] = _celestrakOptions.FetchEnabled;
         return View(vm);
     }
 
@@ -235,6 +255,30 @@ public class SatelliteController : Controller
             await _context.SaveChangesAsync();
         }
         return RedirectToAction(nameof(Index));
+    }
+
+    // POST: Admin/Satellite/FetchTle/5
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> FetchTle(Guid id)
+    {
+        if (!_celestrakOptions.FetchEnabled)
+        {
+            TempData["ErrorMessage"] = "CelesTrak fetching is currently disabled.";
+            return RedirectToAction(nameof(Details), new { id });
+        }
+
+        try
+        {
+            await _importTle.ExecuteAsync(id, User.Identity?.Name ?? "admin");
+            TempData["SuccessMessage"] = "TLE fetched from CelesTrak successfully.";
+        }
+        catch (Exception ex)
+        {
+            TempData["ErrorMessage"] = ex.Message;
+        }
+
+        return RedirectToAction(nameof(Details), new { id });
     }
 
     private async Task<List<SelectListItem>> BuildOperatorSelectListAsync(Guid? selected = null)

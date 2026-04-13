@@ -12,4 +12,5 @@ public class SatelliteDetailDto
     public ESatelliteStatus Status { get; init; }
     public OrbitDto? Orbit { get; init; }
     public RiskAssessmentDto? RiskAssessment { get; init; }
+    public IReadOnlyList<TleRecordSummaryDto> TleRecords { get; init; } = [];
 }

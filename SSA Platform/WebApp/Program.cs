@@ -10,6 +10,8 @@ using App.Application.Features.Operators.UseCases;
 using App.Application.Features.Satellites.UseCases;
 using App.Application.Features.Users.UseCases;
 using App.Application.Interfaces;
+using App.Application.Options;
+using App.Infrastructure.ExternalServices;
 using App.Application.Interfaces.IRepositories;
 using App.Domain.Entities.Identity;
 using App.Domain.Services;
@@ -73,6 +75,19 @@ builder.Services.AddScoped<SaveDraftSatelliteUseCase>();
 builder.Services.AddScoped<GetUserDraftsUseCase>();
 builder.Services.AddScoped<DeleteDraftSatelliteUseCase>();
 builder.Services.AddScoped<GetOperatorActionLogsUseCase>();
+
+builder.Services.AddScoped<ImportTleFromCelesTrakUseCase>();
+builder.Services.AddScoped<AddTleManuallyUseCase>();
+
+builder.Services.Configure<CelesTrakOptions>(
+    builder.Configuration.GetSection(CelesTrakOptions.Section));
+
+builder.Services.AddHttpClient<ICelesTrakService, CelesTrakService>(client =>
+{
+    client.BaseAddress = new Uri("https://celestrak.org");
+    client.DefaultRequestHeaders.Add("User-Agent", "SSA-Platform/1.0 (educational)");
+    client.Timeout = TimeSpan.FromSeconds(15);
+});
 
 builder.Services.AddScoped<ConjunctionAnalysisService>();
 builder.Services.AddScoped<SatelliteRiskScoringService>();

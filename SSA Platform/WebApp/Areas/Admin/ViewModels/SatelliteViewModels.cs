@@ -48,6 +48,17 @@ public class SatelliteDetailViewModel
     public DateTime? CreatedAt { get; set; }
     public string?   UpdatedBy { get; set; }
     public DateTime? UpdatedAt { get; set; }
+    // TLE records
+    public IEnumerable<TleRecordAdminListItem> TleRecords { get; set; } = [];
+}
+
+public class TleRecordAdminListItem
+{
+    public Guid     Id          { get; set; }
+    public DateTime Epoch       { get; set; }
+    public DateTime FetchedAt { get; set; }
+    public double   MeanMotion  { get; set; }
+    public double   Inclination { get; set; }
 }
 
 public class SatelliteFormViewModel

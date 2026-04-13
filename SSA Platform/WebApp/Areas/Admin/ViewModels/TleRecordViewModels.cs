@@ -13,7 +13,9 @@ public class TleRecordListItemViewModel
 {
     public Guid     Id               { get; set; }
     public string   SpaceObjectNorad { get; set; } = string.Empty;
+    public string   SpaceObjectName  { get; set; } = string.Empty;
     public DateTime Epoch            { get; set; }
+    public DateTime? FetchedAt { get; set; }
     public double   Inclination      { get; set; }
     public double   RAAN             { get; set; }
     public double   Eccentricity     { get; set; }

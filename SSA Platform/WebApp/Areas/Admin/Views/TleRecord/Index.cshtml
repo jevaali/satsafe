@@ -23,8 +23,10 @@
     <table class="table table-hover mb-0">
         <thead>
             <tr>
-                <th>Space Object (NORAD)</th>
+                <th>Satellite</th>
+                <th>NORAD</th>
                 <th>Epoch (UTC)</th>
+                <th>Fetched At (UTC)</th>
                 <th>Inclination (°)</th>
                 <th>RAAN (°)</th>
                 <th>Eccentricity</th>
@@ -36,8 +38,10 @@
             @foreach (var item in Model.Records)
             {
                 <tr>
-                    <td><strong>@item.SpaceObjectNorad</strong></td>
-                    <td><small>@item.Epoch.ToString("yyyy-MM-dd HH:mm")</small></td>
+                    <td><strong>@item.SpaceObjectName</strong></td>
+                    <td class="font-monospace">@item.SpaceObjectNorad</td>
+                    <td><small class="font-monospace">@item.Epoch.ToString("yyyy-MM-dd HH:mm")</small></td>
+                    <td><small class="text-muted">@(item.FetchedAt?.ToString("yyyy-MM-dd HH:mm") ?? "—")</small></td>
                     <td>@item.Inclination.ToString("F4")</td>
                     <td>@item.RAAN.ToString("F4")</td>
                     <td>@item.Eccentricity.ToString("F7")</td>

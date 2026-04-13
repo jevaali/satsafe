@@ -88,5 +88,9 @@ public class SatelliteRepository : ISatelliteRepository
     {
         _context.SpaceObjects.Update(satellite);
     }
-    
+
+    public async Task AddTleRecordAsync(TleRecord record)
+    {
+        await _context.TleRecords.AddAsync(record);
+    }
 }

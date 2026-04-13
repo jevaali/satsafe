@@ -9,4 +9,5 @@ public interface ISatelliteRepository : IRepository<Satellite>
     Task<int> GetCountAsync();
     Task<int> GetActiveCountAsync();
     Task<List<Satellite>> GetTopAsync(int count);
+    Task AddTleRecordAsync(TleRecord record);
 }

@@ -34,7 +34,9 @@ public class TleRecordController : Controller
             {
                 Id               = t.Id,
                 SpaceObjectNorad = t.SpaceObject?.NoradId.ToString() ?? "—",
+                SpaceObjectName  = t.SpaceObject is Satellite s ? s.Name.ToString() : $"DEBRIS-{t.SpaceObject?.NoradId}",
                 Epoch            = t.Epoch,
+                FetchedAt        = t.CreatedAt,
                 Inclination      = t.Inclination,
                 RAAN             = t.RAAN,
                 Eccentricity     = t.Eccentricity,

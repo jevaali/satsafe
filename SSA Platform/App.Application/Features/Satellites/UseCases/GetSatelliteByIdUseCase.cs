@@ -42,7 +42,18 @@ public class GetSatelliteByIdUseCase
                 RiskLevel     = satellite.RiskAssessment.RiskLevel,
                 ModelVersion  = satellite.RiskAssessment.ModelVersion,
                 CalculatedAt  = satellite.RiskAssessment.CalculatedAt
-            }
+            },
+            TleRecords = satellite.TleRecords
+                .OrderByDescending(t => t.Epoch)
+                .Select(t => new TleRecordSummaryDto
+                {
+                    Id          = t.Id,
+                    Epoch       = t.Epoch,
+                    FetchedAt   = t.CreatedAt,
+                    MeanMotion  = t.MeanMotion,
+                    Inclination = t.Inclination
+                })
+                .ToList()
         };
     }
 }
