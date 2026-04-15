@@ -7,95 +7,95 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <EmbeddedResource Include="Views/Header.resx">
+      <EmbeddedResource Update="Views/Header.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Header.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Include="Enums/Enums.resx">
+      <EmbeddedResource Update="Enums/Enums.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Enums.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Include="Views/Home/Home.resx">
+      <EmbeddedResource Update="Views/Home/Home.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Home.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Include="Views/Operator/Index.resx">
+      <EmbeddedResource Update="Views/Operator/Index.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Index.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Include="Views/User/Index.resx">
+      <EmbeddedResource Update="Views/User/Index.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Index.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Include="Views/Sandbox/Index.resx">
+      <EmbeddedResource Update="Views/Sandbox/Index.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Index.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Include="Views/MainList/Index.resx">
+      <EmbeddedResource Update="Views/MainList/Index.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Index.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Include="Views/Login/Index.resx">
+      <EmbeddedResource Update="Views/Login/Index.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Index.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Include="Views/Register/User.resx">
+      <EmbeddedResource Update="Views/Register/User.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>User.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Include="Views/Register/Operator.resx">
+      <EmbeddedResource Update="Views/Register/Operator.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Operator.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Include="Views/Home/Privacy.resx">
+      <EmbeddedResource Update="Views/Home/Privacy.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Privacy.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Include="Views/Operator/Create.resx">
+      <EmbeddedResource Update="Views/Operator/Create.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Create.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Include="Views/Operator/Satellite/Index.resx">
+      <EmbeddedResource Update="Views/Operator/Satellite/Index.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Index.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Include="Views/Operator/Satellite/Details.resx">
+      <EmbeddedResource Update="Views/Operator/Satellite/Details.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Details.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Include="Views/Operator/Satellite/Create.resx">
+      <EmbeddedResource Update="Views/Operator/Satellite/Create.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Create.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Include="Views/Operator/Satellite/Edit.resx">
+      <EmbeddedResource Update="Views/Operator/Satellite/Edit.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Edit.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Include="Views/Operator/Satellite/Delete.resx">
+      <EmbeddedResource Update="Views/Operator/Satellite/Delete.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Delete.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Include="Views/Operator/Alerts/Index.resx">
+      <EmbeddedResource Update="Views/Operator/Alerts/Index.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Index.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Include="Views/Operator/Alerts/Details.resx">
+      <EmbeddedResource Update="Views/Operator/Alerts/Details.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Details.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Include="Views/Operator/Alerts/EditMessage.resx">
+      <EmbeddedResource Update="Views/Operator/Alerts/EditMessage.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>EditMessage.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Include="Views/Operator/Conjunctions/Index.resx">
+      <EmbeddedResource Update="Views/Operator/Conjunctions/Index.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Index.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Include="Views/Operator/Conjunctions/Details.resx">
+      <EmbeddedResource Update="Views/Operator/Conjunctions/Details.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Details.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Include="Views/Operator/Settings/Index.resx">
+      <EmbeddedResource Update="Views/Operator/Settings/Index.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Index.Designer.cs</LastGenOutput>
       </EmbeddedResource>
