@@ -1,7 +1,7 @@
 services:
   aspnet:
     build:
-      context: ./SSA Platform
+      context: "./SSA Platform"
       dockerfile: Dockerfile
     container_name: aspnet
     ports:
