@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
 # Copy solution and all project files for restore (maximises layer cache)
-COPY "SSA Platform.sln" .
+COPY *.sln .
 COPY global.json .
 COPY Base.Contracts/Base.Contracts.csproj           Base.Contracts/
 COPY Base.Domain/Base.Domain.csproj                 Base.Domain/
