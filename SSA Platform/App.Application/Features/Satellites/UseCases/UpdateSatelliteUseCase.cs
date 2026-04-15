@@ -35,6 +35,7 @@ public class UpdateSatelliteUseCase
         );
 
         satellite.UpdateDetails(request.Name, request.LaunchDate, op, orbitParams, updatedBy);
+        satellite.Operator = null; // prevent EF from re-inserting the untracked operator
 
         await _uow.Satellites.UpdateAsync(satellite);
         await _uow.CommitAsync();

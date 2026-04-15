@@ -33,13 +33,35 @@ using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using WebApp;
 
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
                        throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
+/*
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(connectionString));
+*/
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+{
+    options.UseNpgsql(
+            connectionString,
+            o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery))
+        .ConfigureWarnings(w =>
+            w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))
+        .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTrackingWithIdentityResolution);
+
+    if (!builder.Environment.IsProduction())
+    {
+        options.EnableDetailedErrors()
+            .EnableSensitiveDataLogging();
+    }
+});
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddScoped<AddSatelliteUseCase>();
@@ -232,6 +254,7 @@ using (var scope = app.Services.CreateScope())
     AppDataInit.MigrateDatabase(dbContext);
     AppDataInit.SeedIdentity(userManager, roleManager);
     AppDataInit.SeedAppData(dbContext, userManager);
+    dbContext.ChangeTracker.Clear();
 
     var riskUseCase = services.GetRequiredService<CalculateSatelliteRiskUseCase>();
     await riskUseCase.CalculateForAllNewAsync();

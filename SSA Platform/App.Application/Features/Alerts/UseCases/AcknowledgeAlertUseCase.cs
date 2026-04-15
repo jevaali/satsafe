@@ -24,6 +24,7 @@ public class AcknowledgeAlertUseCase
             throw new InvalidOperationException("Alert not found or not authorized");
 
         alert.Acknowledge();
+        await _unitOfWork.Alerts.UpdateAsync(alert);
         await _unitOfWork.CommitAsync();
     }
 }

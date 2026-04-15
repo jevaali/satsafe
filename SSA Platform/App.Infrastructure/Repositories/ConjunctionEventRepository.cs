@@ -30,7 +30,7 @@ public class ConjunctionEventRepository : IConjunctionEventRepository
 
     public async Task UpdateAsync(ConjunctionEvent entity)
     {
-        _context.ConjunctionEvents.Update(entity);
+        _context.Entry(entity).State = EntityState.Modified;
     }
 
     public async Task DeleteAsync(ConjunctionEvent entity)

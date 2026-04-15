@@ -21,11 +21,15 @@ public class ResolveConjunctionUseCase
             throw new InvalidOperationException("Conjunction not found or not authorized");
 
         conjunction.MarkAsResolved();
+        await _unitOfWork.ConjunctionEvents.UpdateAsync(conjunction);
 
         // Acknowledge all open alerts for this conjunction
         var alerts = await _unitOfWork.Alerts.GetByConjunctionIdsAsync([conjunctionId]);
         foreach (var alert in alerts.Where(a => !a.IsAcknowledged))
+        {
             alert.Acknowledge();
+            await _unitOfWork.Alerts.UpdateAsync(alert);
+        }
 
         await _unitOfWork.CommitAsync();
     }

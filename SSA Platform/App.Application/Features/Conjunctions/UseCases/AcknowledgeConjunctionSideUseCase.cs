@@ -33,12 +33,17 @@ public class AcknowledgeConjunctionSideUseCase
         if (ownsSecondary)
             conjunction.AcknowledgeSecondarySide(state);
 
+        await _uow.ConjunctionEvents.UpdateAsync(conjunction);
+
         // Acknowledge related alerts when the operator resolves their side
         if (state == EOperatorAcknowledgement.Resolved)
         {
             var alerts = await _uow.Alerts.GetByConjunctionIdsAsync([conjunctionId]);
             foreach (var alert in alerts.Where(a => !a.IsAcknowledged))
+            {
                 alert.Acknowledge();
+                await _uow.Alerts.UpdateAsync(alert);
+            }
         }
 
         await _uow.CommitAsync();

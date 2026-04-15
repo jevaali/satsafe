@@ -27,6 +27,7 @@ public class AddSatelliteUseCase
             request.LaunchDate,
             op
         );
+        satellite.Operator = null; // prevent EF from re-inserting the untracked operator
 
         satellite.NoradId = request.NoradId!.Value;
 

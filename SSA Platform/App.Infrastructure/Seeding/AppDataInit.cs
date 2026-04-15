@@ -81,26 +81,33 @@ public static class AppDataInit
         }
 
         // 2. Operator — save before linking
-        var op = new Operator
+        var op = context.Operators.FirstOrDefault(o => o.Name == "SSA-TEST-OPS");
+        if (op == null)
         {
-            Id           = Guid.NewGuid(),
-            Name         = "SSA-TEST-OPS",
-            CountryCode  = "EE",
-            OperatorType = EOperatorType.Commercial,
-            CreatedAt    = DateTime.UtcNow,
-            CreatedBy    = "seed"
-        };
-        context.Operators.Add(op);
-        context.SaveChanges();
+            op = new Operator
+            {
+                Id           = Guid.NewGuid(),
+                Name         = "SSA-TEST-OPS",
+                CountryCode  = "EE",
+                OperatorType = EOperatorType.Commercial,
+                CreatedAt    = DateTime.UtcNow,
+                CreatedBy    = "seed"
+            };
+            context.Operators.Add(op);
+            context.SaveChanges();
+        }
 
         // 3. Link user → operator
-        context.UserOperators.Add(new UserOperator
+        if (!context.UserOperators.Any(uo => uo.AppUserId == user.Id && uo.OperatorId == op.Id))
         {
-            Id         = Guid.NewGuid(),
-            AppUserId  = user.Id,
-            OperatorId = op.Id
-        });
-        context.SaveChanges();
+            context.UserOperators.Add(new UserOperator
+            {
+                Id         = Guid.NewGuid(),
+                AppUserId  = user.Id,
+                OperatorId = op.Id
+            });
+            context.SaveChanges();
+        }
 
         // 4. Satellites
         // A & B — nearly identical orbit; will produce a conjunction when screening runs

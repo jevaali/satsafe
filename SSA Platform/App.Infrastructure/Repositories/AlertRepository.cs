@@ -29,7 +29,7 @@ public class AlertRepository : IAlertRepository
 
     public async Task UpdateAsync(Alert entity)
     {
-        _context.Alerts.Update(entity);
+        _context.Entry(entity).State = EntityState.Modified;
     }
 
     public async Task DeleteAsync(Alert entity)

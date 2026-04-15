@@ -50,14 +50,14 @@ public class CalculateSatelliteRiskUseCase
 
             var assessment = new RiskAssessment
             {
-                Id             = Guid.NewGuid(),
-                RiskScore      = score,
-                ModelVersion   = ModelVersion,
-                CalculatedAt   = DateTime.UtcNow,
-                SatelliteId    = satellite.Id,
-                Satellite      = satellite,
-                CreatedBy      = "system",
-                CreatedAt      = DateTime.UtcNow
+                Id           = Guid.NewGuid(),
+                RiskScore    = score,
+                ModelVersion = ModelVersion,
+                CalculatedAt = DateTime.UtcNow,
+                SatelliteId  = satellite.Id,
+                Satellite    = null!,
+                CreatedBy    = "system",
+                CreatedAt    = DateTime.UtcNow
             };
 
             await _unitOfWork.RiskAssessments.AddAsync(assessment);
@@ -102,7 +102,7 @@ public class CalculateSatelliteRiskUseCase
                 ModelVersion = ModelVersion,
                 CalculatedAt = DateTime.UtcNow,
                 SatelliteId  = satelliteId,
-                Satellite    = satellite,
+                Satellite    = null!,
                 CreatedBy    = "system",
                 CreatedAt    = DateTime.UtcNow
             };
