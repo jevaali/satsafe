@@ -1,0 +1,71 @@
+<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="PageTitle" xml:space="preserve">
+        <value>Kustuta satelliit</value>
+    </data>
+    <data name="SystemBar_Label" xml:space="preserve">
+        <value>SATELLIITIDE HALDAMINE | KUSTUTAMISE KINNITUS</value>
+    </data>
+    <data name="Header" xml:space="preserve">
+        <value>Kustuta satelliit</value>
+    </data>
+    <data name="Header_Subtitle" xml:space="preserve">
+        <value>See toiming kustutab satelliidi pehmelt ja eemaldab selle aktiivsest pargivaates</value>
+    </data>
+    <data name="Badge_Destructive" xml:space="preserve">
+        <value>Pöördumatu toiming</value>
+    </data>
+    <data name="Section_Details" xml:space="preserve">
+        <value>Satelliidi andmed</value>
+    </data>
+    <data name="Section_Consequences" xml:space="preserve">
+        <value>Mis juhtub pärast kustutamist?</value>
+    </data>
+    <data name="Label_Name" xml:space="preserve">
+        <value>Nimi</value>
+    </data>
+    <data name="Label_NoradId" xml:space="preserve">
+        <value>NORAD ID</value>
+    </data>
+    <data name="Label_Status" xml:space="preserve">
+        <value>Olek</value>
+    </data>
+    <data name="Label_LaunchDate" xml:space="preserve">
+        <value>Stardikuupäev</value>
+    </data>
+    <data name="Label_Inclination" xml:space="preserve">
+        <value>Kalle</value>
+    </data>
+    <data name="Label_SemiMajorAxis" xml:space="preserve">
+        <value>Poolsuurtelg</value>
+    </data>
+    <data name="Consequence1" xml:space="preserve">
+        <value>Satelliit märgitakse kustutatuks</value>
+    </data>
+    <data name="Consequence2" xml:space="preserve">
+        <value>Eemaldatakse aktiivsest pargivaates</value>
+    </data>
+    <data name="Consequence3" xml:space="preserve">
+        <value>Ajaloolised andmed säilitatakse</value>
+    </data>
+    <data name="Consequence4" xml:space="preserve">
+        <value>Ei saa taastada ilma administraatorita</value>
+    </data>
+    <data name="Btn_ConfirmDelete" xml:space="preserve">
+        <value>Kinnita kustutamine</value>
+    </data>
+    <data name="Btn_Cancel" xml:space="preserve">
+        <value>Tühista</value>
+    </data>
+</root>

@@ -11,17 +11,17 @@
 
     <div class="system-bar">
         <span class="status-dot"></span>
-        ALERTS | @DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") UTC | @Model.Count() ALERTS LOADED
+        @App.Resources.Views.Operator.Alerts.Index.SystemBar_Label | @DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") UTC | @Model.Count() @App.Resources.Views.Operator.Alerts.Index.SystemBar_Loaded
     </div>
 
     <div class="header">
         <div>
-            <h3>Alerts</h3>
-            <small>System-generated alerts for your conjunction events</small>
+            <h3>@App.Resources.Views.Operator.Alerts.Index.Header</h3>
+            <small>@App.Resources.Views.Operator.Alerts.Index.Header_Subtitle</small>
         </div>
         <div class="header-right">
-            <span class="op-badge high-risk"><i class="bi bi-bell-fill"></i>@Model.Count(a => !a.IsAcknowledged) Unacknowledged</span>
-            <span class="op-badge critical">@Model.Count(a => a.Severity == EAlertSeverity.Critical) Critical</span>
+            <span class="op-badge high-risk"><i class="bi bi-bell-fill"></i>@Model.Count(a => !a.IsAcknowledged) @App.Resources.Views.Operator.Alerts.Index.Badge_Unacknowledged</span>
+            <span class="op-badge critical">@Model.Count(a => a.Severity == EAlertSeverity.Critical) @App.Resources.Views.Operator.Alerts.Index.Badge_Critical</span>
         </div>
     </div>
 
@@ -30,30 +30,30 @@
         <div class="op-filter-bar">
             <div class="op-filter-search">
                 <i class="bi bi-search"></i>
-                <input type="text" id="searchInput" placeholder="Search by message…" />
+                <input type="text" id="searchInput" placeholder="@App.Resources.Views.Operator.Alerts.Index.Filter_SearchPlaceholder" />
             </div>
             <select id="severityFilter">
-                <option value="">All Severities</option>
+                <option value="">@App.Resources.Views.Operator.Alerts.Index.Filter_AllSeverities</option>
                 @foreach (var sev in Enum.GetValues<EAlertSeverity>())
                 {
                     <option value="@sev">@sev</option>
                 }
             </select>
             <select id="statusFilter">
-                <option value="">All Statuses</option>
-                <option value="unacknowledged">Unacknowledged</option>
-                <option value="acknowledged">Acknowledged</option>
+                <option value="">@App.Resources.Views.Operator.Alerts.Index.Filter_AllStatuses</option>
+                <option value="unacknowledged">@App.Resources.Views.Operator.Alerts.Index.Filter_Unacknowledged</option>
+                <option value="acknowledged">@App.Resources.Views.Operator.Alerts.Index.Status_Acknowledged</option>
             </select>
         </div>
 
         <table class="op-table" id="alertTable">
             <thead>
                 <tr>
-                    <th>Severity</th>
-                    <th>Message</th>
-                    <th>Conjunction</th>
-                    <th>Created</th>
-                    <th>Status</th>
+                    <th>@App.Resources.Views.Operator.Alerts.Index.Col_Severity</th>
+                    <th>@App.Resources.Views.Operator.Alerts.Index.Col_Message</th>
+                    <th>@App.Resources.Views.Operator.Alerts.Index.Col_Conjunction</th>
+                    <th>@App.Resources.Views.Operator.Alerts.Index.Col_Created</th>
+                    <th>@App.Resources.Views.Operator.Alerts.Index.Col_Status</th>
                     <th></th>
                 </tr>
             </thead>
@@ -92,10 +92,10 @@
                             }
                         </td>
                         <td style="font-family:'Share Tech Mono',monospace;font-size:0.78rem;color:#8a9bb0;">@alert.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
-                        <td><span class="op-badge @(alert.IsAcknowledged ? "acked" : "pending")">@(alert.IsAcknowledged ? "Acknowledged" : "Pending")</span></td>
+                        <td><span class="op-badge @(alert.IsAcknowledged ? "acked" : "pending")">@(alert.IsAcknowledged ? @App.Resources.Views.Operator.Alerts.Index.Status_Acknowledged : @App.Resources.Views.Operator.Alerts.Index.Status_Pending)</span></td>
                         <td>
                             <a asp-action="Details" asp-route-id="@alert.Id" class="btn-sat btn-sat-view">
-                                <i class="bi bi-eye"></i> Details
+                                <i class="bi bi-eye"></i> @App.Resources.Views.Operator.Alerts.Index.Btn_Details
                             </a>
                         </td>
                     </tr>
@@ -106,7 +106,7 @@
         @if (!Model.Any())
         {
             <div class="empty-state">
-                <p>No alerts found.</p>
+                <p>@App.Resources.Views.Operator.Alerts.Index.Empty_NoAlerts</p>
             </div>
         }
     </div>

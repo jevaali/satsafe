@@ -21,19 +21,19 @@
 
     <div class="system-bar">
         <span class="status-dot"></span>
-        CONJUNCTION DETAIL |
+        @App.Resources.Views.Operator.Conjunctions.Details.SystemBar_Label |
         @tca.ToString("yyyy-MM-dd HH:mm:ss") UTC TCA
     </div>
 
     <div class="header">
         <div>
             <h3>@Model.PrimaryObjectName ↔ @Model.SecondaryObjectName</h3>
-            <small>Conjunction Event — @Model.Id</small>
+            <small>@App.Resources.Views.Operator.Conjunctions.Details.PageTitle — @Model.Id</small>
         </div>
         <div class="header-right">
             @if (Model.IsHighRisk)
             {
-                <span class="badge danger">HIGH RISK</span>
+                <span class="badge danger">@App.Resources.Views.Operator.Conjunctions.Details.Risk_High</span>
             }
             <span class="badge @(Model.Status switch {
                 EConjunctionEventStatus.Resolved        => "bg-success",
@@ -49,10 +49,10 @@
 
         <!-- METRICS -->
         <div class="card">
-            <h5>Orbital Metrics</h5>
+            <h5>@App.Resources.Views.Operator.Conjunctions.Details.Section_Metrics</h5>
             <table class="table mb-0">
                 <tr>
-                    <td class="text-muted">Miss Distance</td>
+                    <td class="text-muted">@App.Resources.Views.Operator.Conjunctions.Details.Label_MissDistance</td>
                     <td class="fw-bold @(Model.MissDistance < 1000 ? "text-danger" : Model.MissDistance < 5000 ? "text-warning" : "")">
                         @(Model.MissDistance < 1000
                             ? $"{Model.MissDistance:N0} m"
@@ -60,19 +60,19 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="text-muted">Collision Probability</td>
+                    <td class="text-muted">@App.Resources.Views.Operator.Conjunctions.Details.Label_CollisionProb</td>
                     <td class="fw-bold">@((Model.CollisionProbability * 100).ToString("F4"))%</td>
                 </tr>
                 <tr>
-                    <td class="text-muted">Time of Closest Approach</td>
+                    <td class="text-muted">@App.Resources.Views.Operator.Conjunctions.Details.Label_TCA</td>
                     <td>@tca.ToString("yyyy-MM-dd HH:mm:ss") UTC</td>
                 </tr>
                 <tr>
-                    <td class="text-muted">Time Until TCA</td>
+                    <td class="text-muted">@App.Resources.Views.Operator.Conjunctions.Details.Label_TimeUntilTca</td>
                     <td>@((Model.TimeOfClosestApproach - DateTime.UtcNow).ToString(@"hh\:mm\:ss"))</td>
                 </tr>
                 <tr>
-                    <td class="text-muted">Threshold</td>
+                    <td class="text-muted">@App.Resources.Views.Operator.Conjunctions.Details.Label_Threshold</td>
                     <td>50 km</td>
                 </tr>
             </table>
@@ -80,10 +80,10 @@
 
         <!-- OBJECTS -->
         <div class="card">
-            <h5>Involved Objects</h5>
+            <h5>@App.Resources.Views.Operator.Conjunctions.Details.Section_Objects</h5>
             <table class="table mb-0">
                 <tr>
-                    <td class="text-muted">Primary</td>
+                    <td class="text-muted">@App.Resources.Views.Operator.Conjunctions.Details.Label_Primary</td>
                     <td>
                         <strong>@Model.PrimaryObjectName</strong>
                         @if (Model.PrimaryNoradId.HasValue)
@@ -99,7 +99,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="text-muted">Secondary</td>
+                    <td class="text-muted">@App.Resources.Views.Operator.Conjunctions.Details.Label_Secondary</td>
                     <td>
                         <strong>@Model.SecondaryObjectName</strong>
                         @if (Model.SecondaryNoradId.HasValue)
@@ -126,19 +126,19 @@
     {
         <div class="card mt-3">
             <div class="d-flex justify-content-between align-items-center px-3 pt-3 pb-2">
-                <h5 class="mb-0">Related Alerts</h5>
+                <h5 class="mb-0">@App.Resources.Views.Operator.Conjunctions.Details.Section_Alerts</h5>
                 <div>
-                    <span class="badge bg-danger me-1">@Model.Alerts.Count(a => !a.IsAcknowledged) unacknowledged</span>
-                    <span class="badge bg-secondary">@Model.Alerts.Count total</span>
+                    <span class="badge bg-danger me-1">@Model.Alerts.Count(a => !a.IsAcknowledged) @App.Resources.Views.Operator.Conjunctions.Details.Badge_Unacknowledged</span>
+                    <span class="badge bg-secondary">@Model.Alerts.Count @App.Resources.Views.Operator.Conjunctions.Details.Badge_Total</span>
                 </div>
             </div>
             <table class="table table-hover mb-0">
                 <thead>
                     <tr>
-                        <th>Severity</th>
-                        <th>Message</th>
-                        <th>Created</th>
-                        <th>Status</th>
+                        <th>@App.Resources.Views.Operator.Conjunctions.Details.Col_Severity</th>
+                        <th>@App.Resources.Views.Operator.Conjunctions.Details.Col_Message</th>
+                        <th>@App.Resources.Views.Operator.Conjunctions.Details.Col_Created</th>
+                        <th>@App.Resources.Views.Operator.Conjunctions.Details.Col_Status</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -158,16 +158,16 @@
                             <td>
                                 @if (alert.IsAcknowledged)
                                 {
-                                    <span class="badge bg-success">Acknowledged</span>
+                                    <span class="badge bg-success">@App.Resources.Views.Operator.Conjunctions.Details.Status_Acknowledged</span>
                                 }
                                 else
                                 {
-                                    <span class="badge bg-warning text-dark">Pending</span>
+                                    <span class="badge bg-warning text-dark">@App.Resources.Views.Operator.Conjunctions.Details.Status_Pending</span>
                                 }
                             </td>
                             <td>
                                 <a asp-area="Operator" asp-controller="Alerts" asp-action="Details"
-                                   asp-route-id="@alert.Id" class="btn btn-sm btn-outline-primary">View</a>
+                                   asp-route-id="@alert.Id" class="btn btn-sm btn-outline-primary">@App.Resources.Views.Operator.Conjunctions.Details.Btn_ViewAlert</a>
                             </td>
                         </tr>
                     }
@@ -188,7 +188,7 @@
     }
     <div class="card mt-3 p-3">
         <h6 class="mb-3" style="font-size:0.8rem;letter-spacing:0.06em;text-transform:uppercase;color:#6b7c93;">
-            Your Response @(operatorSide != "None" ? $"({operatorSide} object)" : "")
+            @App.Resources.Views.Operator.Conjunctions.Details.Response_Label @(operatorSide != "None" ? $"({operatorSide} object)" : "")
         </h6>
         <div class="d-flex gap-2 align-items-center flex-wrap">
             @if (operatorSide != "None" && !isFullyResolved)
@@ -197,14 +197,14 @@
                 {
                     <form asp-action="Acknowledge" asp-route-id="@Model.Id" asp-route-state="@EOperatorAcknowledgement.Noticed" method="post" class="d-inline">
                         @Html.AntiForgeryToken()
-                        <button type="submit" class="btn btn-outline-info btn-sm">Mark as Noticed</button>
+                        <button type="submit" class="btn btn-outline-info btn-sm">@App.Resources.Views.Operator.Conjunctions.Details.Btn_MarkNoticed</button>
                     </form>
                 }
                 @if (myAck < EOperatorAcknowledgement.Confirmed)
                 {
                     <form asp-action="Acknowledge" asp-route-id="@Model.Id" asp-route-state="@EOperatorAcknowledgement.Confirmed" method="post" class="d-inline">
                         @Html.AntiForgeryToken()
-                        <button type="submit" class="btn btn-outline-warning btn-sm">Confirm Risk</button>
+                        <button type="submit" class="btn btn-outline-warning btn-sm">@App.Resources.Views.Operator.Conjunctions.Details.Btn_ConfirmRisk</button>
                     </form>
                 }
                 @if (myAck < EOperatorAcknowledgement.Resolved)
@@ -214,11 +214,11 @@
                         <button type="submit" class="btn btn-success btn-sm">
                             @if (unackedCount > 0)
                             {
-                                <text>Resolve &amp; Acknowledge @unackedCount Alert@(unackedCount != 1 ? "s" : "")</text>
+                                <text>@App.Resources.Views.Operator.Conjunctions.Details.Btn_ResolveAndAck @unackedCount @App.Resources.Views.Operator.Conjunctions.Details.Label_Alert@(unackedCount != 1 ? "s" : "")</text>
                             }
                             else
                             {
-                                <text>Resolve My Side</text>
+                                <text>@App.Resources.Views.Operator.Conjunctions.Details.Btn_ResolveMySide</text>
                             }
                         </button>
                     </form>
@@ -226,17 +226,17 @@
             }
             @if (myAck == EOperatorAcknowledgement.Resolved)
             {
-                <span class="badge bg-success">Your side resolved</span>
+                <span class="badge bg-success">@App.Resources.Views.Operator.Conjunctions.Details.Status_YourSideResolved</span>
             }
             else if (Model.Status == EConjunctionEventStatus.AlreadyOccurred)
             {
-                <span class="badge bg-secondary">Event already occurred</span>
+                <span class="badge bg-secondary">@App.Resources.Views.Operator.Conjunctions.Details.Status_EventOccurred</span>
             }
             else if (Model.Status == EConjunctionEventStatus.Resolved)
             {
-                <span class="badge bg-success">Event fully resolved</span>
+                <span class="badge bg-success">@App.Resources.Views.Operator.Conjunctions.Details.Status_FullyResolved</span>
             }
-            <a asp-action="Index" class="btn btn-outline-secondary btn-sm ms-auto">Back to List</a>
+            <a asp-action="Index" class="btn btn-outline-secondary btn-sm ms-auto">@App.Resources.Views.Operator.Conjunctions.Details.Btn_BackToList</a>
         </div>
     </div>
 

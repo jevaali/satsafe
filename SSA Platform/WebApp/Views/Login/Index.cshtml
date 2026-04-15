@@ -27,30 +27,30 @@
             <a asp-controller="Home" asp-action="Index" class="auth-brand-logo">
                 <i class="bi bi-broadcast-pin"></i> SatSafe
             </a>
-            <div class="auth-brand-tagline">Space Situational Awareness Platform</div>
+            <div class="auth-brand-tagline">@App.Resources.Views.Login.Index.BrandTagline</div>
         </div>
 
         <div class="auth-brand-middle">
             <div class="auth-brand-headline">
-                Monitor.<br/>Track.<br/><span>Stay Safe.</span>
+                @App.Resources.Views.Login.Index.Monitor.<br/>@App.Resources.Views.Login.Index.Track.<br/><span>@App.Resources.Views.Login.Index.Stay_Safe</span>
             </div>
             <p class="auth-brand-desc">
-                Real-time orbital tracking and conjunction analysis for satellite operators and space professionals.
+                @App.Resources.Views.Login.Index.BrandDesc
             </p>
         </div>
 
         <div class="auth-brand-stats">
             <div class="auth-stat-row">
                 <div class="auth-stat-dot green"></div>
-                <span class="auth-stat-label">System operational</span>
+                <span class="auth-stat-label">@App.Resources.Views.Login.Index.Stat_System</span>
             </div>
             <div class="auth-stat-row">
                 <div class="auth-stat-dot blue"></div>
-                <span class="auth-stat-label">Tracking active objects</span>
+                <span class="auth-stat-label">@App.Resources.Views.Login.Index.Stat_Tracking</span>
             </div>
             <div class="auth-stat-row">
                 <div class="auth-stat-dot yellow"></div>
-                <span class="auth-stat-label">24 / 7 conjunction screening</span>
+                <span class="auth-stat-label">@App.Resources.Views.Login.Index.Stat_Screening</span>
             </div>
         </div>
     </div>
@@ -60,13 +60,13 @@
         <div class="auth-form-wrap">
 
             <a asp-controller="Home" asp-action="Index" class="auth-back">
-                <i class="bi bi-arrow-left"></i> Back to home
+                <i class="bi bi-arrow-left"></i> @App.Resources.Views.Login.Index.BackToHome
             </a>
 
             <div class="auth-card">
                 <div class="auth-card-header">
                     <i class="bi bi-shield-lock"></i>
-                    <h1 class="auth-card-title">Sign In</h1>
+                    <h1 class="auth-card-title">@App.Resources.Views.Login.Index.Btn_SignIn</h1>
                 </div>
 
                 <div class="auth-card-body">
@@ -91,20 +91,20 @@
 
                         <div class="auth-check-row">
                             <input asp-for="RememberMe" class="form-check-input mt-0"/>
-                            <label asp-for="RememberMe" class="mb-0">Remember me</label>
+                            <label asp-for="RememberMe" class="mb-0">@App.Resources.Views.Login.Index.RememberMe</label>
                         </div>
 
                         <button type="submit" class="auth-submit-btn">
-                            <i class="bi bi-box-arrow-in-right"></i> Sign In
+                            <i class="bi bi-box-arrow-in-right"></i> @App.Resources.Views.Login.Index.CardTitle
                         </button>
                     </form>
                 </div>
 
                 <div class="auth-card-footer">
-                    Don't have an account?
-                    <a asp-controller="Register" asp-action="User">Register as User</a>
-                    &nbsp;or&nbsp;
-                    <a asp-controller="Register" asp-action="Operator">Register as Operator</a>
+                    @App.Resources.Views.Login.Index.NoAccount
+                    <a asp-controller="Register" asp-action="User">@App.Resources.Views.Login.Index.RegisterAsUser</a>
+                    &nbsp;@App.Resources.Views.Login.Index.or&nbsp;
+                    <a asp-controller="Register" asp-action="Operator">@App.Resources.Views.Login.Index.RegisterAsOperator</a>
                 </div>
             </div>
 

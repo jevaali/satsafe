@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="PageTitle" xml:space="preserve">
+        <value>Edit Satellite</value>
+    </data>
+    <data name="SystemBar_Label" xml:space="preserve">
+        <value>SATELLITE MANAGEMENT | EDIT SATELLITE</value>
+    </data>
+    <data name="Header" xml:space="preserve">
+        <value>Edit Satellite</value>
+    </data>
+    <data name="Header_Subtitle" xml:space="preserve">
+        <value>Update satellite details and orbital parameters</value>
+    </data>
+    <data name="Btn_Back" xml:space="preserve">
+        <value>Back</value>
+    </data>
+    <data name="Section_Basic" xml:space="preserve">
+        <value>Basic Information</value>
+    </data>
+    <data name="Section_Orbital" xml:space="preserve">
+        <value>Orbital Parameters</value>
+    </data>
+    <data name="Hint_NoradId" xml:space="preserve">
+        <value>The NORAD catalog number assigned to this satellite (e.g. 25544 for ISS)</value>
+    </data>
+    <data name="Hint_SemiMajorAxis" xml:space="preserve">
+        <value>Distance from Earth's centre. LEO: 6,500,000–8,400,000 m</value>
+    </data>
+    <data name="Hint_Eccentricity" xml:space="preserve">
+        <value>0 = circular, &lt;1 = elliptical. Most LEO satellites: &lt;0.01</value>
+    </data>
+    <data name="Hint_Inclination" xml:space="preserve">
+        <value>Angle to equatorial plane. Sun-sync: ~98°, polar: ~90°</value>
+    </data>
+    <data name="Hint_Raan" xml:space="preserve">
+        <value>Right ascension of ascending node (0–360°)</value>
+    </data>
+    <data name="Hint_ArgOfPerigee" xml:space="preserve">
+        <value>Angle from ascending node to perigee (0–360°)</value>
+    </data>
+    <data name="Hint_MeanAnomaly" xml:space="preserve">
+        <value>Satellite position along orbit at epoch (0–360°)</value>
+    </data>
+    <data name="Btn_SaveChanges" xml:space="preserve">
+        <value>Save Changes</value>
+    </data>
+    <data name="Btn_Cancel" xml:space="preserve">
+        <value>Cancel</value>
+    </data>
+    <data name="Guide_Title" xml:space="preserve">
+        <value>Orbital Parameters Guide</value>
+    </data>
+    <data name="Guide_OrbitTypes" xml:space="preserve">
+        <value>Common Orbit Types (Semi-Major Axis in metres)</value>
+    </data>
+    <data name="Guide_Inclinations" xml:space="preserve">
+        <value>Sample Inclinations</value>
+    </data>
+    <data name="Guide_Equatorial" xml:space="preserve">
+        <value>Equatorial</value>
+    </data>
+    <data name="Guide_SunSync" xml:space="preserve">
+        <value>Sun-Synchronous</value>
+    </data>
+    <data name="Guide_Polar" xml:space="preserve">
+        <value>Polar</value>
+    </data>
+</root>

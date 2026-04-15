@@ -8,18 +8,18 @@
 
     <div class="system-bar">
         <span class="status-dot"></span>
-        PRIVACY POLICY | @DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") UTC
+        @App.Resources.Views.Home.Privacy.SystemBar | @DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") UTC
     </div>
 
     <div class="header">
         <div>
-            <h3>Privacy Policy</h3>
-            <small>How we collect, use, and protect your data</small>
+            <h3>@App.Resources.Views.Home.Privacy.PageTitle</h3>
+            <small>@App.Resources.Views.Home.Privacy.Subtitle</small>
         </div>
     </div>
 
     <div class="card">
-        <p class="text-muted">Use this page to detail your site's privacy policy.</p>
+        <p class="text-muted">@App.Resources.Views.Home.Privacy.Body</p>
     </div>
 
 </div>

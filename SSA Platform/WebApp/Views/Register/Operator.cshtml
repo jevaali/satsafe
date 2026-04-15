@@ -26,30 +26,30 @@
             <a asp-controller="Home" asp-action="Index" class="auth-brand-logo">
                 <i class="bi bi-broadcast-pin"></i> SatSafe
             </a>
-            <div class="auth-brand-tagline">Space Situational Awareness Platform</div>
+            <div class="auth-brand-tagline">@App.Resources.Views.Register.Operator.BrandTagline</div>
         </div>
 
         <div class="auth-brand-middle">
             <div class="auth-brand-headline">
-                Monitor.<br/>Track.<br/><span>Stay Safe.</span>
+                @App.Resources.Views.Login.Index.Monitor<br/>@App.Resources.Views.Login.Index.Track.<br/><span>@App.Resources.Views.Login.Index.Stay_Safe.</span>
             </div>
             <p class="auth-brand-desc">
-                Register your organisation to manage satellites, receive conjunction alerts, and access the full operator dashboard.
+                @App.Resources.Views.Register.Operator.BrandDesc
             </p>
         </div>
 
         <div class="auth-brand-stats">
             <div class="auth-stat-row">
                 <div class="auth-stat-dot green"></div>
-                <span class="auth-stat-label">System operational</span>
+                <span class="auth-stat-label">@App.Resources.Views.Register.Operator.Stat_System</span>
             </div>
             <div class="auth-stat-row">
                 <div class="auth-stat-dot blue"></div>
-                <span class="auth-stat-label">Tracking active objects</span>
+                <span class="auth-stat-label">@App.Resources.Views.Register.Operator.Stat_Tracking</span>
             </div>
             <div class="auth-stat-row">
                 <div class="auth-stat-dot yellow"></div>
-                <span class="auth-stat-label">24 / 7 conjunction screening</span>
+                <span class="auth-stat-label">@App.Resources.Views.Register.Operator.Stat_Screening</span>
             </div>
         </div>
     </div>
@@ -59,23 +59,23 @@
         <div class="auth-form-wrap" style="max-width:520px;">
 
             <a asp-controller="Home" asp-action="Index" class="auth-back">
-                <i class="bi bi-arrow-left"></i> Back to home
+                <i class="bi bi-arrow-left"></i> @App.Resources.Views.Register.Operator.BackToHome
             </a>
 
             <!-- Type switcher -->
             <div class="auth-type-switcher">
                 <a asp-controller="Register" asp-action="User" class="auth-type-btn">
-                    <i class="bi bi-person"></i> User
+                    <i class="bi bi-person"></i> @App.Resources.Views.Register.Operator.Type_User
                 </a>
                 <a asp-controller="Register" asp-action="Operator" class="auth-type-btn active">
-                    <i class="bi bi-building"></i> Operator
+                    <i class="bi bi-building"></i> @App.Resources.Views.Register.Operator.Type_Operator
                 </a>
             </div>
 
             <div class="auth-card">
                 <div class="auth-card-header">
                     <i class="bi bi-building-add"></i>
-                    <h1 class="auth-card-title">Create Operator Account</h1>
+                    <h1 class="auth-card-title">@App.Resources.Views.Register.Operator.CardTitle</h1>
                 </div>
 
                 <div class="auth-card-body">
@@ -83,7 +83,7 @@
 
                         <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
-                        <div class="auth-section-label">Personal information</div>
+                        <div class="auth-section-label">@App.Resources.Views.Register.Operator.Section_Personal</div>
 
                         <div class="row g-2 mb-0">
                             <div class="col-6">
@@ -126,7 +126,7 @@
                         </div>
 
                         <hr class="auth-divider"/>
-                        <div class="auth-section-label">Operator information</div>
+                        <div class="auth-section-label">@App.Resources.Views.Register.Operator.Section_Operator</div>
 
                         <div class="auth-field">
                             <label asp-for="OperatorName"></label>
@@ -158,14 +158,14 @@
                         </div>
 
                         <button type="submit" class="auth-submit-btn">
-                            <i class="bi bi-building-check"></i> Create Operator Account
+                            <i class="bi bi-building-check"></i> @App.Resources.Views.Register.Operator.Btn_CreateAccount
                         </button>
                     </form>
                 </div>
 
                 <div class="auth-card-footer">
-                    Already have an account?
-                    <a asp-controller="Login" asp-action="Index">Sign in</a>
+                    @App.Resources.Views.Register.Operator.AlreadyHaveAccount
+                    <a asp-controller="Login" asp-action="Index">@App.Resources.Views.Register.Operator.SignIn</a>
                 </div>
             </div>
 

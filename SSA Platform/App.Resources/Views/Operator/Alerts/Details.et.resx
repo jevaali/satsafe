@@ -1,0 +1,95 @@
+<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="PageTitle" xml:space="preserve">
+        <value>Teavituse üksikasjad</value>
+    </data>
+    <data name="SystemBar_Label" xml:space="preserve">
+        <value>TEAVITUSE ÜKSIKASJAD</value>
+    </data>
+    <data name="Section_Alert" xml:space="preserve">
+        <value>Teavituse teave</value>
+    </data>
+    <data name="Section_Conjunction" xml:space="preserve">
+        <value>Seotud konjunktsioonisündmus</value>
+    </data>
+    <data name="Label_Message" xml:space="preserve">
+        <value>Sõnum</value>
+    </data>
+    <data name="Label_Severity" xml:space="preserve">
+        <value>Tase</value>
+    </data>
+    <data name="Label_Status" xml:space="preserve">
+        <value>Olek</value>
+    </data>
+    <data name="Label_Created" xml:space="preserve">
+        <value>Loodud</value>
+    </data>
+    <data name="Label_Updated" xml:space="preserve">
+        <value>Uuendatud</value>
+    </data>
+    <data name="Label_AlertId" xml:space="preserve">
+        <value>Teavituse ID</value>
+    </data>
+    <data name="Label_EventId" xml:space="preserve">
+        <value>Sündmuse ID</value>
+    </data>
+    <data name="Label_TCA" xml:space="preserve">
+        <value>Lähima lähenemise aeg (UTC)</value>
+    </data>
+    <data name="Label_MissDistance" xml:space="preserve">
+        <value>Möödumiskaugus</value>
+    </data>
+    <data name="Label_CollisionProb" xml:space="preserve">
+        <value>Kokkupõrke tõenäosus</value>
+    </data>
+    <data name="Label_Risk" xml:space="preserve">
+        <value>Risk</value>
+    </data>
+    <data name="Label_TimeToTca" xml:space="preserve">
+        <value>Aeg lähima lähenemiseni</value>
+    </data>
+    <data name="Status_Acknowledged" xml:space="preserve">
+        <value>Kinnitatud</value>
+    </data>
+    <data name="Status_Pending" xml:space="preserve">
+        <value>Ootel</value>
+    </data>
+    <data name="Risk_High" xml:space="preserve">
+        <value>KÕRGE RISK</value>
+    </data>
+    <data name="Risk_Normal" xml:space="preserve">
+        <value>NORMAALNE</value>
+    </data>
+    <data name="Btn_Acknowledge" xml:space="preserve">
+        <value>Kinnita</value>
+    </data>
+    <data name="Btn_EditMessage" xml:space="preserve">
+        <value>Muuda sõnumit</value>
+    </data>
+    <data name="Btn_BackToAlerts" xml:space="preserve">
+        <value>Tagasi teavituste juurde</value>
+    </data>
+    <data name="Btn_ViewConjunction" xml:space="preserve">
+        <value>Vaata konjunktsiooni üksikasju</value>
+    </data>
+    <data name="Btn_ViewConjunction2" xml:space="preserve">
+        <value>Vaata konjunktsiooni</value>
+    </data>
+    <data name="ConjunctionNotAvailable" xml:space="preserve">
+        <value>Konjunktsioonisündmuse üksikasjad pole saadaval.</value>
+    </data>
+    <data name="TcaCountdown_Passed" xml:space="preserve">
+        <value>MÖÖDUNUD</value>
+    </data>
+</root>

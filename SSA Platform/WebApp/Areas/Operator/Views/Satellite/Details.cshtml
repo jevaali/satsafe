@@ -11,23 +11,23 @@
 
     <div class="system-bar">
         <span class="status-dot"></span>
-        SATELLITE DETAIL | @Model.Name | NORAD #@Model.NoradId
+        @App.Resources.Views.Operator.Satellite.Details.SystemBar_Label | @Model.Name | NORAD #@Model.NoradId
     </div>
 
     <div class="header">
         <div>
             <h3>@Model.Name</h3>
-            <small>Satellite Details &amp; Orbital Parameters</small>
+            <small>@App.Resources.Views.Operator.Satellite.Details.Subtitle</small>
         </div>
         <div class="header-right">
             <span class="badge-status @statusStr">@Model.Status</span>
             @if (User.IsInRole("Operator"))
             {
                 <a asp-area="Operator" asp-controller="Satellite" asp-action="Edit" asp-route-id="@Model.Id" class="btn-sat btn-sat-edit">
-                    <i class="bi bi-pencil"></i> Edit
+                    <i class="bi bi-pencil"></i> @App.Resources.Views.Operator.Satellite.Details.Btn_Edit
                 </a>
                 <a asp-area="Operator" asp-controller="Satellite" asp-action="Delete" asp-route-id="@Model.Id" class="btn-sat btn-sat-delete">
-                    <i class="bi bi-trash"></i> Delete
+                    <i class="bi bi-trash"></i> @App.Resources.Views.Operator.Satellite.Details.Btn_Delete
                 </a>
             }
         </div>
@@ -51,43 +51,43 @@
     <div class="grid">
 
         <div class="card">
-            <h5>Basic Information</h5>
+            <h5>@App.Resources.Views.Operator.Satellite.Details.Section_Basic</h5>
             <table class="table mb-0">
                 <tr>
-                    <td class="text-muted">Name</td>
+                    <td class="text-muted">@App.Resources.Views.Operator.Satellite.Details.Label_Name</td>
                     <td><strong>@Model.Name</strong></td>
                 </tr>
                 <tr>
-                    <td class="text-muted">NORAD ID</td>
+                    <td class="text-muted">@App.Resources.Views.Operator.Satellite.Details.Label_NoradId</td>
                     <td class="font-monospace">@Model.NoradId</td>
                 </tr>
                 <tr>
-                    <td class="text-muted">Status</td>
+                    <td class="text-muted">@App.Resources.Views.Operator.Satellite.Details.Label_Status</td>
                     <td><span class="badge-status @statusStr">@Model.Status</span></td>
                 </tr>
                 <tr>
-                    <td class="text-muted">Launch Date</td>
+                    <td class="text-muted">@App.Resources.Views.Operator.Satellite.Details.Label_LaunchDate</td>
                     <td>@Model.LaunchDate.ToString("yyyy-MM-dd")</td>
                 </tr>
             </table>
         </div>
 
         <div class="card">
-            <h5>Orbital Parameters</h5>
+            <h5>@App.Resources.Views.Operator.Satellite.Details.Section_Orbital</h5>
             @if (Model.Orbit != null)
             {
                 var o = Model.Orbit;
                 <table class="table mb-0">
                     <tr>
-                        <td class="text-muted">Semi-Major Axis</td>
+                        <td class="text-muted">@App.Resources.Views.Operator.Satellite.Details.Label_SemiMajorAxis</td>
                         <td class="fw-bold">@o.SemiMajorAxis.ToString("N0") m</td>
                     </tr>
                     <tr>
-                        <td class="text-muted">Eccentricity</td>
+                        <td class="text-muted">@App.Resources.Views.Operator.Satellite.Details.Label_Eccentricity</td>
                         <td class="font-monospace">@o.Eccentricity.ToString("F5")</td>
                     </tr>
                     <tr>
-                        <td class="text-muted">Inclination</td>
+                        <td class="text-muted">@App.Resources.Views.Operator.Satellite.Details.Label_Inclination</td>
                         <td class="font-monospace">@o.Inclination.ToString("F2")°</td>
                     </tr>
                     <tr>
@@ -95,15 +95,15 @@
                         <td class="font-monospace">@o.RAAN.ToString("F2")°</td>
                     </tr>
                     <tr>
-                        <td class="text-muted">Argument of Perigee</td>
+                        <td class="text-muted">@App.Resources.Views.Operator.Satellite.Details.Label_ArgOfPerigee</td>
                         <td class="font-monospace">@o.ArgumentOfPerigee.ToString("F2")°</td>
                     </tr>
                     <tr>
-                        <td class="text-muted">Mean Anomaly</td>
+                        <td class="text-muted">@App.Resources.Views.Operator.Satellite.Details.Label_MeanAnomaly</td>
                         <td class="font-monospace">@o.MeanAnomaly.ToString("F2")°</td>
                     </tr>
                     <tr>
-                        <td class="text-muted">Orbital Period</td>
+                        <td class="text-muted">@App.Resources.Views.Operator.Satellite.Details.Label_OrbitalPeriod</td>
                         <td class="font-monospace">
                             @{
                                 var periodSec = 2 * Math.PI * Math.Sqrt(Math.Pow(o.SemiMajorAxis, 3) / (3.986004418e14));
@@ -113,7 +113,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="text-muted">Altitude (approx)</td>
+                        <td class="text-muted">@App.Resources.Views.Operator.Satellite.Details.Label_Altitude</td>
                         <td class="font-monospace">@((o.SemiMajorAxis - 6_371_000).ToString("N0")) m</td>
                     </tr>
                 </table>
@@ -121,11 +121,11 @@
             else
             {
                 <div class="text-center py-4 text-muted">
-                    <p>No orbital parameters available.</p>
+                    <p>@App.Resources.Views.Operator.Satellite.Details.NoOrbitalParams</p>
                     @if (User.IsInRole("Operator"))
                     {
                         <a asp-area="Operator" asp-controller="Satellite" asp-action="Edit" asp-route-id="@Model.Id"
-                           class="btn-sat btn-sat-edit"><i class="bi bi-pencil"></i> Add Orbit Data</a>
+                           class="btn-sat btn-sat-edit"><i class="bi bi-pencil"></i> @App.Resources.Views.Operator.Satellite.Details.Btn_AddOrbitData</a>
                     }
                 </div>
             }
@@ -135,11 +135,11 @@
 
     <div class="card mt-3">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-            <h5 style="margin:0;"><i class="bi bi-shield-check me-2"></i>Orbit Risk Assessment</h5>
+            <h5 style="margin:0;"><i class="bi bi-shield-check me-2"></i>@App.Resources.Views.Operator.Satellite.Details.Section_Risk</h5>
             <form asp-area="Operator" asp-controller="Satellite" asp-action="RegenerateRisk" asp-route-id="@Model.Id" method="post">
                 @Html.AntiForgeryToken()
                 <button type="submit" class="btn-sat btn-sat-edit" style="font-size:0.8rem;">
-                    <i class="bi bi-arrow-clockwise"></i> Recalculate
+                    <i class="bi bi-arrow-clockwise"></i> @App.Resources.Views.Operator.Satellite.Details.Btn_Recalculate
                 </button>
             </form>
         </div>
@@ -158,7 +158,7 @@
             };
             <table class="table mb-0">
                 <tr>
-                    <td class="text-muted">Risk Score</td>
+                    <td class="text-muted">@App.Resources.Views.Operator.Satellite.Details.Label_RiskScore</td>
                     <td>
                         <span class="@riskCss">@ra.RiskScore.ToString("F4")</span>
                         <span class="badge @badgeCss ms-2">@ra.RiskLevel</span>
@@ -169,14 +169,14 @@
                     <td class="font-monospace">@ra.ModelVersion</td>
                 </tr>
                 <tr>
-                    <td class="text-muted">Calculated At</td>
+                    <td class="text-muted">@App.Resources.Views.Operator.Satellite.Details.Label_CalculatedAt</td>
                     <td><small>@ra.CalculatedAt.ToString("yyyy-MM-dd HH:mm") UTC</small></td>
                 </tr>
             </table>
         }
         else
         {
-            <p class="text-muted mb-0">No risk assessment yet. Click <strong>Recalculate</strong> to generate one.</p>
+            <p class="text-muted mb-0">@App.Resources.Views.Operator.Satellite.Details.NoRiskAssessment</p>
         }
     </div>
 
@@ -186,7 +186,7 @@
         var o = Model.Orbit;
         <div class="card mt-3 orbit-card">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                <h5 style="margin:0;">Orbital View</h5>
+                <h5 style="margin:0;">@App.Resources.Views.Operator.Satellite.Details.Section_OrbitalView</h5>
                 <small style="color:#6c757d;">
                     @Model.Name &nbsp;·&nbsp;
                     Alt ~@(((o.SemiMajorAxis - 6_371_000) / 1000).ToString("N0")) km &nbsp;·&nbsp;
@@ -233,13 +233,13 @@
 
     <div class="card mt-3">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-            <h5 style="margin:0;"><i class="bi bi-broadcast-pin me-2"></i>TLE Records</h5>
+            <h5 style="margin:0;"><i class="bi bi-broadcast-pin me-2"></i>@App.Resources.Views.Operator.Satellite.Details.Section_TleRecords</h5>
             @if (User.IsInRole("Operator") && fetchEnabled)
             {
                 <form asp-area="Operator" asp-controller="Satellite" asp-action="FetchTle" asp-route-id="@Model.Id" method="post">
                     @Html.AntiForgeryToken()
                     <button type="submit" class="btn-sat btn-sat-edit" style="font-size:0.8rem;">
-                        <i class="bi bi-cloud-download"></i> Fetch from CelesTrak
+                        <i class="bi bi-cloud-download"></i> @App.Resources.Views.Operator.Satellite.Details.Btn_FetchTle
                     </button>
                 </form>
             }
@@ -249,10 +249,10 @@
             <table class="table table-sm mb-0">
                 <thead>
                     <tr>
-                        <th>Epoch (UTC)</th>
-                        <th>Added At (UTC)</th>
-                        <th>Inclination (°)</th>
-                        <th>Mean Motion (rev/day)</th>
+                        <th>@App.Resources.Views.Operator.Satellite.Details.TleCol_Epoch</th>
+                        <th>@App.Resources.Views.Operator.Satellite.Details.TleCol_AddedAt</th>
+                        <th>@App.Resources.Views.Operator.Satellite.Details.TleCol_Inclination</th>
+                        <th>@App.Resources.Views.Operator.Satellite.Details.TleCol_MeanMotion</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -270,42 +270,42 @@
         }
         else
         {
-            <p class="text-muted mb-0" style="font-size:0.85rem;">No TLE records yet.</p>
+            <p class="text-muted mb-0" style="font-size:0.85rem;">@App.Resources.Views.Operator.Satellite.Details.NoTleRecords</p>
         }
     </div>
 
     @* Manual TLE entry — Operator and OperatorHelper *@
     <div class="card mt-3">
-        <h5 style="margin-bottom:12px;"><i class="bi bi-pencil-square me-2"></i>Add TLE Manually</h5>
+        <h5 style="margin-bottom:12px;"><i class="bi bi-pencil-square me-2"></i>@App.Resources.Views.Operator.Satellite.Details.Section_AddTle</h5>
         <p class="text-muted" style="font-size:0.82rem; margin-bottom:10px;">
-            Paste TLE Line 1 and Line 2 (each exactly 69 characters). You can copy these from
+            @App.Resources.Views.Operator.Satellite.Details.TleManualDesc
             <a href="https://www.space-track.org" target="_blank" rel="noopener">Space-Track.org</a>
-            or any other TLE source.
+            @App.Resources.Views.Operator.Satellite.Details.TleManualDescEnd
         </p>
         <form asp-area="Operator" asp-controller="Satellite" asp-action="AddTleManually" asp-route-id="@Model.Id" method="post">
             @Html.AntiForgeryToken()
             <input type="hidden" name="request.SatelliteId" value="@Model.Id" />
             <div class="mb-2">
-                <label class="form-label" style="font-size:0.85rem;">TLE Line 1</label>
+                <label class="form-label" style="font-size:0.85rem;">@App.Resources.Views.Operator.Satellite.Details.TleLabel_Line1</label>
                 <input type="text" name="request.RawLine1" class="form-control form-control-sm font-monospace"
                        placeholder="1 25544U 98067A   26097.50000000  .00007330  00000-0  49679-3 0  9999"
                        maxlength="69" required />
             </div>
             <div class="mb-3">
-                <label class="form-label" style="font-size:0.85rem;">TLE Line 2</label>
+                <label class="form-label" style="font-size:0.85rem;">@App.Resources.Views.Operator.Satellite.Details.TleLabel_Line2</label>
                 <input type="text" name="request.RawLine2" class="form-control form-control-sm font-monospace"
                        placeholder="2 25544  51.6416 208.7236 0007511 311.2271 134.3485 15.49557417447411"
                        maxlength="69" required />
             </div>
             <button type="submit" class="btn-sat btn-sat-edit" style="font-size:0.8rem;">
-                <i class="bi bi-plus-lg"></i> Add TLE Record
+                <i class="bi bi-plus-lg"></i> @App.Resources.Views.Operator.Satellite.Details.Btn_AddTle
             </button>
         </form>
     </div>
 
     <div class="card mt-3 p-3">
         <a asp-area="Operator" asp-controller="Satellite" asp-action="Index" class="btn btn-outline-secondary">
-            <i class="bi bi-arrow-left me-1"></i> Back to Satellites
+            <i class="bi bi-arrow-left me-1"></i> @App.Resources.Views.Operator.Satellite.Details.Btn_Back
         </a>
     </div>
 

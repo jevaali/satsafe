@@ -20,17 +20,17 @@
 
     <div class="system-bar">
         <span class="status-dot"></span>
-        OPERATOR SETTINGS | @DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") UTC
+        @App.Resources.Views.Operator.Settings.Index.SystemBar_Label | @DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") UTC
     </div>
 
     <div class="header">
         <div>
-            <h3><i class="bi bi-gear-fill me-2"></i>Settings</h3>
-            <small>Manage your operator profile, team access, and notification preferences</small>
+            <h3><i class="bi bi-gear-fill me-2"></i>@App.Resources.Views.Operator.Settings.Index.Header</h3>
+            <small>@App.Resources.Views.Operator.Settings.Index.Header_Subtitle</small>
         </div>
         <div class="header-right">
-            <span class="op-badge resolved"><i class="bi bi-circle-fill" style="font-size:0.45rem;"></i>@satellites.Count(s => s.Status == ESatelliteStatus.Active) Active</span>
-            <span class="op-badge low"><i class="bi bi-people-fill"></i>@helpers.Count Team</span>
+            <span class="op-badge resolved"><i class="bi bi-circle-fill" style="font-size:0.45rem;"></i>@satellites.Count(s => s.Status == ESatelliteStatus.Active) @App.Resources.Views.Operator.Settings.Index.Badge_Active</span>
+            <span class="op-badge low"><i class="bi bi-people-fill"></i>@helpers.Count @App.Resources.Views.Operator.Settings.Index.Badge_Team</span>
         </div>
     </div>
 
@@ -54,31 +54,31 @@
         <li class="nav-item">
             <a class="nav-link @(activeTab == "profile" ? "active" : "")"
                data-bs-toggle="tab" data-bs-target="#panel-profile" role="tab">
-                <i class="bi bi-building me-1"></i> Operator Profile
+                <i class="bi bi-building me-1"></i> @App.Resources.Views.Operator.Settings.Index.Tab_Profile
             </a>
         </li>
         <li class="nav-item">
             <a class="nav-link @(activeTab == "satellites" ? "active" : "")"
                data-bs-toggle="tab" data-bs-target="#panel-satellites" role="tab">
-                <i class="bi bi-rocket-takeoff me-1"></i> Satellites
+                <i class="bi bi-rocket-takeoff me-1"></i> @App.Resources.Views.Operator.Settings.Index.Tab_Satellites
             </a>
         </li>
         <li class="nav-item">
             <a class="nav-link @(activeTab == "team" ? "active" : "")"
                data-bs-toggle="tab" data-bs-target="#panel-team" role="tab">
-                <i class="bi bi-people-fill me-1"></i> Team Access
+                <i class="bi bi-people-fill me-1"></i> @App.Resources.Views.Operator.Settings.Index.Tab_Team
             </a>
         </li>
         <li class="nav-item">
             <a class="nav-link @(activeTab == "notifications" ? "active" : "")"
                data-bs-toggle="tab" data-bs-target="#panel-notifications" role="tab">
-                <i class="bi bi-bell-fill me-1"></i> Notifications
+                <i class="bi bi-bell-fill me-1"></i> @App.Resources.Views.Operator.Settings.Index.Tab_Notifications
             </a>
         </li>
         <li class="nav-item">
             <a class="nav-link @(activeTab == "activity" ? "active" : "")"
                data-bs-toggle="tab" data-bs-target="#panel-activity" role="tab">
-                <i class="bi bi-clock-history me-1"></i> Activity Log
+                <i class="bi bi-clock-history me-1"></i> @App.Resources.Views.Operator.Settings.Index.Tab_Activity
                 @if (logs.Any())
                 {
                     <span class="badge bg-secondary ms-1" style="font-size:0.65rem;">@logs.Count</span>
@@ -94,23 +94,23 @@
 
             <div class="card mb-3">
                 <div class="card-header">
-                    <span><i class="bi bi-info-circle me-1"></i> Current Profile</span>
+                    <span><i class="bi bi-info-circle me-1"></i> @App.Resources.Views.Operator.Settings.Index.Profile_CurrentProfile</span>
                 </div>
                 <div class="info-grid p-2">
                     <div>
-                        <div class="info-label">Operator Name</div>
+                        <div class="info-label">@App.Resources.Views.Operator.Settings.Index.Profile_OperatorName</div>
                         <div class="info-value">@op.Name</div>
                     </div>
                     <div>
-                        <div class="info-label">Country</div>
+                        <div class="info-label">@App.Resources.Views.Operator.Settings.Index.Profile_Country</div>
                         <div class="info-value">@op.CountryCode</div>
                     </div>
                     <div>
-                        <div class="info-label">Type</div>
+                        <div class="info-label">@App.Resources.Views.Operator.Settings.Index.Profile_Type</div>
                         <div class="info-value">@(op.OperatorType?.ToString() ?? "—")</div>
                     </div>
                     <div>
-                        <div class="info-label">Operator ID</div>
+                        <div class="info-label">@App.Resources.Views.Operator.Settings.Index.Profile_OperatorId</div>
                         <div class="info-value mono">@op.Id</div>
                     </div>
                 </div>
@@ -118,23 +118,23 @@
 
             <div class="card">
                 <div class="card-header">
-                    <span><i class="bi bi-pencil-square me-1"></i> Edit Profile</span>
+                    <span><i class="bi bi-pencil-square me-1"></i> @App.Resources.Views.Operator.Settings.Index.Profile_EditProfile</span>
                 </div>
                 <form asp-area="Operator" asp-controller="Settings" asp-action="UpdateOperator" method="post">
                     @Html.AntiForgeryToken()
                     <div class="row g-3 p-2">
                         <div class="col-md-6">
-                            <label class="form-label" asp-for="OperatorForm.Name">Operator Name</label>
+                            <label class="form-label" asp-for="OperatorForm.Name">@App.Resources.Views.Operator.Settings.Index.Profile_OperatorName</label>
                             <input asp-for="OperatorForm.Name" class="form-control" placeholder="e.g. National Space Agency" />
                             <span asp-validation-for="OperatorForm.Name" class="text-danger small"></span>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label" asp-for="OperatorForm.Country">Country</label>
+                            <label class="form-label" asp-for="OperatorForm.Country">@App.Resources.Views.Operator.Settings.Index.Profile_Country</label>
                             <input asp-for="OperatorForm.Country" class="form-control" placeholder="e.g. Estonia" />
                             <span asp-validation-for="OperatorForm.Country" class="text-danger small"></span>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label" asp-for="OperatorForm.OperatorType">Operator Type</label>
+                            <label class="form-label" asp-for="OperatorForm.OperatorType">@App.Resources.Views.Operator.Settings.Index.Profile_Type</label>
                             <select asp-for="OperatorForm.OperatorType" class="form-select"
                                     asp-items="Html.GetEnumSelectList<EOperatorType>()">
                                 <option value="">— Select type —</option>
@@ -143,7 +143,7 @@
                     </div>
                     <div class="p-2 pt-0">
                         <button type="submit" class="btn-ssa-primary">
-                            <i class="bi bi-floppy me-1"></i> Save Changes
+                            <i class="bi bi-floppy me-1"></i> @App.Resources.Views.Operator.Settings.Index.Profile_Btn_Save
                         </button>
                     </div>
                 </form>
@@ -158,7 +158,7 @@
                 <div class="card-header">
                     <span><i class="bi bi-rocket-takeoff me-1"></i> Registered Satellites (@satellites.Count)</span>
                     <a asp-area="Operator" asp-controller="Satellite" asp-action="Create" class="btn-add">
-                        <i class="bi bi-plus-lg"></i> Add Satellite
+                        <i class="bi bi-plus-lg"></i> @App.Resources.Views.Operator.Settings.Index.Satellites_Btn_Add
                     </a>
                 </div>
 
@@ -167,10 +167,10 @@
                     <table class="table table-sm table-hover mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th>Name</th>
-                                <th>NORAD</th>
-                                <th>Launch Date</th>
-                                <th>Status</th>
+                                <th>@App.Resources.Views.Operator.Settings.Index.Satellites_Col_Name</th>
+                                <th>@App.Resources.Views.Operator.Settings.Index.Satellites_Col_Norad</th>
+                                <th>@App.Resources.Views.Operator.Settings.Index.Satellites_Col_LaunchDate</th>
+                                <th>@App.Resources.Views.Operator.Settings.Index.Satellites_Col_Status</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -185,7 +185,7 @@
                                 <td class="text-end">
                                     <a asp-area="Operator" asp-controller="Satellite" asp-action="Edit" asp-route-id="@sat.Id"
                                        class="btn-sat btn-sat-edit">
-                                        <i class="bi bi-pencil"></i> Edit
+                                        <i class="bi bi-pencil"></i> @App.Resources.Views.Operator.Settings.Index.Satellites_Btn_Edit
                                     </a>
                                 </td>
                             </tr>
@@ -196,7 +196,7 @@
                 else
                 {
                 <div class="empty-state">
-                    <p>No satellites registered yet.</p>
+                    <p>@App.Resources.Views.Operator.Settings.Index.Satellites_Empty</p>
                 </div>
                 }
             </div>
@@ -230,8 +230,8 @@
                                   asp-route-id="@member.Id" method="post" class="d-inline">
                                 @Html.AntiForgeryToken()
                                 <button type="submit" class="btn-sat btn-sat-delete"
-                                        onclick="return confirm('Remove this team member?')">
-                                    <i class="bi bi-person-x"></i> Remove
+                                        onclick="return confirm('@App.Resources.Views.Operator.Settings.Index.Team_Confirm_Remove')">
+                                    <i class="bi bi-person-x"></i> @App.Resources.Views.Operator.Settings.Index.Team_Btn_Remove
                                 </button>
                             </form>
                         </div>
@@ -241,30 +241,30 @@
                 else
                 {
                 <div class="empty-state" style="padding:2rem">
-                    <p>No additional team members yet.</p>
+                    <p>@App.Resources.Views.Operator.Settings.Index.Team_Empty</p>
                 </div>
                 }
             </div>
 
             <div class="card">
                 <div class="card-header">
-                    <span><i class="bi bi-person-plus me-1"></i> Add Team Member</span>
+                    <span><i class="bi bi-person-plus me-1"></i> @App.Resources.Views.Operator.Settings.Index.Team_AddMember</span>
                 </div>
                 <p class="text-muted small px-3 pt-2 mb-2">
-                    Grant another registered user access to manage this operator's satellites.
+                    @App.Resources.Views.Operator.Settings.Index.Team_Desc
                 </p>
                 <form asp-area="Operator" asp-controller="Settings" asp-action="AddHelper" method="post">
                     @Html.AntiForgeryToken()
                     <div class="row g-2 align-items-end px-3 pb-3">
                         <div class="col-md-7">
-                            <label class="form-label" asp-for="HelperForm.Email">User Email</label>
+                            <label class="form-label" asp-for="HelperForm.Email">@App.Resources.Views.Operator.Settings.Index.Team_UserEmail</label>
                             <input asp-for="HelperForm.Email" type="email" class="form-control"
                                    placeholder="user@example.com" />
                             <span asp-validation-for="HelperForm.Email" class="text-danger small"></span>
                         </div>
                         <div class="col-md-5">
                             <button type="submit" class="btn btn-dark btn-sm w-100">
-                                <i class="bi bi-person-plus me-1"></i> Grant Access
+                                <i class="bi bi-person-plus me-1"></i> @App.Resources.Views.Operator.Settings.Index.Team_Btn_Grant
                             </button>
                         </div>
                     </div>
@@ -284,7 +284,7 @@
                         <input type="hidden" name="activeTab" value="activity" />
                         <select name="filterUserId" class="form-select form-select-sm" style="width:auto;"
                                 onchange="this.form.submit()">
-                            <option value="">All members</option>
+                            <option value="">@App.Resources.Views.Operator.Settings.Index.Activity_AllMembers</option>
                             @foreach (var member in teamMembers)
                             {
                                 if (Model.ActivityFilterUserId == member.Id)
@@ -304,7 +304,7 @@
                         @if (Model.ActivityFilterUserId.HasValue)
                         {
                             <a asp-area="Operator" asp-controller="Settings" asp-action="Index"
-                               class="btn btn-outline-secondary btn-sm">Clear</a>
+                               class="btn btn-outline-secondary btn-sm">@App.Resources.Views.Operator.Settings.Index.Activity_Btn_Clear</a>
                         }
                     </form>
                 </div>
@@ -314,9 +314,9 @@
                     <table class="table table-sm table-hover mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th>User</th>
-                                <th>Action</th>
-                                <th>Date &amp; Time (UTC)</th>
+                                <th>@App.Resources.Views.Operator.Settings.Index.Activity_Col_User</th>
+                                <th>@App.Resources.Views.Operator.Settings.Index.Activity_Col_Action</th>
+                                <th>@App.Resources.Views.Operator.Settings.Index.Activity_Col_DateTime</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -341,7 +341,7 @@
                 else
                 {
                     <div class="empty-state" style="padding:2rem">
-                        <p>No activity recorded yet.</p>
+                        <p>@App.Resources.Views.Operator.Settings.Index.Activity_Empty</p>
                     </div>
                 }
             </div>
@@ -353,7 +353,7 @@
 
             <div class="card">
                 <div class="card-header">
-                    <span><i class="bi bi-bell me-1"></i> Notification Preferences</span>
+                    <span><i class="bi bi-bell me-1"></i> @App.Resources.Views.Operator.Settings.Index.Tab_Notifications</span>
                 </div>
                 <form asp-area="Operator" asp-controller="Settings" asp-action="SaveNotifications" method="post">
                     @Html.AntiForgeryToken()
@@ -361,11 +361,10 @@
 
                         <div class="mb-4">
                             <label class="form-label fw-semibold" asp-for="NotificationForm.ConjunctionThresholdKm">
-                                Conjunction Detection Threshold (km)
+                                @App.Resources.Views.Operator.Settings.Index.Notifications_ConjThreshold
                             </label>
                             <p class="text-muted small mb-2">
-                                Only record conjunction events where the miss distance is below this value.
-                                Higher values catch more events; lower values reduce noise.
+                                @App.Resources.Views.Operator.Settings.Index.Notifications_ConjThreshold_Desc
                             </p>
                             <div class="d-flex align-items-center gap-3" style="max-width:420px">
                                 <input type="range" min="1" max="500" step="1"
@@ -381,11 +380,10 @@
 
                         <div class="mb-4">
                             <label class="form-label fw-semibold" asp-for="NotificationForm.AlertThresholdKm">
-                                Alert Threshold (km)
+                                @App.Resources.Views.Operator.Settings.Index.Notifications_AlertThreshold
                             </label>
                             <p class="text-muted small mb-2">
-                                Generate an alert only when a recorded conjunction is within this distance.
-                                Must be less than or equal to the detection threshold above.
+                                @App.Resources.Views.Operator.Settings.Index.Notifications_AlertThreshold_Desc
                             </p>
                             <div class="d-flex align-items-center gap-3" style="max-width:420px">
                                 <input type="range" min="0.1" max="100" step="0.1"
@@ -401,8 +399,8 @@
 
                         <div class="toggle-row">
                             <div>
-                                <div class="fw-semibold"><i class="bi bi-envelope me-2"></i>Email Notifications</div>
-                                <div class="text-muted small">Receive alerts via email when high-risk conjunctions are detected</div>
+                                <div class="fw-semibold"><i class="bi bi-envelope me-2"></i>@App.Resources.Views.Operator.Settings.Index.Notifications_Email</div>
+                                <div class="text-muted small">@App.Resources.Views.Operator.Settings.Index.Notifications_Email_Desc</div>
                             </div>
                             <div class="form-check form-switch mb-0">
                                 <input asp-for="NotificationForm.EmailEnabled"
@@ -412,8 +410,8 @@
 
                         <div class="toggle-row">
                             <div>
-                                <div class="fw-semibold"><i class="bi bi-phone me-2"></i>SMS Notifications</div>
-                                <div class="text-muted small">Receive text message alerts for critical conjunction events</div>
+                                <div class="fw-semibold"><i class="bi bi-phone me-2"></i>@App.Resources.Views.Operator.Settings.Index.Notifications_Sms</div>
+                                <div class="text-muted small">@App.Resources.Views.Operator.Settings.Index.Notifications_Sms_Desc</div>
                             </div>
                             <div class="form-check form-switch mb-0">
                                 <input asp-for="NotificationForm.SmsEnabled"
@@ -424,7 +422,7 @@
                     </div>
                     <div class="px-3 pb-3">
                         <button type="submit" class="btn-ssa-primary">
-                            <i class="bi bi-floppy me-1"></i> Save Preferences
+                            <i class="bi bi-floppy me-1"></i> @App.Resources.Views.Operator.Settings.Index.Notifications_Btn_Save
                         </button>
                     </div>
                 </form>

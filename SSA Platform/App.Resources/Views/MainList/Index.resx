@@ -3,7 +3,6 @@
 <root>
     <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
         <xsd:element name="root" msdata:IsDataSet="true">
-            
         </xsd:element>
     </xsd:schema>
     <resheader name="resmimetype">
@@ -18,4 +17,52 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
+    <data name="SystemBar_Title" xml:space="preserve">
+        <value>SPACE OBJECT CATALOGUE</value>
+    </data>
+    <data name="SystemBar_ObjectsTracked" xml:space="preserve">
+        <value>OBJECTS TRACKED</value>
+    </data>
+    <data name="Header_Title" xml:space="preserve">
+        <value>Space Object Catalogue</value>
+    </data>
+    <data name="Header_Subtitle" xml:space="preserve">
+        <value>All tracked satellites and debris — click any object to inspect orbit</value>
+    </data>
+    <data name="Filter_SearchPlaceholder" xml:space="preserve">
+        <value>Search name or NORAD ID…</value>
+    </data>
+    <data name="Filter_AllTypes" xml:space="preserve">
+        <value>All Types</value>
+    </data>
+    <data name="Filter_Satellites" xml:space="preserve">
+        <value>Satellites</value>
+    </data>
+    <data name="Filter_Debris" xml:space="preserve">
+        <value>Debris</value>
+    </data>
+    <data name="Filter_AllObjects" xml:space="preserve">
+        <value>All Objects</value>
+    </data>
+    <data name="Filter_HasOrbitData" xml:space="preserve">
+        <value>Has Orbit Data</value>
+    </data>
+    <data name="Filter_NoOrbitData" xml:space="preserve">
+        <value>No Orbit Data</value>
+    </data>
+    <data name="Badge_Satellite" xml:space="preserve">
+        <value>Satellite</value>
+    </data>
+    <data name="Badge_Debris" xml:space="preserve">
+        <value>Debris</value>
+    </data>
+    <data name="Label_NoOrbitData" xml:space="preserve">
+        <value>No orbit data</value>
+    </data>
+    <data name="Empty_NoCatalogue" xml:space="preserve">
+        <value>No objects in the catalogue.</value>
+    </data>
+    <data name="PageTitle" xml:space="preserve">
+        <value>Space Object Catalogue</value>
+    </data>
 </root>

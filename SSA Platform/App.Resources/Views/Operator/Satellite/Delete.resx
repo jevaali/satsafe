@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="PageTitle" xml:space="preserve">
+        <value>Delete Satellite</value>
+    </data>
+    <data name="SystemBar_Label" xml:space="preserve">
+        <value>SATELLITE MANAGEMENT | DELETE CONFIRMATION</value>
+    </data>
+    <data name="Header" xml:space="preserve">
+        <value>Delete Satellite</value>
+    </data>
+    <data name="Header_Subtitle" xml:space="preserve">
+        <value>This action will soft-delete the satellite and remove it from your active fleet</value>
+    </data>
+    <data name="Badge_Destructive" xml:space="preserve">
+        <value>Destructive Action</value>
+    </data>
+    <data name="Section_Details" xml:space="preserve">
+        <value>Satellite Details</value>
+    </data>
+    <data name="Section_Consequences" xml:space="preserve">
+        <value>What happens after deletion?</value>
+    </data>
+    <data name="Label_Name" xml:space="preserve">
+        <value>Name</value>
+    </data>
+    <data name="Label_NoradId" xml:space="preserve">
+        <value>NORAD ID</value>
+    </data>
+    <data name="Label_Status" xml:space="preserve">
+        <value>Status</value>
+    </data>
+    <data name="Label_LaunchDate" xml:space="preserve">
+        <value>Launch Date</value>
+    </data>
+    <data name="Label_Inclination" xml:space="preserve">
+        <value>Inclination</value>
+    </data>
+    <data name="Label_SemiMajorAxis" xml:space="preserve">
+        <value>Semi-Major Axis</value>
+    </data>
+    <data name="Consequence1" xml:space="preserve">
+        <value>Satellite will be marked as deleted</value>
+    </data>
+    <data name="Consequence2" xml:space="preserve">
+        <value>Removed from active fleet view</value>
+    </data>
+    <data name="Consequence3" xml:space="preserve">
+        <value>Historical data preserved</value>
+    </data>
+    <data name="Consequence4" xml:space="preserve">
+        <value>Cannot be restored without admin</value>
+    </data>
+    <data name="Btn_ConfirmDelete" xml:space="preserve">
+        <value>Confirm Delete</value>
+    </data>
+    <data name="Btn_Cancel" xml:space="preserve">
+        <value>Cancel</value>
+    </data>
+</root>

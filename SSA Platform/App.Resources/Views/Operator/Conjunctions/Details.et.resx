@@ -1,0 +1,116 @@
+<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="PageTitle" xml:space="preserve">
+        <value>Konjunktsiooni üksikasjad</value>
+    </data>
+    <data name="SystemBar_Label" xml:space="preserve">
+        <value>KONJUNKTSIOONI ÜKSIKASJAD</value>
+    </data>
+    <data name="Section_Metrics" xml:space="preserve">
+        <value>Orbiidi mõõtmised</value>
+    </data>
+    <data name="Section_Objects" xml:space="preserve">
+        <value>Seotud objektid</value>
+    </data>
+    <data name="Section_Alerts" xml:space="preserve">
+        <value>Seotud teavitused</value>
+    </data>
+    <data name="Label_MissDistance" xml:space="preserve">
+        <value>Möödumiskaugus</value>
+    </data>
+    <data name="Label_CollisionProb" xml:space="preserve">
+        <value>Kokkupõrke tõenäosus</value>
+    </data>
+    <data name="Label_TCA" xml:space="preserve">
+        <value>Lähima lähenemise aeg</value>
+    </data>
+    <data name="Label_TimeUntilTca" xml:space="preserve">
+        <value>Aeg lähima lähenemiseni</value>
+    </data>
+    <data name="Label_Threshold" xml:space="preserve">
+        <value>Lävi</value>
+    </data>
+    <data name="Label_Primary" xml:space="preserve">
+        <value>Esmane</value>
+    </data>
+    <data name="Label_Secondary" xml:space="preserve">
+        <value>Teisene</value>
+    </data>
+    <data name="Label_Debris" xml:space="preserve">
+        <value>Prügi</value>
+    </data>
+    <data name="Col_Severity" xml:space="preserve">
+        <value>Tase</value>
+    </data>
+    <data name="Col_Message" xml:space="preserve">
+        <value>Sõnum</value>
+    </data>
+    <data name="Col_Created" xml:space="preserve">
+        <value>Loodud</value>
+    </data>
+    <data name="Col_Status" xml:space="preserve">
+        <value>Olek</value>
+    </data>
+    <data name="Status_Acknowledged" xml:space="preserve">
+        <value>Kinnitatud</value>
+    </data>
+    <data name="Status_Pending" xml:space="preserve">
+        <value>Ootel</value>
+    </data>
+    <data name="Risk_High" xml:space="preserve">
+        <value>KÕRGE RISK</value>
+    </data>
+    <data name="Response_Label" xml:space="preserve">
+        <value>Teie vastus</value>
+    </data>
+    <data name="Btn_MarkNoticed" xml:space="preserve">
+        <value>Märgi märgatuks</value>
+    </data>
+    <data name="Btn_ConfirmRisk" xml:space="preserve">
+        <value>Kinnita risk</value>
+    </data>
+    <data name="Btn_ResolveMySide" xml:space="preserve">
+        <value>Lahenda minu pool</value>
+    </data>
+    <data name="Status_YourSideResolved" xml:space="preserve">
+        <value>Teie pool on lahendatud</value>
+    </data>
+    <data name="Status_EventOccurred" xml:space="preserve">
+        <value>Sündmus on juba toimunud</value>
+    </data>
+    <data name="Status_FullyResolved" xml:space="preserve">
+        <value>Sündmus täielikult lahendatud</value>
+    </data>
+    <data name="Btn_BackToList" xml:space="preserve">
+        <value>Tagasi nimekirja</value>
+    </data>
+    <data name="Btn_ViewAlert" xml:space="preserve">
+        <value>Vaata</value>
+    </data>
+    <data name="Badge_Unacknowledged" xml:space="preserve">
+        <value>kinnitamata</value>
+    </data>
+    <data name="Badge_Total" xml:space="preserve">
+        <value>kokku</value>
+    </data>
+    <data name="Btn_ResolveAndAck" xml:space="preserve">
+        <value>Lahenda ja kinnita</value>
+    </data>
+    <data name="Label_Alert" xml:space="preserve">
+        <value>teavitus</value>
+    </data>
+    <data name="Label_Alerts" xml:space="preserve">
+        <value>teavitust</value>
+    </data>
+</root>

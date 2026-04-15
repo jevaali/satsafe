@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="PageTitle" xml:space="preserve">
+        <value>Edit Alert Message</value>
+    </data>
+    <data name="SystemBar_Label" xml:space="preserve">
+        <value>ALERT MANAGEMENT | EDIT MESSAGE</value>
+    </data>
+    <data name="Header" xml:space="preserve">
+        <value>Edit Alert Message</value>
+    </data>
+    <data name="Btn_Back" xml:space="preserve">
+        <value>Back</value>
+    </data>
+    <data name="Section_Message" xml:space="preserve">
+        <value>Message</value>
+    </data>
+    <data name="Section_AlertInfo" xml:space="preserve">
+        <value>Alert Information</value>
+    </data>
+    <data name="Label_AlertMessage" xml:space="preserve">
+        <value>Alert Message</value>
+    </data>
+    <data name="Hint_MaxChars" xml:space="preserve">
+        <value>Max 128 characters.</value>
+    </data>
+    <data name="Placeholder_Message" xml:space="preserve">
+        <value>Enter alert message…</value>
+    </data>
+    <data name="Btn_SaveMessage" xml:space="preserve">
+        <value>Save Message</value>
+    </data>
+    <data name="Btn_Cancel" xml:space="preserve">
+        <value>Cancel</value>
+    </data>
+    <data name="Label_AlertId" xml:space="preserve">
+        <value>Alert ID</value>
+    </data>
+    <data name="Label_Severity" xml:space="preserve">
+        <value>Severity</value>
+    </data>
+    <data name="Label_Status" xml:space="preserve">
+        <value>Status</value>
+    </data>
+    <data name="Label_Created" xml:space="preserve">
+        <value>Created</value>
+    </data>
+    <data name="Status_Acknowledged" xml:space="preserve">
+        <value>Acknowledged</value>
+    </data>
+    <data name="Status_Pending" xml:space="preserve">
+        <value>Pending</value>
+    </data>
+</root>

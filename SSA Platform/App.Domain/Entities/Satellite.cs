@@ -46,7 +46,7 @@ public class Satellite : SpaceObject
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException("Name is required");
 
-        Name = name;
+        Name.SetTranslation(name);
         LaunchDate = launchDate;
         Operator = op;
         OperatorId = op.Id;

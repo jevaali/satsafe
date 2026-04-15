@@ -18,18 +18,18 @@
 
     <div class="system-bar">
         <span class="status-dot"></span>
-        ALERT MANAGEMENT | EDIT MESSAGE | @DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") UTC
+        @App.Resources.Views.Operator.Alerts.EditMessage.SystemBar_Label | @DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") UTC
     </div>
 
     <div class="header">
         <div>
-            <h3>Edit Alert Message</h3>
+            <h3>@App.Resources.Views.Operator.Alerts.EditMessage.PageTitle</h3>
             <small>Alert — @Model.Id.ToString()[..8]…</small>
         </div>
         <div class="header-right">
             <span class="badge @severityBadgeClass">@Model.Severity</span>
             <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-secondary btn-sm">
-                <i class="bi bi-arrow-left me-1"></i> Back
+                <i class="bi bi-arrow-left me-1"></i> @App.Resources.Views.Operator.Alerts.EditMessage.Btn_Back
             </a>
         </div>
     </div>
@@ -37,56 +37,56 @@
     <div class="grid">
 
         <div class="card">
-            <h5>Message</h5>
+            <h5>@App.Resources.Views.Operator.Alerts.EditMessage.Section_Message</h5>
             <form asp-action="EditMessage" asp-route-id="@Model.Id" method="post">
                 @Html.AntiForgeryToken()
 
                 <div asp-validation-summary="All" class="alert alert-danger" style="display:@(ViewContext.ModelState.IsValid ? "none" : "block")"></div>
 
                 <div class="mb-3">
-                    <label for="message" class="form-label">Alert Message</label>
+                    <label for="message" class="form-label">@App.Resources.Views.Operator.Alerts.EditMessage.Label_AlertMessage</label>
                     <textarea id="message" name="message" class="form-control" rows="4"
-                              maxlength="128" placeholder="Enter alert message…">@currentMessage</textarea>
-                    <div class="form-text">Max 128 characters.</div>
+                              maxlength="128" placeholder="@App.Resources.Views.Operator.Alerts.EditMessage.Placeholder_Message">@currentMessage</textarea>
+                    <div class="form-text">@App.Resources.Views.Operator.Alerts.EditMessage.Hint_MaxChars</div>
                 </div>
 
                 <div class="d-flex gap-2 mt-4">
                     <button type="submit" class="btn-add">
-                        <i class="bi bi-check-circle"></i> Save Message
+                        <i class="bi bi-check-circle"></i> @App.Resources.Views.Operator.Alerts.EditMessage.Btn_SaveMessage
                     </button>
                     <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-secondary">
-                        Cancel
+                        @App.Resources.Views.Operator.Alerts.EditMessage.Btn_Cancel
                     </a>
                 </div>
             </form>
         </div>
 
         <div class="card">
-            <h5>Alert Information</h5>
+            <h5>@App.Resources.Views.Operator.Alerts.EditMessage.Section_AlertInfo</h5>
             <table class="table mb-0">
                 <tr>
-                    <td class="text-muted">Alert ID</td>
+                    <td class="text-muted">@App.Resources.Views.Operator.Alerts.EditMessage.Label_AlertId</td>
                     <td><code>@Model.Id</code></td>
                 </tr>
                 <tr>
-                    <td class="text-muted">Severity</td>
+                    <td class="text-muted">@App.Resources.Views.Operator.Alerts.EditMessage.Label_Severity</td>
                     <td><span class="badge @severityBadgeClass">@Model.Severity</span></td>
                 </tr>
                 <tr>
-                    <td class="text-muted">Status</td>
+                    <td class="text-muted">@App.Resources.Views.Operator.Alerts.EditMessage.Label_Status</td>
                     <td>
                         @if (Model.IsAcknowledged)
                         {
-                            <span class="badge bg-success">Acknowledged</span>
+                            <span class="badge bg-success">@App.Resources.Views.Operator.Alerts.EditMessage.Status_Acknowledged</span>
                         }
                         else
                         {
-                            <span class="badge bg-warning text-dark">Pending</span>
+                            <span class="badge bg-warning text-dark">@App.Resources.Views.Operator.Alerts.EditMessage.Status_Pending</span>
                         }
                     </td>
                 </tr>
                 <tr>
-                    <td class="text-muted">Created</td>
+                    <td class="text-muted">@App.Resources.Views.Operator.Alerts.EditMessage.Label_Created</td>
                     <td>@Model.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss") UTC</td>
                 </tr>
             </table>

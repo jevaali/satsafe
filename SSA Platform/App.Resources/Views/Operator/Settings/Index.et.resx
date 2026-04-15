@@ -1,0 +1,155 @@
+<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="PageTitle" xml:space="preserve">
+        <value>Seaded</value>
+    </data>
+    <data name="SystemBar_Label" xml:space="preserve">
+        <value>OPERAATORI SEADED</value>
+    </data>
+    <data name="Header" xml:space="preserve">
+        <value>Seaded</value>
+    </data>
+    <data name="Header_Subtitle" xml:space="preserve">
+        <value>Halda operaatori profiili, meeskonna ligipääsu ja teavituste eelistusi</value>
+    </data>
+    <data name="Tab_Profile" xml:space="preserve">
+        <value>Operaatori profiil</value>
+    </data>
+    <data name="Tab_Satellites" xml:space="preserve">
+        <value>Satelliidid</value>
+    </data>
+    <data name="Tab_Team" xml:space="preserve">
+        <value>Meeskonna ligipääs</value>
+    </data>
+    <data name="Tab_Notifications" xml:space="preserve">
+        <value>Teavitused</value>
+    </data>
+    <data name="Tab_Activity" xml:space="preserve">
+        <value>Tegevuslogi</value>
+    </data>
+    <data name="Profile_CurrentProfile" xml:space="preserve">
+        <value>Praegune profiil</value>
+    </data>
+    <data name="Profile_EditProfile" xml:space="preserve">
+        <value>Muuda profiili</value>
+    </data>
+    <data name="Profile_OperatorName" xml:space="preserve">
+        <value>Operaatori nimi</value>
+    </data>
+    <data name="Profile_Country" xml:space="preserve">
+        <value>Riik</value>
+    </data>
+    <data name="Profile_Type" xml:space="preserve">
+        <value>Tüüp</value>
+    </data>
+    <data name="Profile_OperatorId" xml:space="preserve">
+        <value>Operaatori ID</value>
+    </data>
+    <data name="Profile_Btn_Save" xml:space="preserve">
+        <value>Salvesta muudatused</value>
+    </data>
+    <data name="Satellites_Btn_Add" xml:space="preserve">
+        <value>Lisa satelliit</value>
+    </data>
+    <data name="Satellites_Col_Name" xml:space="preserve">
+        <value>Nimi</value>
+    </data>
+    <data name="Satellites_Col_Norad" xml:space="preserve">
+        <value>NORAD</value>
+    </data>
+    <data name="Satellites_Col_LaunchDate" xml:space="preserve">
+        <value>Stardikuupäev</value>
+    </data>
+    <data name="Satellites_Col_Status" xml:space="preserve">
+        <value>Olek</value>
+    </data>
+    <data name="Satellites_Btn_Edit" xml:space="preserve">
+        <value>Muuda</value>
+    </data>
+    <data name="Satellites_Empty" xml:space="preserve">
+        <value>Satelliite pole veel registreeritud.</value>
+    </data>
+    <data name="Team_Empty" xml:space="preserve">
+        <value>Täiendavaid meeskonnaliikmeid pole veel.</value>
+    </data>
+    <data name="Team_AddMember" xml:space="preserve">
+        <value>Lisa meeskonnaliige</value>
+    </data>
+    <data name="Team_Desc" xml:space="preserve">
+        <value>Anna teisele registreeritud kasutajale ligipääs selle operaatori satelliitide haldamiseks.</value>
+    </data>
+    <data name="Team_UserEmail" xml:space="preserve">
+        <value>Kasutaja e-post</value>
+    </data>
+    <data name="Team_Btn_Grant" xml:space="preserve">
+        <value>Anna ligipääs</value>
+    </data>
+    <data name="Team_Btn_Remove" xml:space="preserve">
+        <value>Eemalda</value>
+    </data>
+    <data name="Team_Confirm_Remove" xml:space="preserve">
+        <value>Eemalda see meeskonnaliige?</value>
+    </data>
+    <data name="Activity_AllMembers" xml:space="preserve">
+        <value>Kõik liikmed</value>
+    </data>
+    <data name="Activity_Btn_Clear" xml:space="preserve">
+        <value>Tühjenda</value>
+    </data>
+    <data name="Activity_Col_User" xml:space="preserve">
+        <value>Kasutaja</value>
+    </data>
+    <data name="Activity_Col_Action" xml:space="preserve">
+        <value>Toiming</value>
+    </data>
+    <data name="Activity_Col_DateTime" xml:space="preserve">
+        <value>Kuupäev ja kellaaeg (UTC)</value>
+    </data>
+    <data name="Activity_Empty" xml:space="preserve">
+        <value>Tegevusi pole veel salvestatud.</value>
+    </data>
+    <data name="Notifications_ConjThreshold" xml:space="preserve">
+        <value>Konjunktsiooni tuvastamise lävi (km)</value>
+    </data>
+    <data name="Notifications_ConjThreshold_Desc" xml:space="preserve">
+        <value>Salvesta ainult sellised konjunktsioonisündmused, kus möödumiskaugus on alla selle väärtuse. Suuremad väärtused tuvastavad rohkem sündmusi; väiksemad vähendavad müra.</value>
+    </data>
+    <data name="Notifications_AlertThreshold" xml:space="preserve">
+        <value>Teavituse lävi (km)</value>
+    </data>
+    <data name="Notifications_AlertThreshold_Desc" xml:space="preserve">
+        <value>Genereeri teavitus ainult siis, kui salvestatud konjunktsioon on selle kauguse piires. Peab olema väiksem või võrdne ülaltoodud tuvastamisläviga.</value>
+    </data>
+    <data name="Notifications_Email" xml:space="preserve">
+        <value>E-posti teavitused</value>
+    </data>
+    <data name="Notifications_Email_Desc" xml:space="preserve">
+        <value>Saa e-postiga teavitusi, kui tuvastatakse kõrge riskiga konjunktsioonid</value>
+    </data>
+    <data name="Notifications_Sms" xml:space="preserve">
+        <value>SMS-teavitused</value>
+    </data>
+    <data name="Notifications_Sms_Desc" xml:space="preserve">
+        <value>Saa tekstsõnumeid kriitiliste konjunktsioonisündmuste kohta</value>
+    </data>
+    <data name="Notifications_Btn_Save" xml:space="preserve">
+        <value>Salvesta eelistused</value>
+    </data>
+    <data name="Badge_Active" xml:space="preserve">
+        <value>Aktiivne</value>
+    </data>
+    <data name="Badge_Team" xml:space="preserve">
+        <value>Meeskond</value>
+    </data>
+</root>

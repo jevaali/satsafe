@@ -1,0 +1,74 @@
+<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="PageTitle" xml:space="preserve">
+        <value>Satelliitide haldamine</value>
+    </data>
+    <data name="SystemBar_Label" xml:space="preserve">
+        <value>SATELLIITIDE HALDAMINE</value>
+    </data>
+    <data name="SystemBar_SatCount" xml:space="preserve">
+        <value>SATELLIITI REGISTREERITUD</value>
+    </data>
+    <data name="Header" xml:space="preserve">
+        <value>Satelliidipark</value>
+    </data>
+    <data name="Header_Subtitle" xml:space="preserve">
+        <value>Halda oma registreeritud satelliite ja orbiidiparameetreid</value>
+    </data>
+    <data name="Badge_Active" xml:space="preserve">
+        <value>Aktiivne</value>
+    </data>
+    <data name="Badge_Inactive" xml:space="preserve">
+        <value>Mitteaktiivne</value>
+    </data>
+    <data name="Btn_AddSatellite" xml:space="preserve">
+        <value>Lisa satelliit</value>
+    </data>
+    <data name="Label_LaunchDate" xml:space="preserve">
+        <value>Stardikuupäev</value>
+    </data>
+    <data name="Label_SemiMajorAxis" xml:space="preserve">
+        <value>Poolsuurtelg</value>
+    </data>
+    <data name="Label_Inclination" xml:space="preserve">
+        <value>Kalle</value>
+    </data>
+    <data name="Label_Eccentricity" xml:space="preserve">
+        <value>Ekstsentrilisus</value>
+    </data>
+    <data name="Label_OrbitData" xml:space="preserve">
+        <value>Orbiidiandmed</value>
+    </data>
+    <data name="Label_NotAvailable" xml:space="preserve">
+        <value>Pole saadaval</value>
+    </data>
+    <data name="Btn_View" xml:space="preserve">
+        <value>Vaata</value>
+    </data>
+    <data name="Btn_Edit" xml:space="preserve">
+        <value>Muuda</value>
+    </data>
+    <data name="Btn_Delete" xml:space="preserve">
+        <value>Kustuta</value>
+    </data>
+    <data name="Empty_NoSatellites" xml:space="preserve">
+        <value>Teie operaatori kontol pole satelliite registreeritud.</value>
+    </data>
+    <data name="Btn_AddFirstSatellite" xml:space="preserve">
+        <value>Lisa oma esimene satelliit</value>
+    </data>
+    <data name="Label_Risk" xml:space="preserve">
+        <value>Risk</value>
+    </data>
+</root>

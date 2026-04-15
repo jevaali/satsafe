@@ -11,19 +11,19 @@
 
     <div class="system-bar">
         <span class="status-dot"></span>
-        CONJUNCTION MANAGEMENT |
+        @App.Resources.Views.Operator.Conjunctions.Index.SystemBar_Label |
         @DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") UTC |
-        @Model.Count() EVENTS LOADED
+        @Model.Count() @App.Resources.Views.Operator.Conjunctions.Index.SystemBar_Loaded
     </div>
 
     <div class="header">
         <div>
-            <h3>Conjunction Events</h3>
-            <small>All detected conjunction events for your satellites</small>
+            <h3>@App.Resources.Views.Operator.Conjunctions.Index.Header</h3>
+            <small>@App.Resources.Views.Operator.Conjunctions.Index.Header_Subtitle</small>
         </div>
         <div class="header-right">
-            <span class="op-badge high-risk"><i class="bi bi-exclamation-triangle-fill"></i>@Model.Count(c => c.IsHighRisk) High Risk</span>
-            <span class="op-badge pending">@Model.Count(c => c.Status == EConjunctionEventStatus.Pending) Pending</span>
+            <span class="op-badge high-risk"><i class="bi bi-exclamation-triangle-fill"></i>@Model.Count(c => c.IsHighRisk) @App.Resources.Views.Operator.Conjunctions.Index.Badge_HighRisk</span>
+            <span class="op-badge pending">@Model.Count(c => c.Status == EConjunctionEventStatus.Pending) @App.Resources.Views.Operator.Conjunctions.Index.Badge_Pending</span>
         </div>
     </div>
 
@@ -32,32 +32,32 @@
         <div class="op-filter-bar">
             <div class="op-filter-search">
                 <i class="bi bi-search"></i>
-                <input type="text" id="searchInput" placeholder="Search by object name or NORAD ID…" />
+                <input type="text" id="searchInput" placeholder="@App.Resources.Views.Operator.Conjunctions.Index.Filter_SearchPlaceholder" />
             </div>
             <select id="statusFilter">
-                <option value="">All Statuses</option>
+                <option value="">@App.Resources.Views.Operator.Conjunctions.Index.Filter_AllStatuses</option>
                 @foreach (var status in Enum.GetValues<EConjunctionEventStatus>())
                 {
                     <option value="@status">@status</option>
                 }
             </select>
             <select id="riskFilter">
-                <option value="">All Risk Levels</option>
-                <option value="high">High Risk</option>
-                <option value="normal">Normal</option>
+                <option value="">@App.Resources.Views.Operator.Conjunctions.Index.Filter_AllRiskLevels</option>
+                <option value="high">@App.Resources.Views.Operator.Conjunctions.Index.Filter_HighRisk</option>
+                <option value="normal">@App.Resources.Views.Operator.Conjunctions.Index.Filter_Normal</option>
             </select>
         </div>
 
         <table class="op-table" id="conjunctionTable">
             <thead>
                 <tr>
-                    <th>Primary Object</th>
-                    <th>Secondary Object</th>
-                    <th>TCA (UTC)</th>
-                    <th>Miss Distance</th>
-                    <th>Collision Prob.</th>
-                    <th>Status</th>
-                    <th>Risk</th>
+                    <th>@App.Resources.Views.Operator.Conjunctions.Index.Col_PrimaryObject</th>
+                    <th>@App.Resources.Views.Operator.Conjunctions.Index.Col_SecondaryObject</th>
+                    <th>@App.Resources.Views.Operator.Conjunctions.Index.Col_TCA</th>
+                    <th>@App.Resources.Views.Operator.Conjunctions.Index.Col_MissDistance</th>
+                    <th>@App.Resources.Views.Operator.Conjunctions.Index.Col_CollisionProb</th>
+                    <th>@App.Resources.Views.Operator.Conjunctions.Index.Col_Status</th>
+                    <th>@App.Resources.Views.Operator.Conjunctions.Index.Col_Risk</th>
                     <th></th>
                 </tr>
             </thead>
@@ -88,10 +88,10 @@
                         </td>
                         <td style="font-family:'Share Tech Mono',monospace;font-size:0.8rem;">@((c.CollisionProbability * 100).ToString("F4"))%</td>
                         <td><span class="op-badge @statusBadge">@c.Status</span></td>
-                        <td><span class="op-badge @(c.IsHighRisk ? "high-risk" : "normal")">@(c.IsHighRisk ? "HIGH" : "NORMAL")</span></td>
+                        <td><span class="op-badge @(c.IsHighRisk ? "high-risk" : "normal")">@(c.IsHighRisk ? @App.Resources.Views.Operator.Conjunctions.Index.Risk_High : @App.Resources.Views.Operator.Conjunctions.Index.Risk_Normal)</span></td>
                         <td>
                             <a asp-action="Details" asp-route-id="@c.Id" class="btn-sat btn-sat-view">
-                                <i class="bi bi-eye"></i> Details
+                                <i class="bi bi-eye"></i> @App.Resources.Views.Operator.Conjunctions.Index.Btn_Details
                             </a>
                         </td>
                     </tr>
@@ -102,7 +102,7 @@
         @if (!Model.Any())
         {
             <div class="empty-state">
-                <p>No conjunction events detected.</p>
+                <p>@App.Resources.Views.Operator.Conjunctions.Index.Empty_NoEvents</p>
             </div>
         }
     </div>

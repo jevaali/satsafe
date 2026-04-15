@@ -19,23 +19,23 @@
 
     <div class="system-bar">
         <span class="status-dot"></span>
-        ALERT DETAIL | @DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") UTC
+        @App.Resources.Views.Operator.Alerts.Details.SystemBar_Label | @DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") UTC
     </div>
 
     <div class="header">
         <div>
-            <h3>Alert — @Model.Id.ToString()[..8]…</h3>
+            <h3>@App.Resources.Views.Operator.Alerts.Details.Label_Message — @Model.Id.ToString()[..8]…</h3>
             <small>@message</small>
         </div>
         <div class="header-right">
             <span class="badge @severityBadgeClass">@Model.Severity</span>
             @if (Model.IsAcknowledged)
             {
-                <span class="badge bg-success">Acknowledged</span>
+                <span class="badge bg-success">@App.Resources.Views.Operator.Alerts.Details.Status_Acknowledged</span>
             }
             else
             {
-                <span class="badge warning">Pending</span>
+                <span class="badge warning">@App.Resources.Views.Operator.Alerts.Details.Status_Pending</span>
             }
         </div>
     </div>
@@ -44,42 +44,42 @@
 
         <!-- ALERT INFO -->
         <div class="card">
-            <h5>Alert Information</h5>
+            <h5>@App.Resources.Views.Operator.Alerts.Details.Section_Alert</h5>
             <table class="table mb-0">
                 <tr>
-                    <td class="text-muted">Message</td>
+                    <td class="text-muted">@App.Resources.Views.Operator.Alerts.Details.Label_Message</td>
                     <td>@message</td>
                 </tr>
                 <tr>
-                    <td class="text-muted">Severity</td>
+                    <td class="text-muted">@App.Resources.Views.Operator.Alerts.Details.Label_Severity</td>
                     <td><span class="badge @severityBadgeClass">@Model.Severity</span></td>
                 </tr>
                 <tr>
-                    <td class="text-muted">Status</td>
+                    <td class="text-muted">@App.Resources.Views.Operator.Alerts.Details.Label_Status</td>
                     <td>
                         @if (Model.IsAcknowledged)
                         {
-                            <span class="badge bg-success">Acknowledged</span>
+                            <span class="badge bg-success">@App.Resources.Views.Operator.Alerts.Details.Status_Acknowledged</span>
                         }
                         else
                         {
-                            <span class="badge bg-warning text-dark">Pending</span>
+                            <span class="badge bg-warning text-dark">@App.Resources.Views.Operator.Alerts.Details.Status_Acknowledged</span>
                         }
                     </td>
                 </tr>
                 <tr>
-                    <td class="text-muted">Created</td>
+                    <td class="text-muted">@App.Resources.Views.Operator.Alerts.Details.Label_Created</td>
                     <td>@Model.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss") UTC</td>
                 </tr>
                 @if (Model.UpdatedAt != null)
                 {
                     <tr>
-                        <td class="text-muted">Updated</td>
+                        <td class="text-muted">@App.Resources.Views.Operator.Alerts.Details.Label_Updated</td>
                         <td>@Model.UpdatedAt.Value.ToString("yyyy-MM-dd HH:mm:ss") UTC</td>
                     </tr>
                 }
                 <tr>
-                    <td class="text-muted">Alert ID</td>
+                    <td class="text-muted">@App.Resources.Views.Operator.Alerts.Details.Label_AlertId</td>
                     <td><code>@Model.Id</code></td>
                 </tr>
             </table>
@@ -90,27 +90,27 @@
                     <form asp-action="Acknowledge" asp-route-id="@Model.Id" method="post">
                         @Html.AntiForgeryToken()
                         <button type="submit" class="btn btn-success">
-                            <i class="bi bi-check-circle"></i> Acknowledge
+                            <i class="bi bi-check-circle"></i> @App.Resources.Views.Operator.Alerts.Details.Btn_Acknowledge
                         </button>
                     </form>
                 }
                 <a asp-action="EditMessage" asp-route-id="@Model.Id" class="btn btn-outline-primary">
-                    <i class="bi bi-pencil"></i> Edit Message
+                    <i class="bi bi-pencil"></i> @App.Resources.Views.Operator.Alerts.Details.Btn_EditMessage
                 </a>
-                <a asp-action="Index" class="btn btn-outline-secondary">Back to Alerts</a>
+                <a asp-action="Index" class="btn btn-outline-secondary">@App.Resources.Views.Operator.Alerts.Details.Btn_BackToAlerts</a>
             </div>
         </div>
 
         <!-- CONJUNCTION INFO -->
         <div class="card">
-            <h5>Related Conjunction Event</h5>
+            <h5>@App.Resources.Views.Operator.Alerts.Details.Section_Conjunction</h5>
             @if (Model.ConjunctionEvent != null)
             {
                 var c = Model.ConjunctionEvent;
                 var tca = c.TimeOfClosestApproach;
                 <table class="table mb-0">
                     <tr>
-                        <td class="text-muted">Event ID</td>
+                        <td class="text-muted">@App.Resources.Views.Operator.Alerts.Details.Label_EventId</td>
                         <td><code>@c.Id</code></td>
                     </tr>
                     <tr>
@@ -118,7 +118,7 @@
                         <td>@tca.ToString("yyyy-MM-dd HH:mm")</td>
                     </tr>
                     <tr>
-                        <td class="text-muted">Miss Distance</td>
+                        <td class="text-muted">@App.Resources.Views.Operator.Alerts.Details.Label_MissDistance</td>
                         <td class="fw-bold @(c.MissDistance < 1000 ? "text-danger" : c.MissDistance < 5000 ? "text-warning" : "")">
                             @(c.MissDistance < 1000
                                 ? $"{c.MissDistance:N0} m"
@@ -126,19 +126,19 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="text-muted">Collision Prob.</td>
+                        <td class="text-muted">@App.Resources.Views.Operator.Alerts.Details.Label_CollisionProb</td>
                         <td>@((c.CollisionProbability * 100).ToString("F4"))%</td>
                     </tr>
                     <tr>
-                        <td class="text-muted">Risk</td>
+                        <td class="text-muted">@App.Resources.Views.Operator.Alerts.Details.Label_Risk</td>
                         <td>
                             @if (c.IsHighRisk)
                             {
-                                <span class="badge danger">HIGH RISK</span>
+                                <span class="badge danger">@App.Resources.Views.Operator.Alerts.Details.Risk_High</span>
                             }
                             else
                             {
-                                <span class="badge bg-secondary">NORMAL</span>
+                                <span class="badge bg-secondary">@App.Resources.Views.Operator.Alerts.Details.Risk_Normal</span>
                             }
                         </td>
                     </tr>
@@ -151,7 +151,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="text-muted">Time to TCA</td>
+                        <td class="text-muted">@App.Resources.Views.Operator.Alerts.Details.Label_TimeToTca</td>
                         <td>
                             <span id="tca-countdown" class="fw-bold font-monospace"></span>
                         </td>
@@ -160,17 +160,17 @@
                 <div class="mt-3">
                     <a asp-area="Operator" asp-controller="Conjunctions" asp-action="Details"
                        asp-route-id="@c.Id" class="btn btn-outline-primary btn-sm">
-                        View Conjunction Details
+                        @App.Resources.Views.Operator.Alerts.Details.Btn_ViewConjunction
                     </a>
                 </div>
             }
             else
             {
                 <div class="text-muted py-3">
-                    <p>Conjunction event details not available.</p>
+                    <p>@App.Resources.Views.Operator.Alerts.Details.ConjunctionNotAvailable</p>
                     <a asp-area="Operator" asp-controller="Conjunctions" asp-action="Details"
                        asp-route-id="@Model.ConjunctionEventId" class="btn btn-outline-primary btn-sm">
-                        View Conjunction
+                        @App.Resources.Views.Operator.Alerts.Details.Btn_ViewConjunction2
                     </a>
                 </div>
             }
@@ -192,7 +192,7 @@
                 function update() {
                     const diff = Math.floor((tca - Date.now()) / 1000);
                     if (diff <= 0) {
-                        el.textContent = 'PASSED';
+                        el.textContent = '@App.Resources.Views.Operator.Alerts.Details.TcaCountdown_Passed';
                         el.classList.add('text-muted');
                         return;
                     }

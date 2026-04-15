@@ -1,0 +1,80 @@
+<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="PageTitle" xml:space="preserve">
+        <value>Muuda satelliiti</value>
+    </data>
+    <data name="SystemBar_Label" xml:space="preserve">
+        <value>SATELLIITIDE HALDAMINE | SATELLIIDI MUUTMINE</value>
+    </data>
+    <data name="Header" xml:space="preserve">
+        <value>Muuda satelliiti</value>
+    </data>
+    <data name="Header_Subtitle" xml:space="preserve">
+        <value>Uuenda satelliidi andmeid ja orbiidiparameetreid</value>
+    </data>
+    <data name="Btn_Back" xml:space="preserve">
+        <value>Tagasi</value>
+    </data>
+    <data name="Section_Basic" xml:space="preserve">
+        <value>Põhiandmed</value>
+    </data>
+    <data name="Section_Orbital" xml:space="preserve">
+        <value>Orbiidiparameetrid</value>
+    </data>
+    <data name="Hint_NoradId" xml:space="preserve">
+        <value>NORAD kataloogi number (nt. 25544 ISS jaoks)</value>
+    </data>
+    <data name="Hint_SemiMajorAxis" xml:space="preserve">
+        <value>Kaugus Maa keskmest. LEO: 6 500 000–8 400 000 m</value>
+    </data>
+    <data name="Hint_Eccentricity" xml:space="preserve">
+        <value>0 = ringikujuline, &lt;1 = elliptiline. Enamik LEO satelliite: &lt;0,01</value>
+    </data>
+    <data name="Hint_Inclination" xml:space="preserve">
+        <value>Nurk ekvaatoritasandiga. Päikese-sünkroonne: ~98°, polaar: ~90°</value>
+    </data>
+    <data name="Hint_Raan" xml:space="preserve">
+        <value>Tõusva sõlme rektastsensiooon (0–360°)</value>
+    </data>
+    <data name="Hint_ArgOfPerigee" xml:space="preserve">
+        <value>Nurk tõusvast sõlmest perigeen (0–360°)</value>
+    </data>
+    <data name="Hint_MeanAnomaly" xml:space="preserve">
+        <value>Satelliidi asukoht orbiidil epohhiajal (0–360°)</value>
+    </data>
+    <data name="Btn_SaveChanges" xml:space="preserve">
+        <value>Salvesta muudatused</value>
+    </data>
+    <data name="Btn_Cancel" xml:space="preserve">
+        <value>Tühista</value>
+    </data>
+    <data name="Guide_Title" xml:space="preserve">
+        <value>Orbiidiparameetrite juhend</value>
+    </data>
+    <data name="Guide_OrbitTypes" xml:space="preserve">
+        <value>Levinumad orbiidi tüübid (poolsuurtelg meetrites)</value>
+    </data>
+    <data name="Guide_Inclinations" xml:space="preserve">
+        <value>Näidiskalled</value>
+    </data>
+    <data name="Guide_Equatorial" xml:space="preserve">
+        <value>Ekvaatoriaalne</value>
+    </data>
+    <data name="Guide_SunSync" xml:space="preserve">
+        <value>Päikese-sünkroonne</value>
+    </data>
+    <data name="Guide_Polar" xml:space="preserve">
+        <value>Polaarorbiit</value>
+    </data>
+</root>

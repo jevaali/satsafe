@@ -16,8 +16,8 @@ public class UpdateOperatorSettingsUseCase
     {
         var op = await _uow.Operators.GetByIdAsync(operatorId)
             ?? throw new Exception("Operator not found");
-
-        op.Name = request.Name;
+        
+        op.Name?.SetTranslation(request.Name);
         op.CountryCode = request.Country;
         op.OperatorType = request.OperatorType;
 

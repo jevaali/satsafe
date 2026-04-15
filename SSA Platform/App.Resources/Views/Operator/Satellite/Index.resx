@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="PageTitle" xml:space="preserve">
+        <value>Satellite Management</value>
+    </data>
+    <data name="SystemBar_Label" xml:space="preserve">
+        <value>SATELLITE MANAGEMENT</value>
+    </data>
+    <data name="SystemBar_SatCount" xml:space="preserve">
+        <value>SATELLITES REGISTERED</value>
+    </data>
+    <data name="Header" xml:space="preserve">
+        <value>Satellite Fleet</value>
+    </data>
+    <data name="Header_Subtitle" xml:space="preserve">
+        <value>Manage your registered satellites and orbital parameters</value>
+    </data>
+    <data name="Badge_Active" xml:space="preserve">
+        <value>Active</value>
+    </data>
+    <data name="Badge_Inactive" xml:space="preserve">
+        <value>Inactive</value>
+    </data>
+    <data name="Btn_AddSatellite" xml:space="preserve">
+        <value>Add Satellite</value>
+    </data>
+    <data name="Label_LaunchDate" xml:space="preserve">
+        <value>Launch Date</value>
+    </data>
+    <data name="Label_SemiMajorAxis" xml:space="preserve">
+        <value>Semi-Major Axis</value>
+    </data>
+    <data name="Label_Inclination" xml:space="preserve">
+        <value>Inclination</value>
+    </data>
+    <data name="Label_Eccentricity" xml:space="preserve">
+        <value>Eccentricity</value>
+    </data>
+    <data name="Label_OrbitData" xml:space="preserve">
+        <value>Orbit Data</value>
+    </data>
+    <data name="Label_NotAvailable" xml:space="preserve">
+        <value>Not available</value>
+    </data>
+    <data name="Btn_View" xml:space="preserve">
+        <value>View</value>
+    </data>
+    <data name="Btn_Edit" xml:space="preserve">
+        <value>Edit</value>
+    </data>
+    <data name="Btn_Delete" xml:space="preserve">
+        <value>Delete</value>
+    </data>
+    <data name="Empty_NoSatellites" xml:space="preserve">
+        <value>No satellites registered to your operator account.</value>
+    </data>
+    <data name="Btn_AddFirstSatellite" xml:space="preserve">
+        <value>Add Your First Satellite</value>
+    </data>
+    <data name="Label_Risk" xml:space="preserve">
+        <value>Risk</value>
+    </data>
+</root>

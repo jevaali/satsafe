@@ -1,0 +1,62 @@
+<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="Title" xml:space="preserve">
+        <value>Registreeru operaatorina</value>
+    </data>
+    <data name="BrandTagline" xml:space="preserve">
+        <value>Kosmoseolude teadlikkuse platvorm</value>
+    </data>
+    <data name="BrandHeadline" xml:space="preserve">
+        <value>Jälgi. Tuvasta. Püsi turvaliselt.</value>
+    </data>
+    <data name="BrandDesc" xml:space="preserve">
+        <value>Registreerige oma organisatsioon satelliitide haldamiseks, konjunktsioonide teavituste saamiseks ja operaatori töölaua kasutamiseks.</value>
+    </data>
+    <data name="Stat_System" xml:space="preserve">
+        <value>Süsteem töötab</value>
+    </data>
+    <data name="Stat_Tracking" xml:space="preserve">
+        <value>Jälgitakse aktiivseid objekte</value>
+    </data>
+    <data name="Stat_Screening" xml:space="preserve">
+        <value>24 / 7 konjunktsioonide sõelumine</value>
+    </data>
+    <data name="BackToHome" xml:space="preserve">
+        <value>Tagasi avalehele</value>
+    </data>
+    <data name="Type_User" xml:space="preserve">
+        <value>Kasutaja</value>
+    </data>
+    <data name="Type_Operator" xml:space="preserve">
+        <value>Operaator</value>
+    </data>
+    <data name="CardTitle" xml:space="preserve">
+        <value>Loo operaatori konto</value>
+    </data>
+    <data name="Section_Personal" xml:space="preserve">
+        <value>Isikuandmed</value>
+    </data>
+    <data name="Section_Operator" xml:space="preserve">
+        <value>Operaatori andmed</value>
+    </data>
+    <data name="Btn_CreateAccount" xml:space="preserve">
+        <value>Loo operaatori konto</value>
+    </data>
+    <data name="AlreadyHaveAccount" xml:space="preserve">
+        <value>On juba konto?</value>
+    </data>
+    <data name="SignIn" xml:space="preserve">
+        <value>Logi sisse</value>
+    </data>
+</root>

@@ -11,48 +11,48 @@
 
     <div class="system-bar">
         <span class="status-dot"></span>
-        SATELLITE MANAGEMENT | DELETE CONFIRMATION
+        @App.Resources.Views.Operator.Satellite.Delete.SystemBar_Label
     </div>
 
     <div class="header">
         <div>
-            <h3>Delete Satellite</h3>
-            <small>This action will soft-delete the satellite and remove it from your active fleet</small>
+            <h3>@App.Resources.Views.Operator.Satellite.Delete.Header</h3>
+            <small>@App.Resources.Views.Operator.Satellite.Delete.Header_Subtitle</small>
         </div>
         <div class="header-right">
-            <span class="badge danger">Destructive Action</span>
+            <span class="badge danger">@App.Resources.Views.Operator.Satellite.Delete.Badge_Destructive</span>
         </div>
     </div>
 
     <div class="grid">
 
         <div class="card">
-            <h5>Satellite Details</h5>
+            <h5>@App.Resources.Views.Operator.Satellite.Delete.Section_Details</h5>
             <table class="table mb-0">
                 <tr>
-                    <td class="text-muted">Name</td>
+                    <td class="text-muted">@App.Resources.Views.Operator.Satellite.Delete.Label_Name</td>
                     <td><strong>@Model.Name</strong></td>
                 </tr>
                 <tr>
-                    <td class="text-muted">NORAD ID</td>
+                    <td class="text-muted">@App.Resources.Views.Operator.Satellite.Delete.Label_NoradId</td>
                     <td class="font-monospace">@Model.NoradId</td>
                 </tr>
                 <tr>
-                    <td class="text-muted">Status</td>
+                    <td class="text-muted">@App.Resources.Views.Operator.Satellite.Delete.Label_Status</td>
                     <td><span class="badge-status @statusStr">@Model.Status</span></td>
                 </tr>
                 <tr>
-                    <td class="text-muted">Launch Date</td>
+                    <td class="text-muted">@App.Resources.Views.Operator.Satellite.Delete.Label_LaunchDate</td>
                     <td>@Model.LaunchDate.ToString("yyyy-MM-dd")</td>
                 </tr>
                 @if (Model.Orbit != null)
                 {
                     <tr>
-                        <td class="text-muted">Inclination</td>
+                        <td class="text-muted">@App.Resources.Views.Operator.Satellite.Delete.Label_Inclination</td>
                         <td>@Model.Orbit.Inclination.ToString("F2")°</td>
                     </tr>
                     <tr>
-                        <td class="text-muted">Semi-Major Axis</td>
+                        <td class="text-muted">@App.Resources.Views.Operator.Satellite.Delete.Label_SemiMajorAxis</td>
                         <td>@Model.Orbit.SemiMajorAxis.ToString("N0") m</td>
                     </tr>
                 }
@@ -60,12 +60,12 @@
         </div>
 
         <div class="card">
-            <h5>What happens after deletion?</h5>
+            <h5>@App.Resources.Views.Operator.Satellite.Delete.Section_Consequences</h5>
             <ul class="list-unstyled small mt-2">
-                <li class="mb-2"><i class="bi bi-check text-warning me-2"></i>Satellite will be marked as deleted</li>
-                <li class="mb-2"><i class="bi bi-check text-warning me-2"></i>Removed from active fleet view</li>
-                <li class="mb-2"><i class="bi bi-check text-warning me-2"></i>Historical data preserved</li>
-                <li class="mb-2"><i class="bi bi-x text-danger me-2"></i>Cannot be restored without admin</li>
+                <li class="mb-2"><i class="bi bi-check text-warning me-2"></i>@App.Resources.Views.Operator.Satellite.Delete.Consequence1</li>
+                <li class="mb-2"><i class="bi bi-check text-warning me-2"></i>@App.Resources.Views.Operator.Satellite.Delete.Consequence2</li>
+                <li class="mb-2"><i class="bi bi-check text-warning me-2"></i>@App.Resources.Views.Operator.Satellite.Delete.Consequence3</li>
+                <li class="mb-2"><i class="bi bi-x text-danger me-2"></i>@App.Resources.Views.Operator.Satellite.Delete.Consequence4</li>
             </ul>
 
             <hr />
@@ -74,10 +74,10 @@
                 <input type="hidden" name="id" value="@Model.Id" />
                 <div class="d-flex gap-2">
                     <button type="submit" class="btn btn-danger">
-                        <i class="bi bi-trash me-1"></i> Confirm Delete
+                        <i class="bi bi-trash me-1"></i> @App.Resources.Views.Operator.Satellite.Delete.Btn_ConfirmDelete
                     </button>
                     <a asp-area="Operator" asp-controller="Satellite" asp-action="Index" class="btn btn-outline-secondary">
-                        Cancel
+                        @App.Resources.Views.Operator.Satellite.Delete.Btn_Cancel
                     </a>
                 </div>
             </form>
