@@ -1,8 +1,6 @@
 services:
   aspnet:
-    build:
-      context: "./SSA Platform"
-      dockerfile: Dockerfile
+    build: .
     container_name: aspnet
     ports:
       - "8080:8080"
@@ -18,8 +16,6 @@ services:
     image: ghcr.io/baosystems/postgis:18
     command: postgres -c 'max_connections=1000'
     restart: unless-stopped
-    ports:
-      - "5432:5432"
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
