@@ -5,6 +5,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <UserSecretsId>aspnet-WebApp-f4bcc5f3-7041-40df-b041-81af618bac7f</UserSecretsId>
+        <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
     </PropertyGroup>
 
     <ItemGroup>

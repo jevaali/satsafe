@@ -7,67 +7,67 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <EmbeddedResource Update="Views\Header.resx">
+      <EmbeddedResource Update="Views/Header.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Header.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Update="Enums\Enums.resx">
+      <EmbeddedResource Update="Enums/Enums.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Enums.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Update="Views\Home\Home.resx">
+      <EmbeddedResource Update="Views/Home/Home.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Home.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Update="Views\Operator\Index.resx">
+      <EmbeddedResource Update="Views/Operator/Index.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Index.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Update="Views\User\Index.resx">
+      <EmbeddedResource Update="Views/User/Index.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Index.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Update="Views\Sandbox\Index.resx">
+      <EmbeddedResource Update="Views/Sandbox/Index.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Index.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Update="Views\MainList\Index.resx">
+      <EmbeddedResource Update="Views/MainList/Index.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Index.Designer.cs</LastGenOutput>
       </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="Views\Header.Designer.cs">
+      <Compile Update="Views/Header.Designer.cs">
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
       </Compile>
-      <Compile Update="Enums\Enums.Designer.cs">
+      <Compile Update="Enums/Enums.Designer.cs">
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
         <DependentUpon>Enums.resx</DependentUpon>
       </Compile>
-      <Compile Update="Views\Home\Home.Designer.cs">
+      <Compile Update="Views/Home/Home.Designer.cs">
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
         <DependentUpon>Home.resx</DependentUpon>
       </Compile>
-      <Compile Update="Views\Operator\Index.Designer.cs">
+      <Compile Update="Views/Operator/Index.Designer.cs">
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
         <DependentUpon>Index.resx</DependentUpon>
       </Compile>
-      <Compile Update="Views\User\Index.Designer.cs">
+      <Compile Update="Views/User/Index.Designer.cs">
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
         <DependentUpon>Index.resx</DependentUpon>
       </Compile>
-      <Compile Update="Views\Sandbox\Index.Designer.cs">
+      <Compile Update="Views/Sandbox/Index.Designer.cs">
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
         <DependentUpon>Index.resx</DependentUpon>
       </Compile>
-      <Compile Update="Views\MainList\Index.Designer.cs">
+      <Compile Update="Views/MainList/Index.Designer.cs">
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
         <DependentUpon>Index.resx</DependentUpon>
