@@ -24,9 +24,6 @@ COPY App.Infrastructure/. ./App.Infrastructure/
 COPY App.Resources/. ./App.Resources/
 COPY WebApp/. ./WebApp/
 WORKDIR /app/WebApp
-
-RUN find /app -name "*.resx"
-
 RUN dotnet publish -c Release -o out
 
 
