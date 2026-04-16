@@ -243,6 +243,8 @@ builder.Services.AddAuthorization(options =>
 
 var app = builder.Build();
 
+SetupAppData(app, app.Environment, app.Configuration);
+
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -251,9 +253,9 @@ using (var scope = app.Services.CreateScope())
     var userManager = services.GetRequiredService<UserManager<AppUser>>();
     var roleManager = services.GetRequiredService<RoleManager<AppRole>>();
     
-    AppDataInit.MigrateDatabase(dbContext);
-    AppDataInit.SeedIdentity(userManager, roleManager);
-    AppDataInit.SeedAppData(dbContext, userManager);
+    //AppDataInit.MigrateDatabase(dbContext);
+    //AppDataInit.SeedIdentity(userManager, roleManager);
+    //AppDataInit.SeedAppData(dbContext, userManager);
     dbContext.ChangeTracker.Clear();
 
     var riskUseCase = services.GetRequiredService<CalculateSatelliteRiskUseCase>();
@@ -318,3 +320,69 @@ app.MapRazorPages()
     .WithStaticAssets();
 
 app.Run();
+
+
+static void SetupAppData(IApplicationBuilder app, IWebHostEnvironment env, IConfiguration configuration)
+{
+    using var serviceScope = ((IApplicationBuilder)app).ApplicationServices
+        .GetRequiredService<IServiceScopeFactory>()
+        .CreateScope();
+    var logger = serviceScope.ServiceProvider.GetRequiredService<ILogger<IApplicationBuilder>>();
+
+    using var context = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+    WaitDbConnection(context, logger);
+
+    using var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
+    using var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<AppRole>>();
+
+    if (configuration.GetValue<bool>("DataInitialization:DropDatabase"))
+    {
+        logger.LogWarning("DropDatabase");
+        AppDataInit.DeleteDatabase(context);
+    }
+
+    if (configuration.GetValue<bool>("DataInitialization:MigrateDatabase"))
+    {
+        logger.LogInformation("MigrateDatabase");
+        AppDataInit.MigrateDatabase(context);
+    }
+
+    if (configuration.GetValue<bool>("DataInitialization:SeedIdentity"))
+    {
+        logger.LogInformation("SeedIdentity");
+        AppDataInit.SeedIdentity(userManager, roleManager);
+    }
+
+    if (configuration.GetValue<bool>("DataInitialization:SeedData"))
+    {
+        logger.LogInformation("SeedData");
+        AppDataInit.SeedAppData(context, userManager);
+    }
+}
+
+static void WaitDbConnection(AppDbContext ctx, ILogger<IApplicationBuilder> logger)
+{
+    while (true)
+    {
+        try
+        {
+            ctx.Database.OpenConnection();
+            ctx.Database.CloseConnection();
+            return;
+        }
+        catch (Npgsql.PostgresException e)
+        {
+            logger.LogWarning("Checked postgres db connection. Got: {}", e.Message);
+
+            if (e.Message.Contains("does not exist"))
+            {
+                logger.LogWarning("Applying migration, probably db is not there (but server is)");
+                return;
+            }
+
+            logger.LogWarning("Waiting for db connection. Sleep 1 sec");
+            System.Threading.Thread.Sleep(1000);
+        }
+    }
+}
