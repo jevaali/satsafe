@@ -357,6 +357,11 @@ static void SetupAppData(IApplicationBuilder app, IWebHostEnvironment env, IConf
     if (configuration.GetValue<bool>("DataInitialization:SeedData"))
     {
         logger.LogInformation("SeedData");
+        
+        var defaultCulture = new CultureInfo("et-EE");
+        CultureInfo.DefaultThreadCurrentCulture = defaultCulture;
+        CultureInfo.DefaultThreadCurrentUICulture = defaultCulture;
+        
         AppDataInit.SeedAppData(context, userManager);
     }
 }
