@@ -24,7 +24,7 @@ COPY App.Infrastructure/. ./App.Infrastructure/
 COPY App.Resources/. ./App.Resources/
 COPY WebApp/. ./WebApp/
 WORKDIR /app/WebApp
-RUN sed -i 's|<EmbeddedResource Include="\*\*\/\*.resx".*/>||g' WebApp/WebApp.csproj
+RUN sed -i 's|<EmbeddedResource Include="\*\*\/\*.resx".*/>||g' WebApp.csproj
 RUN dotnet publish -c Release -o out
 
 
