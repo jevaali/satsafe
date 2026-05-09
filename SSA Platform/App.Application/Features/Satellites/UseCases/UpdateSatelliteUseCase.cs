@@ -4,22 +4,17 @@ using App.Domain.ValueObjects;
 
 namespace App.Application.Features.Satellites.UseCases;
 
-public class UpdateSatelliteUseCase
+public class UpdateSatelliteUseCase : BaseUseCase
 {
-    private readonly IUnitOfWork _uow;
-
-    public UpdateSatelliteUseCase(IUnitOfWork uow)
-    {
-        _uow = uow;
-    }
+    public UpdateSatelliteUseCase(IUnitOfWork uow) : base(uow) { }
 
     public async Task Execute(Guid satelliteId, UpdateSatelliteRequest request, string updatedBy)
     {
-        var satellite = await _uow.Satellites.GetByIdAsync(satelliteId);
+        var satellite = await Uow.Satellites.FindAsync(satelliteId);
         if (satellite == null || satellite.DeletedAt != null)
             throw new Exception("Satellite not found or deleted");
 
-        var op = await _uow.Operators.GetByIdAsync(request.OperatorId);
+        var op = await Uow.Operators.FindAsync(request.OperatorId);
         if (op == null)
             throw new Exception("Operator not found");
 
@@ -37,7 +32,7 @@ public class UpdateSatelliteUseCase
         satellite.UpdateDetails(request.Name, request.LaunchDate, op, orbitParams, updatedBy);
         satellite.Operator = null; // prevent EF from re-inserting the untracked operator
 
-        await _uow.Satellites.UpdateAsync(satellite);
-        await _uow.CommitAsync();
+        await Uow.Satellites.UpdateAsync(satellite);
+        await Uow.CommitAsync();
     }
 }

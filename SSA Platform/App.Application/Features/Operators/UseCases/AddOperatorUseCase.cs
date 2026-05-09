@@ -4,30 +4,25 @@ using App.Domain.Entities;
 
 namespace App.Application.Features.Operators.UseCases;
 
-public class AddOperatorUseCase
+public class AddOperatorUseCase : BaseUseCase
 {
-    private readonly IUnitOfWork _uow;
-
-    public AddOperatorUseCase(IUnitOfWork uow)
-    {
-        _uow = uow;
-    }
+    public AddOperatorUseCase(IUnitOfWork uow) : base(uow) { }
 
     public async Task<Guid> Execute(AddOperatorRequest request)
     {
         var operatorEntity = new Operator
         {
-            Id = Guid.NewGuid(),
-            Name = request.Name,
-            CountryCode = request.Country,
+            Id           = Guid.NewGuid(),
+            Name         = request.Name,
+            CountryCode  = request.Country,
             OperatorType = request.OperatorType,
-            CreatedBy = "system",
-            CreatedAt = DateTime.UtcNow
+            CreatedBy    = "system",
+            CreatedAt    = DateTime.UtcNow
         };
 
-        await _uow.Operators.AddAsync(operatorEntity);
+        Uow.Operators.Add(operatorEntity);
 
-        await _uow.CommitAsync();
+        await Uow.CommitAsync();
 
         return operatorEntity.Id;
     }

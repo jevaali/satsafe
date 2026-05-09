@@ -1,55 +1,23 @@
 using App.Application.Interfaces.IRepositories;
 using App.Domain.Entities;
 using App.Infrastructure.Persistence;
+using Base.Application.EF;
+using Base.Contracts;
+using Base.EF;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.Infrastructure.Repositories;
 
-public class SpaceObjectsRepository : ISpaceObjectsRepository
+public class SpaceObjectsRepository : BaseRepository<SpaceObject, SpaceObject, AppDbContext>, ISpaceObjectsRepository
 {
-    private readonly AppDbContext _context;
-
-    public SpaceObjectsRepository(AppDbContext context)
+    public SpaceObjectsRepository(AppDbContext context, IBaseMapper<SpaceObject, SpaceObject> mapper)
+        : base(context, mapper)
     {
-        _context = context;
     }
-
-    public async Task<SpaceObject?> GetByIdAsync(Guid? id)
-    {
-        return await _context.SpaceObjects
-            .Include(so => so.Orbit)
-            .FirstOrDefaultAsync(so => so.Id == id);
-    }
-
-    public async Task AddAsync(SpaceObject entity)
-    {
-        await _context.SpaceObjects.AddAsync(entity);
-    }
-
-    public async Task UpdateAsync(SpaceObject entity)
-    {
-        _context.SpaceObjects.Update(entity);
-        await Task.CompletedTask;
-    }
-
-    public async Task DeleteAsync(SpaceObject entity)
-    {
-        _context.SpaceObjects.Remove(entity);
-        await Task.CompletedTask;
-    }
-
-    public async Task<IEnumerable<SpaceObject>> GetAllAsync()
-    {
-        return await _context.SpaceObjects
-            .Include(so => so.Orbit)
-            .ToListAsync();
-    }
-
+    
     public async Task<IEnumerable<SpaceObject>> GetAllWithOrbitsAsync()
-    {
-        return await _context.SpaceObjects
+        => await RepositoryDbSet
             .Include(so => so.Orbit)
-            .Where(so => so.Orbit != null)  // only objects that have an orbit set
+            .Where(so => so.Orbit != null)
             .ToListAsync();
-    }
 }

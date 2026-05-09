@@ -1,59 +1,22 @@
-using App.Application.Common.DTOs;
 using App.Application.Features.Satellites.DTOs;
 using App.Application.Interfaces;
+using App.Domain.Entities;
+using Base.Contracts;
 
 namespace App.Application.Features.Satellites.UseCases;
 
-public class GetSatelliteByIdUseCase
+public class GetSatelliteByIdUseCase : BaseUseCase<SatelliteDetailDto, Satellite>
 {
-    private readonly IUnitOfWork _uow;
-
-    public GetSatelliteByIdUseCase(IUnitOfWork uow)
-    {
-        _uow = uow;
-    }
+    public GetSatelliteByIdUseCase(IUnitOfWork uow, IBaseMapper<SatelliteDetailDto, Satellite> mapper)
+        : base(uow, mapper) { }
 
     public async Task<SatelliteDetailDto?> ExecuteAsync(Guid satelliteId, Guid operatorId)
     {
-        var satellite = await _uow.Satellites.GetByIdAsync(satelliteId);
+        var satellite = await Uow.Satellites.FindAsync(satelliteId);
 
         if (satellite == null || satellite.OperatorId != operatorId)
             return null;
 
-        return new SatelliteDetailDto
-        {
-            Id         = satellite.Id,
-            Name       = satellite.Name.ToString(),
-            NoradId    = satellite.NoradId,
-            LaunchDate = satellite.LaunchDate,
-            Status     = satellite.Status,
-            Orbit      = satellite.Orbit == null ? null : new OrbitDto
-            {
-                SemiMajorAxis     = satellite.Orbit.Parameters.SemiMajorAxis,
-                Eccentricity      = satellite.Orbit.Parameters.Eccentricity,
-                Inclination       = satellite.Orbit.Parameters.Inclination,
-                RAAN              = satellite.Orbit.Parameters.RAAN,
-                ArgumentOfPerigee = satellite.Orbit.Parameters.ArgumentOfPerigee,
-                MeanAnomaly       = satellite.Orbit.Parameters.MeanAnomaly
-            },
-            RiskAssessment = satellite.RiskAssessment == null ? null : new RiskAssessmentDto
-            {
-                RiskScore     = satellite.RiskAssessment.RiskScore,
-                RiskLevel     = satellite.RiskAssessment.RiskLevel,
-                ModelVersion  = satellite.RiskAssessment.ModelVersion,
-                CalculatedAt  = satellite.RiskAssessment.CalculatedAt
-            },
-            TleRecords = satellite.TleRecords
-                .OrderByDescending(t => t.Epoch)
-                .Select(t => new TleRecordSummaryDto
-                {
-                    Id          = t.Id,
-                    Epoch       = t.Epoch,
-                    FetchedAt   = t.CreatedAt,
-                    MeanMotion  = t.MeanMotion,
-                    Inclination = t.Inclination
-                })
-                .ToList()
-        };
+        return Mapper.Map(satellite);
     }
 }

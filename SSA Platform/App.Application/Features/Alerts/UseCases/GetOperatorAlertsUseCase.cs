@@ -1,34 +1,23 @@
 using App.Application.Features.Alerts.DTOs;
 using App.Application.Interfaces;
+using App.Domain.Entities;
+using Base.Contracts;
 
 namespace App.Application.Features.Alerts.UseCases;
 
-public class GetOperatorAlertsUseCase
+public class GetOperatorAlertsUseCase : BaseUseCase<AlertSummaryDto, Alert>
 {
-    private readonly IUnitOfWork _uow;
-
-    public GetOperatorAlertsUseCase(IUnitOfWork uow)
-    {
-        _uow = uow;
-    }
+    public GetOperatorAlertsUseCase(IUnitOfWork uow, IBaseMapper<AlertSummaryDto, Alert> mapper)
+        : base(uow, mapper) { }
 
     public async Task<IEnumerable<AlertSummaryDto>> ExecuteAsync(Guid operatorId)
     {
-        var satellites = await _uow.Satellites.GetByOperatorIdAsync(operatorId);
+        var satellites   = await Uow.Satellites.GetByOperatorIdAsync(operatorId);
         var satelliteIds = satellites.Select(s => s.Id).ToList();
-        var conjunctions = await _uow.ConjunctionEvents.GetBySatelliteIdsAsync(satelliteIds);
+        var conjunctions = await Uow.ConjunctionEvents.GetBySatelliteIdsAsync(satelliteIds);
         var conjunctionIds = conjunctions.Select(c => c.Id).ToList();
-        var alerts = await _uow.Alerts.GetByConjunctionIdsAsync(conjunctionIds);
+        var alerts       = await Uow.Alerts.GetByConjunctionIdsAsync(conjunctionIds);
 
-        return alerts.Select(a => new AlertSummaryDto
-        {
-            Id                  = a.Id,
-            IsAcknowledged      = a.IsAcknowledged,
-            CreatedAt           = a.CreatedAt,
-            Severity            = a.Severity,
-            Message             = a.Message?.ToString(),
-            ConjunctionEventId  = a.ConjunctionEventId,
-            HasConjunctionEvent = a.ConjunctionEvent != null
-        });
+        return alerts.Select(Mapper.Map).OfType<AlertSummaryDto>();
     }
 }

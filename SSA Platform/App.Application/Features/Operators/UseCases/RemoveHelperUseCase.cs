@@ -2,18 +2,13 @@ using App.Application.Interfaces;
 
 namespace App.Application.Features.Operators.UseCases;
 
-public class RemoveHelperUseCase
+public class RemoveHelperUseCase : BaseUseCase
 {
-    private readonly IUnitOfWork _uow;
-
-    public RemoveHelperUseCase(IUnitOfWork uow)
-    {
-        _uow = uow;
-    }
+    public RemoveHelperUseCase(IUnitOfWork uow) : base(uow) { }
 
     public async Task ExecuteAsync(Guid userOperatorId, Guid operatorId, Guid requestingUserId)
     {
-        var userOperator = await _uow.UserOperators.GetByIdAsync(userOperatorId)
+        var userOperator = await Uow.UserOperators.FindAsync(userOperatorId)
             ?? throw new Exception("Helper entry not found.");
 
         if (userOperator.OperatorId != operatorId)
@@ -22,7 +17,7 @@ public class RemoveHelperUseCase
         if (userOperator.AppUserId == requestingUserId)
             throw new Exception("You cannot remove yourself.");
 
-        await _uow.UserOperators.DeleteAsync(userOperator);
-        await _uow.CommitAsync();
+        Uow.UserOperators.Remove(userOperator);
+        await Uow.CommitAsync();
     }
 }

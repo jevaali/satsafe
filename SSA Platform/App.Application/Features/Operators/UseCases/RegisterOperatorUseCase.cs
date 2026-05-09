@@ -6,27 +6,21 @@ using Microsoft.AspNetCore.Identity;
 
 namespace App.Application.Features.Operators.UseCases;
 
-public class RegisterOperatorUseCase
+public class RegisterOperatorUseCase : BaseUseCase
 {
     private readonly UserManager<AppUser> _userManager;
-    private readonly IUnitOfWork _uow;
 
-    public RegisterOperatorUseCase(UserManager<AppUser> userManager, IUnitOfWork uow)
+    public RegisterOperatorUseCase(IUnitOfWork uow, UserManager<AppUser> userManager) : base(uow)
     {
         _userManager = userManager;
-        _uow = uow;
     }
 
     public async Task<(bool Success, string? Error)> Execute(RegisterOperatorRequest request)
     {
-        // Database-dependent validations only
-
-        // Check email uniqueness (requires database access)
         var existingUser = await _userManager.FindByEmailAsync(request.Email);
         if (existingUser != null)
             return (false, "Email is already registered");
 
-        // Conditional operator field validation (depends on request data)
         if (request.RegisterAsOperator)
         {
             if (string.IsNullOrWhiteSpace(request.OperatorName))
@@ -41,10 +35,10 @@ public class RegisterOperatorUseCase
 
         var appUser = new AppUser
         {
-            UserName = request.Email,
-            Email = request.Email,
+            UserName  = request.Email,
+            Email     = request.Email,
             FirstName = request.FirstName,
-            LastName = request.LastName,
+            LastName  = request.LastName,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };
@@ -69,27 +63,27 @@ public class RegisterOperatorUseCase
 
                 var operatorEntity = new Operator
                 {
-                    Id = Guid.NewGuid(),
-                    Name = request.OperatorName!,
-                    CountryCode = request.OperatorCountry!,
+                    Id           = Guid.NewGuid(),
+                    Name         = request.OperatorName!,
+                    CountryCode  = request.OperatorCountry!,
                     OperatorType = request.OperatorType!.Value,
-                    CreatedBy = appUser.Id.ToString(),
-                    CreatedAt = DateTime.UtcNow
+                    CreatedBy    = appUser.Id.ToString(),
+                    CreatedAt    = DateTime.UtcNow
                 };
 
-                await _uow.Operators.AddAsync(operatorEntity);
+                Uow.Operators.Add(operatorEntity);
 
                 var userOperator = new UserOperator
                 {
-                    Id = Guid.NewGuid(),
-                    AppUserId = appUser.Id,
+                    Id         = Guid.NewGuid(),
+                    AppUserId  = appUser.Id,
                     OperatorId = operatorEntity.Id,
                 };
 
-                await _uow.UserOperators.AddAsync(userOperator);
+                Uow.UserOperators.Add(userOperator);
             }
 
-            await _uow.CommitAsync();
+            await Uow.CommitAsync();
             return (true, null);
         }
         catch (Exception ex)

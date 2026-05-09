@@ -1,39 +1,18 @@
-using App.Application.Common.DTOs;
 using App.Application.Features.Satellites.DTOs;
 using App.Application.Interfaces;
+using App.Domain.Entities;
+using Base.Contracts;
 
 namespace App.Application.Features.Satellites.UseCases;
 
-public class GetOperatorSatellitesUseCase
+public class GetOperatorSatellitesUseCase : BaseUseCase<SatelliteSummaryDto, Satellite>
 {
-    private readonly IUnitOfWork _uow;
-
-    public GetOperatorSatellitesUseCase(IUnitOfWork uow)
-    {
-        _uow = uow;
-    }
+    public GetOperatorSatellitesUseCase(IUnitOfWork uow, IBaseMapper<SatelliteSummaryDto, Satellite> mapper)
+        : base(uow, mapper) { }
 
     public async Task<IEnumerable<SatelliteSummaryDto>> ExecuteAsync(Guid operatorId)
     {
-        var satellites = await _uow.Satellites.GetByOperatorIdAsync(operatorId);
-
-        return satellites.Select(s => new SatelliteSummaryDto
-        {
-            Id         = s.Id,
-            Name       = s.Name.ToString(),
-            NoradId    = s.NoradId,
-            LaunchDate = s.LaunchDate,
-            Status     = s.Status,
-            RiskLevel  = s.RiskAssessment?.RiskLevel,
-            Orbit      = s.Orbit == null ? null : new OrbitDto
-            {
-                SemiMajorAxis     = s.Orbit.Parameters.SemiMajorAxis,
-                Eccentricity      = s.Orbit.Parameters.Eccentricity,
-                Inclination       = s.Orbit.Parameters.Inclination,
-                RAAN              = s.Orbit.Parameters.RAAN,
-                ArgumentOfPerigee = s.Orbit.Parameters.ArgumentOfPerigee,
-                MeanAnomaly       = s.Orbit.Parameters.MeanAnomaly
-            }
-        });
+        var satellites = await Uow.Satellites.GetByOperatorIdAsync(operatorId);
+        return satellites.Select(Mapper.Map).OfType<SatelliteSummaryDto>();
     }
 }

@@ -1,48 +1,31 @@
-using App.Application.Interfaces;
 using App.Application.Interfaces.IRepositories;
 using App.Domain.Entities;
 using App.Infrastructure.Persistence;
+using Base.Application.EF;
+using Base.Contracts;
+using Base.EF;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.Infrastructure.Repositories;
 
-public class DebrisObjectRepository : IDebrisObjectRepository
+public class DebrisObjectRepository : BaseRepository<DebrisObject, DebrisObject, AppDbContext>, IDebrisObjectRepository
 {
-    private readonly AppDbContext _context;
-
-    public DebrisObjectRepository(AppDbContext context)
+    public DebrisObjectRepository(AppDbContext context, IBaseMapper<DebrisObject, DebrisObject> mapper)
+        : base(context, mapper)
     {
-        _context = context;
     }
 
     public async Task<DebrisObject?> GetByIdAsync(Guid? id)
     {
-        return await _context.SpaceObjects
-            .OfType<DebrisObject>()
+        return await RepositoryDbSet
             .Include(d => d.Orbit)
             .Include(d => d.TleRecords)
             .FirstOrDefaultAsync(d => d.Id == id);
     }
 
-    public async Task AddAsync(DebrisObject debrisObject)
-    { 
-        _context.SpaceObjects.Add(debrisObject);
-    }
-
-    public async Task UpdateAsync(DebrisObject entity)
-    {
-        _context.SpaceObjects.Update(entity);
-    }
-
-    public async Task DeleteAsync(DebrisObject entity)
-    {
-        _context.SpaceObjects.Remove(entity);
-    }
-
     public async Task<IEnumerable<DebrisObject>> GetAllAsync()
     {
-        return await _context.SpaceObjects
-            .OfType<DebrisObject>()
+        return await RepositoryDbSet
             .Include(d => d.Orbit)
             .Include(d => d.TleRecords)
             .ToListAsync();
@@ -50,12 +33,6 @@ public class DebrisObjectRepository : IDebrisObjectRepository
 
     public Task<int> GetCountAsync()
     {
-        return _context.SpaceObjects.OfType<DebrisObject>().CountAsync();
+        return RepositoryDbSet.CountAsync();
     }
-
-    public async Task Update(DebrisObject debrisObject)
-    {
-        _context.SpaceObjects.Update(debrisObject);
-    }
-    
 }

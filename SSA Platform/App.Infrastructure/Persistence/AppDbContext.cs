@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace App.Infrastructure.Persistence;
 
-public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbContext<AppUser, AppRole, Guid>(options)
+public class AppDbContext : IdentityDbContext<AppUser, AppRole, Guid>
 {
     public DbSet<Alert> Alerts { get; set; } = null!;
     public DbSet<ConjunctionEvent> ConjunctionEvents { get; set; } = null!;
@@ -25,6 +25,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
     public DbSet<AppRefreshToken> RefreshTokens { get; set; } = null!;
     public DbSet<DraftSatellite> DraftSatellites { get; set; } = null!;
     public DbSet<OperatorActionLog> OperatorActionLogs { get; set; } = null!;
+
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

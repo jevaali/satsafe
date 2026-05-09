@@ -33,9 +33,10 @@ public class SatelliteRiskScoringService
             double otherPerigee = other.SemiMajorAxis * (1 - other.Eccentricity) - EarthRadiusMeters;
             double otherApogee  = other.SemiMajorAxis * (1 + other.Eccentricity) - EarthRadiusMeters;
 
-            bool altitudeOverlap      = satPerigee < otherApogee && otherPerigee < satApogee;
-            bool inclinationProximity = Math.Abs(satellite.Inclination - other.Inclination) < InclinationThresholdDegrees;
-
+            bool altitudeOverlap = satPerigee <= otherApogee && otherPerigee <= satApogee;
+            bool inclinationProximity = Math.Abs(satellite.Inclination - other.Inclination) 
+                                        < InclinationThresholdDegrees - 1e-9;
+            
             if (altitudeOverlap && inclinationProximity)
                 count++;
         }

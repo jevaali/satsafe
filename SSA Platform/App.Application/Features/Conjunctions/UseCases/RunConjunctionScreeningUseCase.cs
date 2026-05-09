@@ -4,29 +4,26 @@ using App.Domain.Services;
 
 namespace App.Application.Features.Conjunctions.UseCases;
 
-public class RunConjunctionScreeningUseCase
+public class RunConjunctionScreeningUseCase : BaseUseCase
 {
-    private readonly IUnitOfWork _unitOfWork;
     private readonly ConjunctionAnalysisService _conjunctionService;
 
-    public RunConjunctionScreeningUseCase(
-        IUnitOfWork unitOfWork,
-        ConjunctionAnalysisService conjunctionService)
+    public RunConjunctionScreeningUseCase(IUnitOfWork uow, ConjunctionAnalysisService conjunctionService)
+        : base(uow)
     {
-        _unitOfWork         = unitOfWork;
         _conjunctionService = conjunctionService;
     }
 
     public async Task ExecuteAsync(Guid operatorId, Guid userId)
     {
-        var satellites = await _unitOfWork.Satellites.GetByOperatorIdAsync(operatorId);
+        var satellites = await Uow.Satellites.GetByOperatorIdAsync(operatorId);
         if (satellites.Count(s => s.Orbit != null) < 2) return;
 
-        var settings               = await _unitOfWork.NotificationSettings.GetByUserIdAsync(userId);
+        var settings               = await Uow.NotificationSettings.GetByUserIdAsync(userId);
         var conjunctionThresholdKm = settings?.ConjunctionThresholdKm ?? 50.0;
-        var alertThresholdKm        = settings?.AlertThresholdKm ?? 5.0;
+        var alertThresholdKm       = settings?.AlertThresholdKm ?? 5.0;
 
-        var allObjects = await _unitOfWork.SpaceObjects.GetAllWithOrbitsAsync();
+        var allObjects = await Uow.SpaceObjects.GetAllWithOrbitsAsync();
 
         var newEvents = _conjunctionService
             .ScreenAll(allObjects.ToList(),
@@ -37,7 +34,7 @@ public class RunConjunctionScreeningUseCase
 
         if (newEvents.Count == 0) return;
 
-        var allExisting   = await _unitOfWork.ConjunctionEvents.GetAllAsync();
+        var allExisting   = await Uow.ConjunctionEvents.AllAsync();
         var existingPairs = allExisting.Select(e => e.GetOrderedPair()).ToHashSet();
 
         var toSave = newEvents.Where(e => !existingPairs.Contains(e.GetOrderedPair())).ToList();
@@ -46,16 +43,16 @@ public class RunConjunctionScreeningUseCase
         foreach (var evt in toSave)
         {
             evt.RefreshStatus();
-            await _unitOfWork.ConjunctionEvents.AddAsync(evt);
+            Uow.ConjunctionEvents.Add(evt);
         }
 
-        await _unitOfWork.CommitAsync();
+        await Uow.CommitAsync();
 
         foreach (var alert in toSave.Select(e => e.CreateAlert(userId, alertThresholdKm)).OfType<Alert>())
         {
-            await _unitOfWork.Alerts.AddAsync(alert);
+            Uow.Alerts.Add(alert);
         }
 
-        await _unitOfWork.CommitAsync();
+        await Uow.CommitAsync();
     }
 }

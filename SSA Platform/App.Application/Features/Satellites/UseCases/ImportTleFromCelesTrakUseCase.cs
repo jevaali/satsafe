@@ -3,20 +3,18 @@ using App.Domain.Entities;
 
 namespace App.Application.Features.Satellites.UseCases;
 
-public class ImportTleFromCelesTrakUseCase
+public class ImportTleFromCelesTrakUseCase : BaseUseCase
 {
-    private readonly IUnitOfWork _uow;
     private readonly ICelesTrakService _celestrak;
 
-    public ImportTleFromCelesTrakUseCase(IUnitOfWork uow, ICelesTrakService celestrak)
+    public ImportTleFromCelesTrakUseCase(IUnitOfWork uow, ICelesTrakService celestrak) : base(uow)
     {
-        _uow       = uow;
         _celestrak = celestrak;
     }
 
     public async Task<Guid> ExecuteAsync(Guid satelliteId, string fetchedBy, Guid? requiredOperatorId = null)
     {
-        var satellite = await _uow.Satellites.GetByIdAsync(satelliteId)
+        var satellite = await Uow.Satellites.FindAsync(satelliteId)
             ?? throw new Exception("Satellite not found");
 
         if (requiredOperatorId.HasValue && satellite.OperatorId != requiredOperatorId)
@@ -49,9 +47,9 @@ public class ImportTleFromCelesTrakUseCase
             CreatedBy         = fetchedBy,
             CreatedAt         = DateTime.UtcNow
         };
-        
-        await _uow.Satellites.AddTleRecordAsync(record);
-        await _uow.CommitAsync();
+
+        await Uow.Satellites.AddTleRecordAsync(record);
+        await Uow.CommitAsync();
 
         return record.Id;
     }

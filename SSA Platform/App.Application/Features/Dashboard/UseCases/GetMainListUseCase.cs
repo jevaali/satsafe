@@ -1,53 +1,33 @@
 using App.Application.Features.Dashboard.DTOs;
 using App.Application.Interfaces;
+using App.Domain.Entities;
+using Base.Contracts;
 
 namespace App.Application.Features.Dashboard.UseCases;
 
-public class GetMainListUseCase
+public class GetMainListUseCase : BaseUseCase
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IBaseMapper<MainListSatDTO, Satellite> _satMapper;
+    private readonly IBaseMapper<MainListDebrisDTO, DebrisObject> _debrisMapper;
 
-    public GetMainListUseCase(IUnitOfWork unitOfWork)
+    public GetMainListUseCase(
+        IUnitOfWork uow,
+        IBaseMapper<MainListSatDTO, Satellite> satMapper,
+        IBaseMapper<MainListDebrisDTO, DebrisObject> debrisMapper) : base(uow)
     {
-        _unitOfWork = unitOfWork;
+        _satMapper    = satMapper;
+        _debrisMapper = debrisMapper;
     }
 
     public async Task<MainListDTO> ExecuteAsync()
     {
-        var satellites = await _unitOfWork.Satellites.GetAllAsync();
-        var satelliteDtos = satellites.Select(s => new MainListSatDTO
-        {
-            Id           = s.Id,
-            Name         = s.Name,
-            Operator     = s.OperatorName ?? "Unknown",
-            HasOrbit     = s.Orbit?.Parameters != null,
-            SemiMajorAxis     = s.Orbit?.Parameters.SemiMajorAxis,
-            Eccentricity      = s.Orbit?.Parameters.Eccentricity,
-            Inclination       = s.Orbit?.Parameters.Inclination,
-            Raan              = s.Orbit?.Parameters.RAAN,
-            ArgumentOfPerigee = s.Orbit?.Parameters.ArgumentOfPerigee,
-            MeanAnomaly       = s.Orbit?.Parameters.MeanAnomaly
-        }).ToList();
-
-        var debris = await _unitOfWork.DebrisObjects.GetAllAsync();
-        var debrisDtos = debris.Select(d => new MainListDebrisDTO
-        {
-            Id            = d.Id,
-            NoradId       = d.NoradId,
-            SizeEstimate  = d.SizeEstimate,
-            HasOrbit      = d.Orbit?.Parameters != null,
-            SemiMajorAxis     = d.Orbit?.Parameters.SemiMajorAxis,
-            Eccentricity      = d.Orbit?.Parameters.Eccentricity,
-            Inclination       = d.Orbit?.Parameters.Inclination,
-            Raan              = d.Orbit?.Parameters.RAAN,
-            ArgumentOfPerigee = d.Orbit?.Parameters.ArgumentOfPerigee,
-            MeanAnomaly       = d.Orbit?.Parameters.MeanAnomaly
-        }).ToList();
+        var satellites = await Uow.Satellites.AllAsync();
+        var debris     = await Uow.DebrisObjects.AllAsync();
 
         return new MainListDTO
         {
-            Satellites = satelliteDtos,
-            Debris     = debrisDtos
+            Satellites = satellites.Select(_satMapper.Map).OfType<MainListSatDTO>().ToList(),
+            Debris     = debris.Select(_debrisMapper.Map).OfType<MainListDebrisDTO>().ToList()
         };
     }
 }

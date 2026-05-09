@@ -5,14 +5,9 @@ using App.Domain.ValueObjects;
 
 namespace App.Application.Features.Debris.UseCases;
 
-public class AddDebrisObjectUseCase
+public class AddDebrisObjectUseCase : BaseUseCase
 {
-    private readonly IUnitOfWork _uow;
-
-    public AddDebrisObjectUseCase(IUnitOfWork uow)
-    {
-        _uow = uow;
-    }
+    public AddDebrisObjectUseCase(IUnitOfWork uow) : base(uow) { }
 
     public async Task<Guid> Execute(AddDebrisObjectRequest request)
     {
@@ -32,9 +27,9 @@ public class AddDebrisObjectUseCase
 
         debrisObject.SetOrbit(orbitParams);
 
-        await _uow.DebrisObjects.AddAsync(debrisObject);
+        Uow.DebrisObjects.Add(debrisObject);
 
-        await _uow.CommitAsync();
+        await Uow.CommitAsync();
 
         return debrisObject.Id;
     }

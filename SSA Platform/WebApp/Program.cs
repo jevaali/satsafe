@@ -1,18 +1,35 @@
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using App.Application.Common.DTOs;
+using App.Application.Features.Alerts.DTOs;
 using App.Application.Features.Alerts.UseCases;
+using App.Application.Features.Conjunctions.DTOs;
 using App.Application.Features.Conjunctions.UseCases;
+using App.Application.Features.Dashboard.DTOs;
 using App.Application.Features.Dashboard.UseCases;
 using App.Application.Features.Debris.UseCases;
+using App.Application.Features.Notifications.DTOs;
 using App.Application.Features.Notifications.UseCases;
+using App.Application.Features.Operators.DTOs;
 using App.Application.Features.Operators.UseCases;
+using App.Application.Features.Satellites.DTOs;
 using App.Application.Features.Satellites.UseCases;
 using App.Application.Features.Users.UseCases;
 using App.Application.Interfaces;
 using App.Application.Options;
 using App.Infrastructure.ExternalServices;
 using App.Application.Interfaces.IRepositories;
+using App.Application.Mappers;
+using App.Application.Mappers.Alerts;
+using App.Application.Mappers.Conjunctions;
+using App.Application.Mappers.MainList;
+using App.Application.Mappers.Notifications;
+using App.Application.Mappers.Operator;
+using App.Application.Mappers.RiskAssessments;
+using App.Application.Mappers.Satellites;
+using App.Application.Mappers.Shared;
+using App.Domain.Entities;
 using App.Domain.Entities.Identity;
 using App.Domain.Services;
 using App.Infrastructure.Persistence;
@@ -21,6 +38,7 @@ using App.Infrastructure.Seeding;
 using App.Infrastructure.UnitOfWork;
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
+using Base.Contracts;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -129,6 +147,22 @@ builder.Services.AddScoped<IOperatorActionLogRepository, OperatorActionLogReposi
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<UserOperatorRepository>();
 builder.Services.AddScoped<LogOperatorActionFilter>();
+builder.Services.AddScoped(typeof(IBaseMapper<,>), typeof(IdentityMapper<,>));
+builder.Services.AddScoped<IBaseMapper<OrbitDto, Orbit>, OrbitMapper>();
+builder.Services.AddScoped<IBaseMapper<SatelliteSummaryDto, Satellite>, SatelliteSummaryMapper>();
+builder.Services.AddScoped<IBaseMapper<SatelliteDetailDto, Satellite>, SatelliteDetailMapper>();
+builder.Services.AddScoped<IBaseMapper<DraftSatelliteDto, DraftSatellite>, DraftSatMapper>();
+builder.Services.AddScoped<IBaseMapper<TleRecordSummaryDto, TleRecord>, TleRecordSummaryMapper>();
+builder.Services.AddScoped<IBaseMapper<AlertSummaryDto, Alert>, AlertSummaryMapper>();
+builder.Services.AddScoped<IBaseMapper<AlertDetailsDto, Alert>, AlertDetailsMapper>();
+builder.Services.AddScoped<IBaseMapper<ConjunctionSummaryDto, ConjunctionEvent>, ConjunctionSummaryMapper>();
+builder.Services.AddScoped<IBaseMapper<ConjunctionDetailDto, ConjunctionEvent>, ConjunctionDetailMapper>();
+builder.Services.AddScoped<ConjunctionDetailMapper>();
+builder.Services.AddScoped<IBaseMapper<RiskAssessmentDto, RiskAssessment>, RiskMapper>();
+builder.Services.AddScoped<IBaseMapper<MainListSatDTO, Satellite>, MainListSatMapper>();
+builder.Services.AddScoped<IBaseMapper<MainListDebrisDTO, DebrisObject>, MainListDebrisMapper>();
+builder.Services.AddScoped<IBaseMapper<NotificationSettingDto, NotificationSetting>, NotificationMapper>();
+builder.Services.AddScoped<IBaseMapper<OperatorSummaryDto, Operator>, OperatorSummaryMapper>();
 
 builder.Services
     .AddIdentity<AppUser,  AppRole>(options => options.SignIn.RequireConfirmedAccount = false)
@@ -258,8 +292,11 @@ using (var scope = app.Services.CreateScope())
     //AppDataInit.SeedAppData(dbContext, userManager);
     dbContext.ChangeTracker.Clear();
 
-    var riskUseCase = services.GetRequiredService<CalculateSatelliteRiskUseCase>();
-    await riskUseCase.CalculateForAllNewAsync();
+    if (app.Configuration.GetValue("DataInitialization:CalculateRisk", true))
+    {
+        var riskUseCase = services.GetRequiredService<CalculateSatelliteRiskUseCase>();
+        await riskUseCase.CalculateForAllNewAsync();
+    }
 }
 
 // Configure the HTTP request pipeline.
@@ -391,3 +428,9 @@ static void WaitDbConnection(AppDbContext ctx, ILogger<IApplicationBuilder> logg
         }
     }
 }
+
+
+public partial class Program
+{
+}
+

@@ -6,14 +6,12 @@ using Microsoft.AspNetCore.Identity;
 
 namespace App.Application.Features.Operators.UseCases;
 
-public class AddHelperUseCase
+public class AddHelperUseCase : BaseUseCase
 {
-    private readonly IUnitOfWork _uow;
     private readonly UserManager<AppUser> _userManager;
 
-    public AddHelperUseCase(IUnitOfWork uow, UserManager<AppUser> userManager)
+    public AddHelperUseCase(IUnitOfWork uow, UserManager<AppUser> userManager) : base(uow)
     {
-        _uow = uow;
         _userManager = userManager;
     }
 
@@ -22,7 +20,7 @@ public class AddHelperUseCase
         var user = await _userManager.FindByEmailAsync(request.Email)
             ?? throw new InvalidOperationException($"No user found with email '{request.Email}'.");
 
-        var existing = await _uow.UserOperators.GetByUserAndOperatorAsync(user.Id, operatorId);
+        var existing = await Uow.UserOperators.GetByUserAndOperatorAsync(user.Id, operatorId);
         if (existing != null)
             throw new Exception("This user already has access to this operator.");
 
@@ -39,12 +37,12 @@ public class AddHelperUseCase
 
         var userOperator = new UserOperator
         {
-            Id = Guid.NewGuid(),
-            AppUserId = user.Id,
+            Id         = Guid.NewGuid(),
+            AppUserId  = user.Id,
             OperatorId = operatorId
         };
 
-        await _uow.UserOperators.AddAsync(userOperator);
-        await _uow.CommitAsync();
+        Uow.UserOperators.Add(userOperator);
+        await Uow.CommitAsync();
     }
 }

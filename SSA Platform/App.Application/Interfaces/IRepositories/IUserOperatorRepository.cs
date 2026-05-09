@@ -1,9 +1,9 @@
-using App.Application.Interfaces.IRepositories;
 using App.Domain.Entities;
+using Base.Contracts;
 
 namespace App.Application.Interfaces.IRepositories;
 
-public interface IUserOperatorRepository : IRepository<UserOperator>
+public interface IUserOperatorRepository : IBaseRepository<UserOperator>
 {
     Task<UserOperator?> GetByUserIdAsync(Guid userId);
     Task<IEnumerable<UserOperator>> GetByOperatorIdAsync(Guid operatorId);

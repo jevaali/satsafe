@@ -1,23 +1,17 @@
 using App.Application.Features.Satellites.DTOs;
 using App.Application.Interfaces;
-using App.Domain;
 using App.Domain.Entities;
 using App.Domain.ValueObjects;
 
 namespace App.Application.Features.Satellites.UseCases;
 
-public class AddSatelliteUseCase
+public class AddSatelliteUseCase : BaseUseCase
 {
-    private readonly IUnitOfWork _uow;
-
-    public AddSatelliteUseCase(IUnitOfWork uow)
-    {
-        _uow = uow;
-    }
+    public AddSatelliteUseCase(IUnitOfWork uow) : base(uow) { }
 
     public async Task<Guid> Execute(AddSatelliteRequest request)
     {
-        var op = await _uow.Operators.GetByIdAsync(request.OperatorId);
+        var op = await Uow.Operators.FindAsync(request.OperatorId);
 
         if (op == null)
             throw new Exception("Operator not found");
@@ -42,9 +36,9 @@ public class AddSatelliteUseCase
 
         satellite.SetOrbit(orbitParams);
 
-        await _uow.Satellites.AddAsync(satellite);
+        Uow.Satellites.Add(satellite);
 
-        await _uow.CommitAsync();
+        await Uow.CommitAsync();
 
         return satellite.Id;
     }

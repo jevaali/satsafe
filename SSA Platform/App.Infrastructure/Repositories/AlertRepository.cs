@@ -1,53 +1,22 @@
 using App.Application.Interfaces.IRepositories;
 using App.Domain.Entities;
 using App.Infrastructure.Persistence;
+using Base.Application.EF;
+using Base.EF;
+using Base.Contracts;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.Infrastructure.Repositories;
-
-public class AlertRepository : IAlertRepository
+public class AlertRepository : BaseRepository<Alert, Alert, AppDbContext>, IAlertRepository
 {
-    private readonly AppDbContext _context;
-
-    public AlertRepository(AppDbContext context)
+    public AlertRepository(AppDbContext context, IBaseMapper<Alert, Alert> mapper) 
+        : base(context, mapper)
     {
-        _context = context;
-    }
-
-    public async Task<Alert?> GetByIdAsync(Guid? id)
-    {
-        return await _context.Alerts
-            .Include(a => a.User)
-            .Include(a => a.ConjunctionEvent)
-            .FirstOrDefaultAsync(a => a.Id == id);
-    }
-
-    public async Task AddAsync(Alert entity)
-    {
-        _context.Alerts.Add(entity);
-    }
-
-    public async Task UpdateAsync(Alert entity)
-    {
-        _context.Entry(entity).State = EntityState.Modified;
-    }
-
-    public async Task DeleteAsync(Alert entity)
-    {
-        _context.Alerts.Remove(entity);
-    }
-
-    public async Task<IEnumerable<Alert>> GetAllAsync()
-    {
-        return await _context.Alerts
-            .Include(a => a.User)
-            .Include(a => a.ConjunctionEvent)
-            .ToListAsync();
     }
 
     public async Task<IEnumerable<Alert>> GetByConjunctionIdsAsync(List<Guid> conjunctionIds)
     {
-        return await _context.Alerts
+        return await RepositoryDbSet
             .Include(a => a.User)
             .Include(a => a.ConjunctionEvent)
             .Where(a => conjunctionIds.Contains(a.ConjunctionEventId))
@@ -56,7 +25,13 @@ public class AlertRepository : IAlertRepository
 
     public Task UpdateMessageAsync(Alert entity)
     {
-        _context.Entry(entity).Property(e => e.Message).IsModified = true;
+        RepositoryDbContext.Entry(entity).Property(e => e.Message).IsModified = true;
+        return Task.CompletedTask;
+    }
+
+    public Task UpdateAcknowledgedAsync(Alert entity)
+    {
+        RepositoryDbContext.Entry(entity).Property(e => e.IsAcknowledged).IsModified = true;
         return Task.CompletedTask;
     }
 }

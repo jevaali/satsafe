@@ -1,8 +1,9 @@
 using App.Application.Interfaces.IRepositories;
+using Base.Contracts;
 
 namespace App.Application.Interfaces;
 
-public interface IUnitOfWork
+public interface IUnitOfWork : IBaseUOW
 {
     ISatelliteRepository Satellites { get; }
     IDebrisObjectRepository DebrisObjects { get; }
@@ -15,6 +16,5 @@ public interface IUnitOfWork
     IDraftSatelliteRepository DraftSatellites { get; }
     IRiskAssessmentRepository RiskAssessments { get; }
     IOperatorActionLogRepository OperatorActionLogs { get; }
-
-    Task CommitAsync();
+    
 }

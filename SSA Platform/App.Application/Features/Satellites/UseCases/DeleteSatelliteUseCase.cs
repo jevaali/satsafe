@@ -2,18 +2,13 @@ using App.Application.Interfaces;
 
 namespace App.Application.Features.Satellites.UseCases;
 
-public class DeleteSatelliteUseCase
+public class DeleteSatelliteUseCase : BaseUseCase
 {
-    private readonly IUnitOfWork _uow;
-
-    public DeleteSatelliteUseCase(IUnitOfWork uow)
-    {
-        _uow = uow;
-    }
+    public DeleteSatelliteUseCase(IUnitOfWork uow) : base(uow) { }
 
     public async Task Execute(Guid satelliteId, Guid operatorId, string deletedBy)
     {
-        var satellite = await _uow.Satellites.GetByIdAsync(satelliteId);
+        var satellite = await Uow.Satellites.FindAsync(satelliteId);
         if (satellite == null || satellite.DeletedAt != null)
             throw new Exception("Satellite not found or already deleted");
 
@@ -22,7 +17,7 @@ public class DeleteSatelliteUseCase
 
         satellite.SoftDelete(deletedBy);
 
-        await _uow.Satellites.UpdateAsync(satellite);
-        await _uow.CommitAsync();
+        await Uow.Satellites.UpdateAsync(satellite);
+        await Uow.CommitAsync();
     }
 }

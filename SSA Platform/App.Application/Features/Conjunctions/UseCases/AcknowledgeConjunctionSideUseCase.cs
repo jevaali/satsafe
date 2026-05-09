@@ -1,24 +1,18 @@
 using App.Application.Interfaces;
-using App.Domain.Entities;
 using App.Domain.Entities.Enums;
 
 namespace App.Application.Features.Conjunctions.UseCases;
 
-public class AcknowledgeConjunctionSideUseCase
+public class AcknowledgeConjunctionSideUseCase : BaseUseCase
 {
-    private readonly IUnitOfWork _uow;
-
-    public AcknowledgeConjunctionSideUseCase(IUnitOfWork uow)
-    {
-        _uow = uow;
-    }
+    public AcknowledgeConjunctionSideUseCase(IUnitOfWork uow) : base(uow) { }
 
     public async Task ExecuteAsync(Guid conjunctionId, Guid operatorId, EOperatorAcknowledgement state)
     {
-        var conjunction = await _uow.ConjunctionEvents.GetByIdAsync(conjunctionId)
+        var conjunction = await Uow.ConjunctionEvents.FindAsync(conjunctionId)
             ?? throw new Exception("Conjunction not found.");
 
-        var satellites = await _uow.Satellites.GetByOperatorIdAsync(operatorId);
+        var satellites = await Uow.Satellites.GetByOperatorIdAsync(operatorId);
         var satelliteIds = satellites.Select(s => s.Id).ToHashSet();
 
         bool ownsPrimary   = satelliteIds.Contains(conjunction.PrimaryObjectId);
@@ -33,19 +27,17 @@ public class AcknowledgeConjunctionSideUseCase
         if (ownsSecondary)
             conjunction.AcknowledgeSecondarySide(state);
 
-        await _uow.ConjunctionEvents.UpdateAsync(conjunction);
+        await Uow.ConjunctionEvents.UpdateAsync(conjunction);
 
-        // Acknowledge related alerts when the operator resolves their side
         if (state == EOperatorAcknowledgement.Resolved)
         {
-            var alerts = await _uow.Alerts.GetByConjunctionIdsAsync([conjunctionId]);
-            foreach (var alert in alerts.Where(a => !a.IsAcknowledged))
+            foreach (var alert in conjunction.Alerts.Where(a => !a.IsAcknowledged))
             {
                 alert.Acknowledge();
-                await _uow.Alerts.UpdateAsync(alert);
+                await Uow.Alerts.UpdateAcknowledgedAsync(alert);
             }
         }
 
-        await _uow.CommitAsync();
+        await Uow.CommitAsync();
     }
 }

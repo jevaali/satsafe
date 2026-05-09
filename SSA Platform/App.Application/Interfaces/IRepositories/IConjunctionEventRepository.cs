@@ -1,9 +1,9 @@
-using App.Application.Interfaces.IRepositories;
 using App.Domain.Entities;
+using Base.Contracts;
 
 namespace App.Application.Interfaces.IRepositories;
 
-public interface IConjunctionEventRepository : IRepository<ConjunctionEvent>
+public interface IConjunctionEventRepository : IBaseRepository<ConjunctionEvent>
 {
     Task<IEnumerable<ConjunctionEvent>> GetBySatelliteIdsAsync(List<Guid> satelliteIds);
 }

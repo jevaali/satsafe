@@ -1,96 +1,54 @@
-using App.Application.Interfaces;
 using App.Application.Interfaces.IRepositories;
 using App.Domain.Entities;
 using App.Domain.Entities.Enums;
 using App.Infrastructure.Persistence;
+using Base.Application.EF;
+using Base.Contracts;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.Infrastructure.Repositories;
 
-public class SatelliteRepository : ISatelliteRepository
+public class SatelliteRepository : BaseRepository<Satellite, Satellite, AppDbContext>, ISatelliteRepository
 {
-    private readonly AppDbContext _context;
-
-    public SatelliteRepository(AppDbContext context)
+    public SatelliteRepository(AppDbContext context, IBaseMapper<Satellite, Satellite> mapper)
+        : base(context, mapper)
     {
-        _context = context;
     }
-
-    public async Task<Satellite?> GetByIdAsync(Guid? id)
-    {
-        return await _context.SpaceObjects
-            .OfType<Satellite>()
+    public override async Task<Satellite?> FindAsync(Guid id, Guid appUserId = default)
+        => await RepositoryDbSet
             .Include(s => s.Operator)
             .Include(s => s.Orbit)
             .Include(s => s.TleRecords)
             .Include(s => s.RiskAssessment)
-            .FirstOrDefaultAsync(s => s.Id == id && s.Status != ESatelliteStatus.Deleted);
-    }
-
-    public async Task AddAsync(Satellite satellite)
-    { 
-        _context.SpaceObjects.Add(satellite);
-    }
-
-    public async Task UpdateAsync(Satellite entity)
-    {
-        _context.SpaceObjects.Update(entity);
-    }
-
-    public async Task DeleteAsync(Satellite entity)
-    {
-        _context.SpaceObjects.Remove(entity);
-    }
-
-    public async Task<IEnumerable<Satellite>> GetAllAsync()
-    {
-        return await _context.SpaceObjects
-            .OfType<Satellite>()
-            .Include(s => s.Operator)
-            .Include(s => s.Orbit)
-            .Include(s => s.TleRecords)
-            .Where(s => s.Status != ESatelliteStatus.Deleted)
-            .ToListAsync();
-    }
+            .FirstOrDefaultAsync(s => s.Id == id);
 
     public async Task<IEnumerable<Satellite>> GetByOperatorIdAsync(Guid operatorId)
-    {
-        return await _context.SpaceObjects
-            .OfType<Satellite>()
+        => await RepositoryDbSet
             .Include(s => s.Operator)
             .Include(s => s.Orbit)
             .Include(s => s.TleRecords)
             .Include(s => s.RiskAssessment)
             .Where(s => s.OperatorId == operatorId && s.Status != ESatelliteStatus.Deleted)
             .ToListAsync();
-    }
 
     public Task<int> GetCountAsync()
-    {
-        return _context.SpaceObjects.OfType<Satellite>().CountAsync();
-    }
+        => RepositoryDbSet.CountAsync();
 
     public Task<int> GetActiveCountAsync()
-    {
-        return _context.SpaceObjects.OfType<Satellite>().CountAsync(s => s.Status == ESatelliteStatus.Active);
-    }
+        => RepositoryDbSet.CountAsync(s => s.Status == ESatelliteStatus.Active);
 
     public Task<List<Satellite>> GetTopAsync(int count)
-    {
-        return _context.SpaceObjects
-            .OfType<Satellite>()
+        => RepositoryDbSet
             .Include(s => s.Operator)
             .Take(count)
             .ToListAsync();
-    }
-
-    public async Task Update(Satellite satellite)
-    {
-        _context.SpaceObjects.Update(satellite);
-    }
 
     public async Task AddTleRecordAsync(TleRecord record)
+        => await RepositoryDbContext.Set<TleRecord>().AddAsync(record);
+
+    public override async Task<Satellite> UpdateAsync(Satellite entity, Guid appUserId = default)
     {
-        await _context.TleRecords.AddAsync(record);
+        RepositoryDbContext.Entry(entity).State = EntityState.Modified;
+        return entity;
     }
 }

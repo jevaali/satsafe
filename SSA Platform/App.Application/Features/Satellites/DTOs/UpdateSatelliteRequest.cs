@@ -20,7 +20,7 @@ public class UpdateSatelliteRequest
 
     [Required(ErrorMessage = "Operator is required")]
     [Display(Name = "Operator")]
-    public Guid? OperatorId { get; set; }
+    public Guid OperatorId { get; set; }
 
     [Required(ErrorMessage = "NORAD ID is required")]
     [Range(1, 99999999, ErrorMessage = "NORAD ID must be a positive number")]

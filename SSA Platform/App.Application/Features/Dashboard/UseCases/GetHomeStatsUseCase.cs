@@ -3,35 +3,30 @@ using App.Application.Interfaces;
 
 namespace App.Application.Features.Dashboard.UseCases;
 
-public class GetHomeStatsUseCase
+public class GetHomeStatsUseCase : BaseUseCase
 {
-    private readonly IUnitOfWork _unitOfWork;
-
-    public GetHomeStatsUseCase(IUnitOfWork unitOfWork)
-    {
-        _unitOfWork = unitOfWork;
-    }
+    public GetHomeStatsUseCase(IUnitOfWork uow) : base(uow) { }
 
     public async Task<HomeStatsDto> ExecuteAsync()
     {
-        var totalSatellites = await _unitOfWork.Satellites.GetCountAsync();
-        var activeSatellites = await _unitOfWork.Satellites.GetActiveCountAsync();
-        var debrisObjects = await _unitOfWork.DebrisObjects.GetCountAsync();
+        var totalSatellites  = await Uow.Satellites.GetCountAsync();
+        var activeSatellites = await Uow.Satellites.GetActiveCountAsync();
+        var debrisObjects    = await Uow.DebrisObjects.GetCountAsync();
 
-        var topSatellites = await _unitOfWork.Satellites.GetTopAsync(10);
+        var topSatellites = await Uow.Satellites.GetTopAsync(10);
 
         var satellitesDto = topSatellites.Select(s => new HomeStatsSatteliteDto
         {
-            Name = s.Name,
+            Name     = s.Name,
             Operator = s.OperatorName ?? "Unknown"
         }).ToList();
 
         return new HomeStatsDto
         {
             TotalSpaceObjects = totalSatellites + debrisObjects,
-            ActiveSatellites = activeSatellites,
-            DebrisObjects = debrisObjects,
-            Satellites = satellitesDto
+            ActiveSatellites  = activeSatellites,
+            DebrisObjects     = debrisObjects,
+            Satellites        = satellitesDto
         };
     }
 }
