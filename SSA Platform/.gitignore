@@ -471,3 +471,6 @@ obj/
 *.cache
 *.dll
 *.exe
+
+**/bin/
+**/obj/
