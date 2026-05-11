@@ -36,54 +36,6 @@ public class TleController : ControllerBase
         _userOperatorRepository  = userOperatorRepository;
     }
 
-    
-    [HttpPost("{id:guid}")]
-    [Authorize(Policy = "OperatorOnlyPolicy")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(typeof(RestApiErrorResponse), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(RestApiErrorResponse), StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(typeof(RestApiErrorResponse), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> FetchTle(Guid id)
-    {
-        if (!_celestrakOptions.FetchEnabled)
-            return BadRequest(new RestApiErrorResponse
-            {
-                Status = HttpStatusCode.BadRequest,
-                Error  = "CelesTrak fetching is currently disabled."
-            });
-
-        var (_, operatorId) = await GetOperatorContextAsync();
-        if (operatorId == Guid.Empty)
-            return StatusCode((int) HttpStatusCode.Forbidden, new RestApiErrorResponse
-            {
-                Status = HttpStatusCode.Forbidden,
-                Error  = "No operator account is linked to this user."
-            });
-
-        var satellite = await _getSatelliteByIdUseCase.ExecuteAsync(id, operatorId);
-        if (satellite == null)
-            return NotFound(new RestApiErrorResponse
-            {
-                Status = HttpStatusCode.NotFound,
-                Error  = "Satellite not found."
-            });
-
-        try
-        {
-            var username = User.FindFirstValue(ClaimTypes.Name) ?? "operator";
-            await _importTle.ExecuteAsync(id, username, operatorId);
-            return NoContent();
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(new RestApiErrorResponse
-            {
-                Status = HttpStatusCode.BadRequest,
-                Error  = ex.Message
-            });
-        }
-    }
-
     /// <summary>
     /// Manually adds a TLE record to a satellite. Requires Operator or OperatorHelper role.
     /// </summary>
