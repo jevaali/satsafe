@@ -1,3 +1,5 @@
+using WebApp.Tests.E2E;
+
 namespace App.Tests.E2E;
 
 [CollectionDefinition("E2E", DisableParallelization = true)]

@@ -35,7 +35,7 @@ public static class DataSeeder
         RoleManager<AppRole> roleManager)
     {
         // Roles
-        foreach (var role in new[] { "Operator", "OperatorHelper" })
+        foreach (var role in new[] { "User", "Operator", "OperatorHelper" })
         {
             if (!await roleManager.RoleExistsAsync(role))
                 await roleManager.CreateAsync(new AppRole { Name = role });

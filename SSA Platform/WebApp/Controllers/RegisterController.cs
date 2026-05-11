@@ -3,6 +3,8 @@ using App.Application.Features.Operators.DTOs;
 using App.Application.Features.Operators.UseCases;
 using App.Application.Features.Users.DTOs;
 using App.Application.Features.Users.UseCases;
+using App.Domain.Entities.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WebApp.ViewModels;
@@ -13,13 +15,19 @@ public class RegisterController : Controller
 {
     private readonly RegisterUserUseCase _registerUserUseCase;
     private readonly RegisterOperatorUseCase _registerOperatorUseCase;
+    private readonly UserManager<AppUser> _userManager;
+    private readonly SignInManager<AppUser> _signInManager;
 
     public RegisterController(
         RegisterUserUseCase registerUserUseCase,
-        RegisterOperatorUseCase registerOperatorUseCase)
+        RegisterOperatorUseCase registerOperatorUseCase,
+        UserManager<AppUser> userManager,
+        SignInManager<AppUser> signInManager)
     {
         _registerUserUseCase = registerUserUseCase;
         _registerOperatorUseCase = registerOperatorUseCase;
+        _userManager = userManager;
+        _signInManager = signInManager;
     }
 
     // GET /Register/User
@@ -29,6 +37,7 @@ public class RegisterController : Controller
     // POST /Register/User
     [HttpPost]
     [ValidateAntiForgeryToken]
+    // POST /Register/User
     public async Task<IActionResult> User(RegisterUserViewModel model)
     {
         if (!ModelState.IsValid)
@@ -50,9 +59,10 @@ public class RegisterController : Controller
             return View(model);
         }
 
-        return RedirectToPage("/Account/Login", new { area = "Identity" });
+        var user = await _userManager.FindByEmailAsync(model.Email);
+        await _signInManager.SignInAsync(user!, isPersistent: false);
+        return RedirectToAction("Index", "Home", new { area = "User" });
     }
-
     // GET /Register/Operator
     [HttpGet]
     public IActionResult Operator()
@@ -96,7 +106,9 @@ public class RegisterController : Controller
             return View(model);
         }
 
-        return RedirectToPage("/Account/Login", new { area = "Identity" });
+        var user = await _userManager.FindByEmailAsync(model.Email);
+        await _signInManager.SignInAsync(user!, isPersistent: false);
+        return RedirectToAction("Index", "Home", new { area = "Operator" });
     }
 
     private static List<SelectListItem> BuildCountryList(string? selectedCode = null)

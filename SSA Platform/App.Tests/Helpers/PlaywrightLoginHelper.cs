@@ -1,22 +1,25 @@
 using Microsoft.Playwright;
 
-namespace App.Tests.Integration.Helpers;
+namespace App.Tests.Helpers;
 
 public static class PlaywrightLoginHelper
 {
     public static async Task LoginAsync(IPage page, string rootUri, string email, string password)
     {
-        await page.GotoAsync($"{rootUri}/Identity/Account/Login");
-        await page.FillAsync("#Input_Email", email);
-        await page.FillAsync("#Input_Password", password);
-        await page.ClickAsync("#login-submit");
+        await page.GotoAsync($"{rootUri}/Login");
+        await page.WaitForSelectorAsync("#Email");
+        await page.FillAsync("#Email", email);
+        await page.FillAsync("#Password", password);
 
-        await page.WaitForFunctionAsync(
-            "() => !window.location.pathname.toLowerCase().includes('/identity/account/login') " +
-            "|| document.querySelector('.text-danger:not(:empty), .validation-summary-errors') !== null",
-            options: new PageWaitForFunctionOptions { Timeout = 15_000 });
+        await page.RunAndWaitForNavigationAsync(
+            async () => await page.ClickAsync("button[type=submit]"),
+            new PageRunAndWaitForNavigationOptions
+            {
+                WaitUntil = WaitUntilState.DOMContentLoaded,
+                Timeout = 15_000
+            });
 
-        if (page.Url.Contains("/Identity/Account/Login", StringComparison.OrdinalIgnoreCase))
+        if (page.Url.Contains("/Login", StringComparison.OrdinalIgnoreCase))
         {
             var errors = await page.Locator(".text-danger, .validation-summary-errors").AllTextContentsAsync();
             throw new InvalidOperationException(
@@ -24,32 +27,39 @@ public static class PlaywrightLoginHelper
         }
     }
 
-    public static async Task RegisterAsync(IPage page, string rootUri, string email, string password)
+    public static async Task RegisterOperatorAsync(IPage page, string rootUri, string email, string password)
     {
-        await page.GotoAsync($"{rootUri}/Identity/Account/Register");
-        await page.FillAsync("#Input_Email", email);
-        await page.FillAsync("#Input_Password", password);
-        await page.FillAsync("#Input_ConfirmPassword", password);
-        await page.ClickAsync("#registerSubmit");
+        await page.GotoAsync($"{rootUri}/Register/Operator",
+            new PageGotoOptions { WaitUntil = WaitUntilState.DOMContentLoaded });
 
-        await page.WaitForFunctionAsync(
-            "() => !window.location.pathname.toLowerCase().includes('/identity/account/register') " +
-            "|| document.querySelector('.text-danger:not(:empty), .validation-summary-errors') !== null",
-            options: new PageWaitForFunctionOptions { Timeout = 15_000 });
+        await page.FillAsync("#FirstName", "Test");
+        await page.FillAsync("#LastName", "Operator");
+        await page.FillAsync("#Email", email);
+        await page.FillAsync("#Password", password);
+        await page.FillAsync("#ConfirmPassword", password);
+        await page.FillAsync("#OperatorName", "TestOrg-" + Guid.NewGuid().ToString("N")[..8]);
+        await page.SelectOptionAsync("#country-select", new SelectOptionValue { Value = "US" });
+        await page.SelectOptionAsync("#OperatorType", new SelectOptionValue { Label = "Commercial" });
 
-        if (page.Url.Contains("/Identity/Account/Register", StringComparison.OrdinalIgnoreCase))
+        await page.RunAndWaitForNavigationAsync(
+            async () => await page.ClickAsync("button[type=submit]"),
+            new PageRunAndWaitForNavigationOptions
+            {
+                WaitUntil = WaitUntilState.DOMContentLoaded,
+                Timeout = 30_000
+            });
+
+        if (page.Url.Contains("/Register/Operator", StringComparison.OrdinalIgnoreCase))
         {
             var errors = await page.Locator(".text-danger, .validation-summary-errors").AllTextContentsAsync();
             throw new InvalidOperationException(
-                $"Registration failed for {email}. URL={page.Url}. Errors={string.Join(" | ", errors.Where(e => !string.IsNullOrWhiteSpace(e)))}");
+                $"Operator registration failed for {email}. URL={page.Url}. Errors={string.Join(" | ", errors.Where(e => !string.IsNullOrWhiteSpace(e)))}");
         }
     }
 
-    public static async Task LogoutAsync(IPage page, string rootUri)
+    public static async Task LogoutAsync(IPage page)
     {
-        await page.GotoAsync($"{rootUri}/");
-        // Identity UI exposes a logout form button in the nav. Click it.
-        var logout = page.Locator("form[action*='Logout'] button[type=submit]");
+        var logout = page.Locator("form[action='/Login/Logout'] button[type=submit]");
         if (await logout.CountAsync() > 0)
         {
             await logout.First.ClickAsync();
@@ -59,9 +69,7 @@ public static class PlaywrightLoginHelper
 
     public static async Task SetCultureAsync(IPage page, string rootUri, string culture)
     {
-        // Use the SetLanguage endpoint. It plants the AspNetCore.Culture cookie and
-        // local-redirects to the supplied returnUrl (we send the caller back to Home).
-        await page.GotoAsync($"{rootUri}/Home/SetLanguage?culture={culture}&returnUrl=%2F");
-        await page.WaitForURLAsync($"{rootUri}/");
+        await page.GotoAsync($"{rootUri}/Home/SetLanguage?culture={culture}&returnUrl=%2F",
+            new PageGotoOptions { WaitUntil = WaitUntilState.DOMContentLoaded });
     }
 }

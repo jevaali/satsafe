@@ -52,7 +52,12 @@ public class LoginController : Controller
         if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
             return Redirect(returnUrl);
 
-        return RedirectToAction("Index", "Home");
+        var user = await _signInManager.UserManager.FindByEmailAsync(model.Email);
+        var isOperator = await _signInManager.UserManager.IsInRoleAsync(user!, "Operator");
+
+        return isOperator
+            ? RedirectToAction("Index", "Home", new { area = "Operator" })
+            : RedirectToAction("Index", "Home", new { area = "User" });
     }
 
     // POST /Login/Logout
