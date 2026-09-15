@@ -473,4 +473,4 @@ obj/
 *.exe
 
 **/bin/
-**/obj/
+**/obj/.idea/
