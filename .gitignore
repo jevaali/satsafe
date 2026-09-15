@@ -469,4 +469,4 @@ obj/
 *.suo
 *.cache
 *.dll
-*.exe
+*.exe.idea/
