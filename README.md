@@ -6,7 +6,7 @@ Built as a learning project to practise software engineering in a domain I love.
 
 React front-end: [link]
 
-![Landing page](docs/screenshots/landing.png)
+![Landing page](docs/screenshots/landing-page.png)
 
 ## Features
 
