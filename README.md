@@ -59,6 +59,8 @@ Layered clean architecture:
 ## Tech
 C# · ASP.NET Core · Entity Framework Core · Docker · xUnit · Playwright
 
+Docker setup is being updated; the app can be run locally with dotnet run against a PostgreSQL database.
+
 ## Tests
 The test suite covers three levels:
 
