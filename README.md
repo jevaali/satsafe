@@ -61,6 +61,8 @@ C# · ASP.NET Core · Entity Framework Core · Docker · xUnit · Playwright
 
 Docker setup is being updated; the app can be run locally with dotnet run against a PostgreSQL database.
 
+appsettings.json contains a development-only JWT key. Use environment variables or user secrets for any real deployment.
+
 ## Tests
 The test suite covers three levels:
 
