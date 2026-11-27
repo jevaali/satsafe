@@ -4,7 +4,7 @@ A web platform for space situational awareness: monitor satellites and debris, m
 
 Built as a learning project to practise software engineering in a domain I love. Orbital models and data are simplified and **not intended for operational use**.
 
-Vue front-end: [[link](https://github.com/jevaali/satsafe-web)]
+Vue front-end: [link](https://github.com/jevaali/satsafe-web)
 
 ![Landing page](docs/screenshots/landing-page.png)
 
