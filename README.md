@@ -4,7 +4,7 @@ A web platform for space situational awareness: monitor satellites and debris, m
 
 Built as a learning project to practise software engineering in a domain I love. Orbital models and data are simplified and **not intended for operational use**.
 
-React front-end: [link]
+Vue front-end: [[link](https://github.com/jevaali/satsafe-web)]
 
 ![Landing page](docs/screenshots/landing-page.png)
 
@@ -57,15 +57,15 @@ Layered clean architecture:
 - **Base.*** – reusable generic building blocks shared across layers
 
 ## Tech
-C# · ASP.NET Core · Entity Framework Core · [database] · Docker · [test framework]
-
-## Run locally
-```
-[docker compose up / dotnet run --project WebApp]
-```
-Then open http://localhost:[PORT]
+C# · ASP.NET Core · Entity Framework Core · Docker · xUnit · Playwright
 
 ## Tests
+The test suite covers three levels:
+
+- **Unit:** domain logic and use cases, tested in isolation
+- **Integration:** API endpoints and the data access layer (repositories, Unit of Work, multilingual string persistence)
+- **End-to-end:** Playwright tests that run the full web app in a browser: authentication, satellite create/edit/delete, and language switching
+
 ```
 dotnet test
 ```
